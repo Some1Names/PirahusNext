@@ -1,0 +1,31 @@
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Mentor {
+  id         String @id @default(cuid())
+  studentId  String @unique
+  hints      String[]?
+
+  mentee     Mentee?
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Mentee {
+  id         String @id @default(cuid())
+  studentId  String @unique
+
+  mentorId   String @unique
+  mentor     Mentor @relation(fields: [mentorId], references: [id])
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
