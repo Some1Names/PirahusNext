@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { GameState, GameAction } from "@/lib/game/gameTypes";
+import { GameState, GameAction } from "@/src/lib/game/gameTypes";
 
 interface Props {
   state: GameState;
@@ -27,8 +27,17 @@ export default function GameTerminal({ state, dispatch }: Props) {
   const logs = state.logs.slice(-5);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", fontFamily: "monospace", fontSize: "0.875rem", backgroundColor: "transparent", color: "inherit" }}>
-
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.5rem",
+        fontFamily: "monospace",
+        fontSize: "0.875rem",
+        backgroundColor: "transparent",
+        color: "inherit",
+      }}
+    >
       {/* Log output */}
       <div
         style={{
@@ -43,10 +52,15 @@ export default function GameTerminal({ state, dispatch }: Props) {
         }}
       >
         {logs.length === 0 ? (
-          <div style={{ color: "#4b5563", lineHeight: "1.25rem" }}>Entering the dungeon...</div>
+          <div style={{ color: "#4b5563", lineHeight: "1.25rem" }}>
+            Entering the dungeon...
+          </div>
         ) : (
           logs.map((line, i) => (
-            <div key={i} style={{ color: getLogColor(line), lineHeight: "1.25rem" }}>
+            <div
+              key={i}
+              style={{ color: getLogColor(line), lineHeight: "1.25rem" }}
+            >
               {line}
             </div>
           ))
@@ -54,9 +68,20 @@ export default function GameTerminal({ state, dispatch }: Props) {
       </div>
 
       {/* HUD */}
-      <div style={{ display: "flex", gap: "1rem", fontSize: "0.75rem", color: "#6b7280", paddingLeft: "0.25rem", backgroundColor: "transparent" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "1rem",
+          fontSize: "0.75rem",
+          color: "#6b7280",
+          paddingLeft: "0.25rem",
+          backgroundColor: "transparent",
+        }}
+      >
         <span>🧩 Fragments: {state.collectedParts.length} / 4</span>
-        <span>📍 ({state.playerX}, {state.playerY})</span>
+        <span>
+          📍 ({state.playerX}, {state.playerY})
+        </span>
       </div>
 
       {/* Key fragments collected */}
@@ -77,8 +102,16 @@ export default function GameTerminal({ state, dispatch }: Props) {
 
       {/* Enter key phase */}
       {state.phase === "enterKey" && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-          <div style={{ color: "#facc15", fontSize: "0.75rem", paddingLeft: "0.25rem" }}>
+        <div
+          style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
+        >
+          <div
+            style={{
+              color: "#facc15",
+              fontSize: "0.75rem",
+              paddingLeft: "0.25rem",
+            }}
+          >
             Hint: ค่ายครั้งนี้ — Enter the full key:
           </div>
           <div style={{ display: "flex", gap: "0.5rem" }}>
@@ -86,7 +119,9 @@ export default function GameTerminal({ state, dispatch }: Props) {
               autoFocus
               type="text"
               value={state.keyInput}
-              onChange={(e) => dispatch({ type: "SET_KEY_INPUT", value: e.target.value })}
+              onChange={(e) =>
+                dispatch({ type: "SET_KEY_INPUT", value: e.target.value })
+              }
               onKeyDown={(e) => {
                 if (e.key === "Enter") dispatch({ type: "SUBMIT_KEY" });
                 if (e.key === "Escape") dispatch({ type: "CANCEL_KEY" });
@@ -119,8 +154,12 @@ export default function GameTerminal({ state, dispatch }: Props) {
                 cursor: "pointer",
                 fontFamily: "monospace",
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#facc15")}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#eab308")}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.backgroundColor = "#facc15")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.backgroundColor = "#eab308")
+              }
             >
               Submit
             </button>
@@ -136,8 +175,12 @@ export default function GameTerminal({ state, dispatch }: Props) {
                 cursor: "pointer",
                 fontFamily: "monospace",
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#4b5563")}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#374151")}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.backgroundColor = "#4b5563")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.backgroundColor = "#374151")
+              }
             >
               Cancel
             </button>
@@ -161,8 +204,12 @@ export default function GameTerminal({ state, dispatch }: Props) {
             cursor: "pointer",
             fontFamily: "monospace",
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#4b5563")}
-          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#374151")}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.backgroundColor = "#4b5563")
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.backgroundColor = "#374151")
+          }
         >
           {state.phase === "escaped" ? "🎉 Play Again" : "💀 Try Again"}
         </button>
