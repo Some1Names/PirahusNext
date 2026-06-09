@@ -1,15 +1,22 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { GameState } from "@/lib/game/gameTypes";
-import { posKey, MAP_W, MAP_H } from "@/lib/game/mapGen";
+import { GameState } from "@/src/lib/game/gameTypes";
+import { posKey, MAP_W, MAP_H } from "@/src/lib/game/mapGen";
 
 interface Props {
   state: GameState;
   debug?: boolean;
 }
 
-function getCellColor(isPlayer: boolean, isFloor: boolean, debug: boolean, isExit: boolean, isFragment: boolean, isTrap: boolean): string {
+function getCellColor(
+  isPlayer: boolean,
+  isFloor: boolean,
+  debug: boolean,
+  isExit: boolean,
+  isFragment: boolean,
+  isTrap: boolean,
+): string {
   if (isPlayer) return "#4ade80";
   if (!isFloor) return "#374151";
   if (debug && isExit) return "#fde047";
@@ -39,16 +46,23 @@ export default function MapDisplay({ state, debug = false }: Props) {
       const char = isPlayer
         ? "P"
         : !isFloor
-        ? "█"
-        : debug && isExit
-        ? "E"
-        : debug && isFragment
-        ? "F"
-        : debug && isTrap
-        ? "T"
-        : "·";
+          ? "█"
+          : debug && isExit
+            ? "E"
+            : debug && isFragment
+              ? "F"
+              : debug && isTrap
+                ? "T"
+                : "·";
 
-      const color = getCellColor(isPlayer, isFloor, debug, isExit, isFragment, isTrap);
+      const color = getCellColor(
+        isPlayer,
+        isFloor,
+        debug,
+        isExit,
+        isFragment,
+        isTrap,
+      );
 
       cells.push(
         <span
@@ -63,14 +77,14 @@ export default function MapDisplay({ state, debug = false }: Props) {
           }}
         >
           {char}
-        </span>
+        </span>,
       );
     }
 
     rows.push(
       <div key={y} style={{ display: "flex" }}>
         {cells}
-      </div>
+      </div>,
     );
   }
 

@@ -2,14 +2,17 @@
 
 import { useReducer, useEffect, useCallback, memo } from "react";
 import Link from "next/link";
-import { generateGame } from "@/lib/game/mapGen";
-import { gameReducer } from "@/lib/game/gameReducer";
-import MapDisplay from "@/components/minigame/MapDisplay";
-import GameTerminal from "@/components/minigame/GameTerminal";
-import FaultyTerminal from "@/components/reactbits/FaultyTerminal";
-import { Pixelify_Sans } from 'next/font/google'
+import { generateGame } from "@/src/lib/game/mapGen";
+import { gameReducer } from "@/src/lib/game/gameReducer";
+import MapDisplay from "@/src/components/minigame/MapDisplay";
+import GameTerminal from "@/src/components/minigame/GameTerminal";
+import FaultyTerminal from "@/src/components/reactbits/FaultyTerminal";
+import { Pixelify_Sans } from "next/font/google";
 
-const pixelifySans = Pixelify_Sans({ subsets: ['latin'], weight: ['400', '700'] })
+const pixelifySans = Pixelify_Sans({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
 
 const Background = memo(function Background() {
   return (
@@ -56,14 +59,19 @@ export default function Page() {
 
   const handleKey = useCallback(
     (e: KeyboardEvent) => {
-      if (state?.phase === "enterKey" || state?.phase === "dead" || state?.phase === "escaped") return;
+      if (
+        state?.phase === "enterKey" ||
+        state?.phase === "dead" ||
+        state?.phase === "escaped"
+      )
+        return;
       const dir = e.key.toLowerCase();
       if (["w", "a", "s", "d"].includes(dir)) {
         e.preventDefault();
         dispatch({ type: "MOVE", dir: dir as "w" | "a" | "s" | "d" });
       }
     },
-    [state?.phase]
+    [state?.phase],
   );
 
   useEffect(() => {
@@ -84,11 +92,26 @@ export default function Page() {
       <Background />
 
       <div style={{ position: "relative", zIndex: 1, minHeight: "100vh" }}>
-
         {/* Top-left header */}
-        <div style={{ position: "absolute", top: "1rem", left: "1rem", display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+        <div
+          style={{
+            position: "absolute",
+            top: "1rem",
+            left: "1rem",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.25rem",
+          }}
+        >
           <h1
-            style={{ color: "#d1d5db", fontSize: "1.5rem", fontWeight: "bold", letterSpacing: "0.2em", textTransform: "uppercase", margin: 0 }}
+            style={{
+              color: "#d1d5db",
+              fontSize: "1.5rem",
+              fontWeight: "bold",
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+              margin: 0,
+            }}
           >
             Dungeon
           </h1>
@@ -111,18 +134,34 @@ export default function Page() {
         </div>
 
         {/* Centered map */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "100vh",
+          }}
+        >
           <MapDisplay state={state} />
         </div>
 
         {/* Bottom-left terminal */}
-        <div style={{ position: "absolute", bottom: "1rem", left: "1rem", width: "380px", display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+        <div
+          style={{
+            position: "absolute",
+            bottom: "1rem",
+            left: "1rem",
+            width: "380px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.25rem",
+          }}
+        >
           <GameTerminal state={state} dispatch={dispatch} />
           <p style={{ color: "#4b5563", fontSize: "0.75rem", margin: 0 }}>
             W A S D to move · Find fragments · Reach the exit
           </p>
         </div>
-
       </div>
     </div>
   );
