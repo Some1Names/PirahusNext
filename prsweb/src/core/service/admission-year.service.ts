@@ -2,9 +2,12 @@ import { parseSchema } from "@/src/lib/validation";
 import {
   CreateAdmissionYearSchema,
   UpdateAdmissionYearSchema,
-} from "../schema/setting";
-import { CreateAdmissionYear, UpdateAdmissionYear } from "../domain/setting";
-import { ISettingRepository } from "../ports/setting.repository";
+} from "../schema/admission-year";
+import {
+  CreateAdmissionYear,
+  UpdateAdmissionYear,
+} from "../domain/admission-year";
+import { ISettingRepository } from "../ports/admission-year.repository";
 
 export class SettingService {
   constructor(private settingRepository: ISettingRepository) {}

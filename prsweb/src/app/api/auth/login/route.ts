@@ -17,7 +17,7 @@ export async function POST(req: Request) {
       });
     }
 
-    const config = await prisma.systemConfig.findFirst();
+    const config = await prisma.admissionYear.findFirst();
 
     if (!config) {
       return handleError({

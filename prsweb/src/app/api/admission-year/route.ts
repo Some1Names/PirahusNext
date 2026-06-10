@@ -1,10 +1,11 @@
 import { prisma } from "@/src/lib/prisma";
 import { successResponse } from "@/src/lib/api-response";
 import { handleError } from "@/src/lib/handle-error";
+import { NextRequest } from "next/server";
 
 export async function GET() {
   try {
-    const setting = await prisma.systemConfig.findFirst();
+    const setting = await prisma.admissionYear.findFirst();
 
     return successResponse(setting);
   } catch (error) {
@@ -12,7 +13,7 @@ export async function GET() {
   }
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
@@ -25,7 +26,7 @@ export async function POST(req: Request) {
       });
     }
 
-    const existing = await prisma.systemConfig.findFirst();
+    const existing = await prisma.admissionYear.findFirst();
 
     if (existing) {
       return handleError({
@@ -34,7 +35,7 @@ export async function POST(req: Request) {
       });
     }
 
-    const setting = await prisma.systemConfig.create({
+    const setting = await prisma.admissionYear.create({
       data: {
         mentorYear,
         menteeYear,
@@ -47,13 +48,13 @@ export async function POST(req: Request) {
   }
 }
 
-export async function PATCH(req: Request) {
+export async function PATCH(req: NextRequest) {
   try {
     const body = await req.json();
 
     const { mentorYear, menteeYear } = body;
 
-    const setting = await prisma.systemConfig.findFirst();
+    const setting = await prisma.admissionYear.findFirst();
 
     if (!setting) {
       return handleError({
@@ -62,7 +63,7 @@ export async function PATCH(req: Request) {
       });
     }
 
-    const updated = await prisma.systemConfig.update({
+    const updated = await prisma.admissionYear.update({
       where: {
         id: setting.id,
       },

@@ -3,7 +3,7 @@ import {
   IAdmissionYear,
   CreateAdmissionYear,
   UpdateAdmissionYear,
-} from "../domain/setting";
+} from "../domain/admission-year";
 
 export interface ISettingRepository {
   getAdmissionYear(): Promise<ApiResponse<IAdmissionYear>>;

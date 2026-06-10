@@ -1,13 +1,13 @@
 export interface CreateAdmissionYear {
-  mentorYear: number;
-  menteeYear: number;
+  mentorYear: string;
+  menteeYear: string;
 }
 export interface UpdateAdmissionYear {
-  mentorYear: number;
-  menteeYear: number;
+  mentorYear: string;
+  menteeYear: string;
 }
 export interface IAdmissionYear {
   id: string;
-  mentorYear: number;
-  menteeYear: number;
+  mentorYear: string;
+  menteeYear: string;
 }

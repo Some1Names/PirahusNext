@@ -8,7 +8,7 @@ datasource db {
   provider = "postgresql"
 }
 
-model SystemConfig {
+model AdmissionYear {
   id          String @id @default(cuid())
   mentorYear  String
   menteeYear  String
