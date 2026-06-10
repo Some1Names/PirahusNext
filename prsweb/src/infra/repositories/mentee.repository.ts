@@ -13,10 +13,10 @@ export class MenteeRepository implements IMenteeRepository {
     return httpClient.post<IMentee[]>("/api/mentees/batch", data);
   }
   async deleteMentee(id: string): Promise<ApiResponse<IMentee>> {
-    return httpClient.delete<IMentee>("/api/mentees/" + id);
+    return httpClient.delete<IMentee>(`/api/mentees/${id}`);
   }
   async getMenteeById(id: string): Promise<ApiResponse<IMentee>> {
-    return httpClient.get<IMentee>("/api/mentees/" + id);
+    return httpClient.get<IMentee>(`/api/mentees/${id}`);
   }
   async getAllMentees(): Promise<ApiResponse<IMentee[]>> {
     return httpClient.get<IMentee[]>("/api/mentees");

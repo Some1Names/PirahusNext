@@ -14,10 +14,10 @@ export class HintService {
       throw error;
     }
   }
-  async updateHints(mentorId: string, data: IUpdateHints): Promise<IHint[]> {
+  async updateHints(id: string, data: IUpdateHints): Promise<IHint[]> {
     try {
       const parsedData = parseSchema(updateHintsSchema, data);
-      const res = await this.hintRepository.updateHints(mentorId, parsedData);
+      const res = await this.hintRepository.updateHints(id, parsedData);
       return res.data;
     } catch (error) {
       throw error;

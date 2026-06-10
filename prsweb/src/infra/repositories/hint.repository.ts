@@ -8,15 +8,15 @@ export class HintRepository implements IHintRepository {
     return httpClient.post<IHint[]>("/api/hint", data);
   }
   async updateHints(
-    mentorId: string,
+    id: string,
     data: IUpdateHints,
   ): Promise<ApiResponse<IHint[]>> {
-    return httpClient.patch<IHint[]>("/api/hint/update/" + mentorId, data);
+    return httpClient.put<IHint[]>(`/api/hint/${id}`, data);
   }
   async deleteHint(id: string): Promise<ApiResponse<IHint>> {
     return httpClient.delete<IHint>(`/api/hint/${id}`);
   }
   async getHintsByMentorId(mentorId: string): Promise<ApiResponse<IHint[]>> {
-    return httpClient.get<IHint[]>(`/api/hint/${mentorId}`);
+    return httpClient.get<IHint[]>(`/api/hint/mentor/${mentorId}`);
   }
 }

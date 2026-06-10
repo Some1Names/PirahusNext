@@ -9,11 +9,6 @@ export interface IAddHints {
   hints: string[];
 }
 
-export interface IUpdateHintItem {
-  id: string;
-  content: string;
-}
-
 export interface IUpdateHints {
-  hints: IUpdateHintItem[];
+  content: string;
 }

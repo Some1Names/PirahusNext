@@ -13,10 +13,10 @@ export class MentorRepository implements IMentorRepository {
     return httpClient.post<IMentor[]>("/api/mentors/batch", data);
   }
   async deleteMentor(id: string): Promise<ApiResponse<IMentor>> {
-    return httpClient.delete<IMentor>("/api/mentors/" + id);
+    return httpClient.delete<IMentor>(`/api/mentors/${id}`);
   }
   async getMentorById(id: string): Promise<ApiResponse<IMentor>> {
-    return httpClient.get<IMentor>("/api/mentors/" + id);
+    return httpClient.get<IMentor>(`/api/mentors/${id}`);
   }
   async getAllMentors(): Promise<ApiResponse<IMentor[]>> {
     return httpClient.get<IMentor[]>("/api/mentors");
