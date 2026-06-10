@@ -28,4 +28,7 @@ export class MenteeRepository implements IMenteeRepository {
   async getAllMentees(): Promise<ApiResponse<IMentee[]>> {
     return httpClient.get<IMentee[]>("/api/mentees");
   }
+  async getHintsByMentorId(mentorId: string): Promise<ApiResponse<IMentee[]>> {
+    return httpClient.get<IMentee[]>(`/api/mentees/hints/${mentorId}`);
+  }
 }

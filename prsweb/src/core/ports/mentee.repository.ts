@@ -8,4 +8,5 @@ export interface IMenteeRepository {
   deleteMentee(id: string): Promise<ApiResponse<IMentee>>;
   getMenteeById(id: string): Promise<ApiResponse<IMentee>>;
   getAllMentees(): Promise<ApiResponse<IMentee[]>>;
+  getHintsByMentorId(mentorId: string): Promise<ApiResponse<IMentee[]>>;
 }

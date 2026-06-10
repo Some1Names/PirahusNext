@@ -57,4 +57,12 @@ export class MenteeService {
       throw error;
     }
   }
+  async getHintsByMentorId(mentorId: string): Promise<IMentee[]> {
+    try {
+      const mentees = await this.menteeRepository.getHintsByMentorId(mentorId);
+      return mentees.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
