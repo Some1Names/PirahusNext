@@ -1,10 +1,6 @@
 import { ApiResponse } from "../interface/response";
 import httpClient from "@/src/lib/http";
-import {
-  IMentee,
-  ICreateMentee,
-  IUpdateMentee,
-} from "@/src/core/domain/mentee";
+import { IMentee, ICreateMentee } from "@/src/core/domain/mentee";
 import { IMenteeRepository } from "@/src/core/ports/mentee.repository";
 
 export class MenteeRepository implements IMenteeRepository {
@@ -16,9 +12,6 @@ export class MenteeRepository implements IMenteeRepository {
   ): Promise<ApiResponse<IMentee[]>> {
     return httpClient.post<IMentee[]>("/api/mentees/batch", data);
   }
-  async updateMentee(data: IUpdateMentee): Promise<ApiResponse<IMentee>> {
-    return httpClient.put<IMentee>("/api/mentees", data);
-  }
   async deleteMentee(id: string): Promise<ApiResponse<IMentee>> {
     return httpClient.delete<IMentee>("/api/mentees/" + id);
   }
@@ -27,8 +20,5 @@ export class MenteeRepository implements IMenteeRepository {
   }
   async getAllMentees(): Promise<ApiResponse<IMentee[]>> {
     return httpClient.get<IMentee[]>("/api/mentees");
-  }
-  async getHintsByMentorId(mentorId: string): Promise<ApiResponse<IMentee[]>> {
-    return httpClient.get<IMentee[]>(`/api/mentees/hints/${mentorId}`);
   }
 }

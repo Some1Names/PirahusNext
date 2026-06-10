@@ -27,28 +27,6 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function PUT(req: NextRequest) {
-  try {
-    const body = await req.json();
-
-    const mentee = await prisma.mentee.update({
-      where: {
-        id: body.id,
-      },
-      data: {
-        studentId: body.studentId,
-      },
-      include: {
-        mentor: true,
-      },
-    });
-
-    return successResponse(mentee);
-  } catch (error) {
-    return handleError(error);
-  }
-}
-
 export async function GET() {
   try {
     const mentees = await prisma.mentee.findMany({

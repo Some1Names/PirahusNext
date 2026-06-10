@@ -1,7 +1,7 @@
 import { IMenteeRepository } from "../ports/mentee.repository";
-import { IMentee, ICreateMentee, IUpdateMentee } from "../domain/mentee";
+import { IMentee, ICreateMentee } from "../domain/mentee";
 import { parseSchema } from "@/src/lib/validation";
-import { createMenteeSchema, updateMenteeSchema } from "../schema/mentee";
+import { createMenteeSchema } from "../schema/mentee";
 
 export class MenteeService {
   constructor(private readonly menteeRepository: IMenteeRepository) {}
@@ -20,15 +20,6 @@ export class MenteeService {
       const parsedData = data.map((d) => parseSchema(createMenteeSchema, d));
       const mentees = await this.menteeRepository.createManyMentees(parsedData);
       return mentees.data;
-    } catch (error) {
-      throw error;
-    }
-  }
-  async updateMentee(data: IUpdateMentee): Promise<IMentee> {
-    try {
-      const parsedData = parseSchema(updateMenteeSchema, data);
-      const mentee = await this.menteeRepository.updateMentee(parsedData);
-      return mentee.data;
     } catch (error) {
       throw error;
     }
@@ -52,14 +43,6 @@ export class MenteeService {
   async getAllMentees(): Promise<IMentee[]> {
     try {
       const mentees = await this.menteeRepository.getAllMentees();
-      return mentees.data;
-    } catch (error) {
-      throw error;
-    }
-  }
-  async getHintsByMentorId(mentorId: string): Promise<IMentee[]> {
-    try {
-      const mentees = await this.menteeRepository.getHintsByMentorId(mentorId);
       return mentees.data;
     } catch (error) {
       throw error;

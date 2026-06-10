@@ -15,8 +15,3 @@ export interface ICreateMentee {
   studentId: string;
   mentorId: string;
 }
-
-export interface IUpdateMentee {
-  id: string;
-  studentId?: string;
-}
