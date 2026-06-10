@@ -31,7 +31,7 @@ export class MentorRepository implements IMentorRepository {
     return httpClient.get<IMentor[]>("/api/mentors");
   }
   async addHints(data: IAddHints): Promise<ApiResponse<IMentor>> {
-    return httpClient.patch<IMentor>(
+    return httpClient.post<IMentor>(
       "/api/mentors/hint/add/" + data.mentorId,
       data.hints,
     );
