@@ -1,13 +1,13 @@
 import { ApiResponse } from "../interface/response";
 import httpClient from "@/src/lib/http";
-import { ISettingRepository } from "@/src/core/ports/admission-year.repository";
+import { IAdmissionYearRepository } from "@/src/core/ports/admission-year.repository";
 import {
   IAdmissionYear,
   CreateAdmissionYear,
   UpdateAdmissionYear,
 } from "@/src/core/domain/admission-year";
 
-export class SettingRepository implements ISettingRepository {
+export class AdmissionYearRepository implements IAdmissionYearRepository {
   async getAdmissionYear(): Promise<ApiResponse<IAdmissionYear>> {
     return await httpClient.get("/api/admission-year");
   }

@@ -5,7 +5,7 @@ import {
   UpdateAdmissionYear,
 } from "../domain/admission-year";
 
-export interface ISettingRepository {
+export interface IAdmissionYearRepository {
   getAdmissionYear(): Promise<ApiResponse<IAdmissionYear>>;
   createAdmissionYear(
     data: CreateAdmissionYear,

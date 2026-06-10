@@ -7,20 +7,20 @@ import {
   CreateAdmissionYear,
   UpdateAdmissionYear,
 } from "../domain/admission-year";
-import { ISettingRepository } from "../ports/admission-year.repository";
+import { IAdmissionYearRepository } from "../ports/admission-year.repository";
 
-export class SettingService {
-  constructor(private settingRepository: ISettingRepository) {}
+export class AdmissionYearService {
+  constructor(private admissionYearRepository: IAdmissionYearRepository) {}
 
   async createAdmissionYear(data: CreateAdmissionYear) {
     const parsedData = parseSchema(CreateAdmissionYearSchema, data);
-    return await this.settingRepository.createAdmissionYear(parsedData);
+    return await this.admissionYearRepository.createAdmissionYear(parsedData);
   }
   async updateAdmissionYear(data: UpdateAdmissionYear) {
     const parsedData = parseSchema(UpdateAdmissionYearSchema, data);
-    return await this.settingRepository.updateAdmissionYear(parsedData);
+    return await this.admissionYearRepository.updateAdmissionYear(parsedData);
   }
   async getAdmissionYear() {
-    return await this.settingRepository.getAdmissionYear();
+    return await this.admissionYearRepository.getAdmissionYear();
   }
 }
