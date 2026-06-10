@@ -1,5 +1,6 @@
 import { prisma } from "@/src/lib/prisma";
-import { NextResponse } from "next/server";
+import { successResponse } from "@/src/lib/api-response";
+import { handleError } from "@/src/lib/handle-error";
 
 export async function POST(req: Request) {
   try {
@@ -15,45 +16,49 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json(mentor);
+    return successResponse(mentor);
   } catch (error) {
-    console.error("Error creating mentor:", error);
-    return NextResponse.json(
-      { message: "Create mentor failed" },
-      { status: 500 },
-    );
+    return handleError(error);
   }
 }
 
 export async function GET() {
-  const mentors = await prisma.mentor.findMany({
-    include: {
-      hints: true,
-      mentee: true,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  try {
+    const mentors = await prisma.mentor.findMany({
+      include: {
+        hints: true,
+        mentee: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
 
-  return NextResponse.json(mentors);
+    return successResponse(mentors);
+  } catch (error) {
+    return handleError(error);
+  }
 }
 
 export async function PUT(req: Request) {
-  const body = await req.json();
+  try {
+    const body = await req.json();
 
-  const mentor = await prisma.mentor.update({
-    where: {
-      id: body.id,
-    },
-    data: {
-      studentId: body.studentId,
-    },
-    include: {
-      hints: true,
-      mentee: true,
-    },
-  });
+    const mentor = await prisma.mentor.update({
+      where: {
+        id: body.id,
+      },
+      data: {
+        studentId: body.studentId,
+      },
+      include: {
+        hints: true,
+        mentee: true,
+      },
+    });
 
-  return NextResponse.json(mentor);
+    return successResponse(mentor);
+  } catch (error) {
+    return handleError(error);
+  }
 }
