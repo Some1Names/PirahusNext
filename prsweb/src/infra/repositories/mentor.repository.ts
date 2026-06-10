@@ -11,24 +11,24 @@ import { IMentorRepository } from "@/src/core/ports/mentor.repository";
 
 export class MentorRepository implements IMentorRepository {
   async createMentor(data: ICreateMentor): Promise<ApiResponse<IMentor>> {
-    return httpClient.post<IMentor>("/mentors", data);
+    return httpClient.post<IMentor>("/api/mentors", data);
   }
   async createManyMentors(
     data: ICreateMentor[],
   ): Promise<ApiResponse<IMentor[]>> {
-    return httpClient.post<IMentor[]>("/mentors/batch", data);
+    return httpClient.post<IMentor[]>("/api/mentors/batch", data);
   }
   async updateMentor(data: IUpdateMentor): Promise<ApiResponse<IMentor>> {
-    return httpClient.put<IMentor>("/mentors", data);
+    return httpClient.put<IMentor>("/api/mentors", data);
   }
   async deleteMentor(id: string): Promise<ApiResponse<IMentor>> {
-    return httpClient.delete<IMentor>("/mentors/" + id);
+    return httpClient.delete<IMentor>("/api/mentors/" + id);
   }
   async getMentorById(id: string): Promise<ApiResponse<IMentor>> {
-    return httpClient.get<IMentor>("/mentors/" + id);
+    return httpClient.get<IMentor>("/api/mentors/" + id);
   }
   async getAllMentors(): Promise<ApiResponse<IMentor[]>> {
-    return httpClient.get<IMentor[]>("/mentors");
+    return httpClient.get<IMentor[]>("/api/mentors");
   }
   async addHints(data: IAddHints): Promise<ApiResponse<IMentor>> {
     return httpClient.patch<IMentor>(
@@ -38,7 +38,7 @@ export class MentorRepository implements IMentorRepository {
   }
   async updateHints(data: IUpdateHints): Promise<ApiResponse<IMentor>> {
     return httpClient.patch<IMentor>(
-      "/mentors/hint/update/" + data.id,
+      "/api/mentors/hint/update/" + data.id,
       data.hints,
     );
   }
