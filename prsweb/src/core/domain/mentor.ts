@@ -1,10 +1,16 @@
 import { IMentee } from "./mentee";
 
+export interface IHint {
+  id: string;
+  content: string;
+  createdAt: Date;
+}
+
 export interface IMentor {
   id: string;
   studentId: string;
 
-  hints: string[];
+  hints: IHint[];
 
   mentee: IMentee | null;
 

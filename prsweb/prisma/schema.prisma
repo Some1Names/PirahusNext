@@ -35,7 +35,7 @@ model Hint {
   content    String
 
   mentorId   String
-  mentor     Mentor @relation(fields: [mentorId], references: [id])
+  mentor     Mentor @relation(fields: [mentorId], references: [id], onDelete: Cascade)
 
   createdAt  DateTime @default(now())
 }
