@@ -26,6 +26,17 @@ export class MentorService {
       throw error;
     }
   }
+
+  async createManyMentors(data: ICreateMentor[]): Promise<IMentor[]> {
+    try {
+      const parsedData = data.map((d) => parseSchema(createMentorSchema, d));
+      const mentors = await this.mentorRepository.createManyMentors(parsedData);
+      return mentors.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async updateMentor(data: IUpdateMentor): Promise<IMentor> {
     try {
       const parsedData = parseSchema(updateMentorSchema, data);

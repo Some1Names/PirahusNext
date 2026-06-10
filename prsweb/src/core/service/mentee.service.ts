@@ -15,6 +15,15 @@ export class MenteeService {
       throw error;
     }
   }
+  async createManyMentees(data: ICreateMentee[]): Promise<IMentee[]> {
+    try {
+      const parsedData = data.map((d) => parseSchema(createMenteeSchema, d));
+      const mentees = await this.menteeRepository.createManyMentees(parsedData);
+      return mentees.data;
+    } catch (error) {
+      throw error;
+    }
+  }
   async updateMentee(data: IUpdateMentee): Promise<IMentee> {
     try {
       const parsedData = parseSchema(updateMenteeSchema, data);

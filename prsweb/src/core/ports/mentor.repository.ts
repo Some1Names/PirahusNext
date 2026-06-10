@@ -9,6 +9,7 @@ import {
 
 export interface IMentorRepository {
   createMentor(data: ICreateMentor): Promise<ApiResponse<IMentor>>;
+  createManyMentors(data: ICreateMentor[]): Promise<ApiResponse<IMentor[]>>;
   updateMentor(data: IUpdateMentor): Promise<ApiResponse<IMentor>>;
   deleteMentor(id: string): Promise<ApiResponse<IMentor>>;
   getMentorById(id: string): Promise<ApiResponse<IMentor>>;

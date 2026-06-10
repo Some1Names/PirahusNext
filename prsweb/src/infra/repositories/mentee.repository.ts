@@ -11,6 +11,11 @@ export class MenteeRepository implements IMenteeRepository {
   async createMentee(data: ICreateMentee): Promise<ApiResponse<IMentee>> {
     return httpClient.post<IMentee>("/mentees", data);
   }
+  async createManyMentees(
+    data: ICreateMentee[],
+  ): Promise<ApiResponse<IMentee[]>> {
+    return httpClient.post<IMentee[]>("/mentees/batch", data);
+  }
   async updateMentee(data: IUpdateMentee): Promise<ApiResponse<IMentee>> {
     return httpClient.put<IMentee>("/mentees", data);
   }

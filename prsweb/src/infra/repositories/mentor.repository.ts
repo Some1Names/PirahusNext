@@ -13,6 +13,11 @@ export class MentorRepository implements IMentorRepository {
   async createMentor(data: ICreateMentor): Promise<ApiResponse<IMentor>> {
     return httpClient.post<IMentor>("/mentors", data);
   }
+  async createManyMentors(
+    data: ICreateMentor[],
+  ): Promise<ApiResponse<IMentor[]>> {
+    return httpClient.post<IMentor[]>("/mentors/batch", data);
+  }
   async updateMentor(data: IUpdateMentor): Promise<ApiResponse<IMentor>> {
     return httpClient.put<IMentor>("/mentors", data);
   }
