@@ -32,13 +32,13 @@ export class MentorRepository implements IMentorRepository {
   }
   async addHints(data: IAddHints): Promise<ApiResponse<IMentor>> {
     return httpClient.patch<IMentor>(
-      "/mentors/hint/add/" + data.id,
+      "/api/mentors/hint/add/" + data.mentorId,
       data.hints,
     );
   }
   async updateHints(data: IUpdateHints): Promise<ApiResponse<IMentor>> {
     return httpClient.patch<IMentor>(
-      "/api/mentors/hint/update/" + data.id,
+      "/api/mentors/hint/update/" + data.mentorId,
       data.hints,
     );
   }

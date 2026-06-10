@@ -28,11 +28,11 @@ export interface IUpdateMentor {
 }
 
 export interface IAddHints {
-  id: string;
   hints: string[];
+  mentorId: string;
 }
 
 export interface IUpdateHints {
-  id: string;
   hints: string[];
+  mentorId: string;
 }
