@@ -9,16 +9,16 @@ import {
 
 export class SettingRepository implements ISettingRepository {
   async getAdmissionYear(): Promise<ApiResponse<IAdmissionYear>> {
-    return await httpClient.get("/admission-year");
+    return await httpClient.get("/api/admission-year");
   }
   async createAdmissionYear(
     data: CreateAdmissionYear,
   ): Promise<ApiResponse<IAdmissionYear>> {
-    return await httpClient.post("/admission-year", data);
+    return await httpClient.post("/api/admission-year", data);
   }
   async updateAdmissionYear(
     data: UpdateAdmissionYear,
   ): Promise<ApiResponse<IAdmissionYear>> {
-    return await httpClient.put("/admission-year", data);
+    return await httpClient.put("/api/admission-year", data);
   }
 }
