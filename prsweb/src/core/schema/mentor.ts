@@ -6,18 +6,6 @@ export const createMentorSchema = z.object({
 
 export type CreateMentorInput = z.infer<typeof createMentorSchema>;
 
-const hintSchema = z.object({
-  id: z.string().min(1),
-  content: z.string().min(1),
-});
-
-export const updateMentorSchema = z.object({
-  id: z.string().min(1),
-  hints: z.array(hintSchema).min(1),
-});
-
-export type UpdateMentorInput = z.infer<typeof updateMentorSchema>;
-
 export const deleteMentorSchema = z.object({
   id: z.string().min(1),
 });
@@ -33,15 +21,3 @@ export type GetMentorByIdInput = z.infer<typeof getMentorByIdSchema>;
 export const getAllMentorsSchema = z.object({});
 
 export type GetAllMentorsInput = z.infer<typeof getAllMentorsSchema>;
-
-export const addHintsSchema = z.object({
-  hints: z.array(z.string()).min(1),
-});
-
-export type AddHintsInput = z.infer<typeof addHintsSchema>;
-
-export const updateHintsSchema = z.object({
-  hints: z.array(hintSchema).min(1),
-});
-
-export type UpdateHintsInput = z.infer<typeof updateHintsSchema>;
