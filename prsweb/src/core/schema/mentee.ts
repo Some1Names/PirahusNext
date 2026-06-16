@@ -7,13 +7,6 @@ export const createMenteeSchema = z.object({
 
 export type CreateMenteeInput = z.infer<typeof createMenteeSchema>;
 
-export const updateMenteeSchema = z.object({
-  id: z.string().min(1),
-  studentId: z.string().min(1),
-});
-
-export type UpdateMenteeInput = z.infer<typeof updateMenteeSchema>;
-
 export const deleteMenteeSchema = z.object({
   id: z.string().min(1),
 });

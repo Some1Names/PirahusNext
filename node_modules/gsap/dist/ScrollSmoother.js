@@ -21,10 +21,10 @@
   }
 
   /*!
-   * ScrollSmoother 3.13.0
+   * ScrollSmoother 3.15.0
    * https://gsap.com
    *
-   * @license Copyright 2008-2025, GreenSock. All rights reserved.
+   * @license Copyright 2008-2026, GreenSock. All rights reserved.
    * Subject to the terms at https://gsap.com/standard-license
    * @author: Jack Doyle, jack@greensock.com
   */
@@ -762,6 +762,7 @@
         },
         onRefresh: function onRefresh(self) {
           self.animation.invalidate();
+          scroll.y = 0;
           self.setPositions(self.start, refreshHeight() / speed);
           recordedRefreshScrub || killScrub(self);
           scroll.y = -scrollFunc() * speed;
@@ -952,7 +953,7 @@
 
     return ScrollSmoother;
   }();
-  ScrollSmoother.version = "3.13.0";
+  ScrollSmoother.version = "3.15.0";
 
   ScrollSmoother.create = function (vars) {
     return _mainInstance && vars && _mainInstance.content() === _toArray(vars.content)[0] ? _mainInstance : new ScrollSmoother(vars);

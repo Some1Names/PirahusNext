@@ -19,10 +19,10 @@
   }
 
   /*!
-   * GSAP 3.13.0
+   * GSAP 3.15.0
    * https://gsap.com
    *
-   * @license Copyright 2008-2025, GreenSock. All rights reserved.
+   * @license Copyright 2008-2026, GreenSock. All rights reserved.
    * Subject to the terms at https://gsap.com/standard-license
    * @author: Jack Doyle, jack@greensock.com
   */
@@ -76,6 +76,8 @@
   },
       _isTypedArray = typeof ArrayBuffer === "function" && ArrayBuffer.isView || function () {},
       _isArray = Array.isArray,
+      _randomExp = /random\([^)]+\)/g,
+      _commaDelimExp = /,\s*/g,
       _strictNumExp = /(?:-?\.?\d|\.)+/gi,
       _numExp = /[-+=.]*\d+[.e\-+]*\d*[e\-+]*\d*/g,
       _numWithUnitExp = /[-+=.]*\d+[.e-]*\d*[a-z%]*/g,
@@ -834,23 +836,12 @@
       return min + (value > range ? total - value : value);
     });
   },
-      _replaceRandom = function _replaceRandom(value) {
-    var prev = 0,
-        s = "",
-        i,
-        nums,
-        end,
-        isArray;
-
-    while (~(i = value.indexOf("random(", prev))) {
-      end = value.indexOf(")", i);
-      isArray = value.charAt(i + 7) === "[";
-      nums = value.substr(i + 7, end - i - 7).match(isArray ? _delimitedValueExp : _strictNumExp);
-      s += value.substr(prev, i - prev) + random(isArray ? nums : +nums[0], isArray ? 0 : +nums[1], +nums[2] || 1e-5);
-      prev = end + 1;
-    }
-
-    return s + value.substr(prev, value.length - prev);
+      _replaceRandom = function _replaceRandom(s) {
+    return s.replace(_randomExp, function (match) {
+      var arIndex = match.indexOf("[") + 1,
+          values = match.substring(arIndex || 7, arIndex ? match.indexOf("]") : match.length - 1).split(_commaDelimExp);
+      return random(arIndex ? values : +values[0], arIndex ? 0 : +values[1], +values[2] || 1e-5);
+    });
   },
       mapRange = function mapRange(inMin, inMax, outMin, outMax, value) {
     var inRange = inMax - inMin,
@@ -1366,27 +1357,6 @@
       return 1 - ease(1 - p);
     };
   },
-      _propagateYoyoEase = function _propagateYoyoEase(timeline, isYoyo) {
-    var child = timeline._first,
-        ease;
-
-    while (child) {
-      if (child instanceof Timeline) {
-        _propagateYoyoEase(child, isYoyo);
-      } else if (child.vars.yoyoEase && (!child._yoyo || !child._repeat) && child._yoyo !== isYoyo) {
-        if (child.timeline) {
-          _propagateYoyoEase(child.timeline, isYoyo);
-        } else {
-          ease = child._ease;
-          child._ease = child._yEase;
-          child._yEase = ease;
-          child._yoyo = isYoyo;
-        }
-      }
-
-      child = child._next;
-    }
-  },
       _parseEase = function _parseEase(ease, defaultEase) {
     return !ease ? defaultEase : (_isFunction(ease) ? ease : _easeMap[ease] || _configEaseFromString(ease)) || defaultEase;
   },
@@ -1615,7 +1585,7 @@
         }
       }
 
-      if (this._tTime !== _totalTime || !this._dur && !suppressEvents || this._initted && Math.abs(this._zTime) === _tinyNum || !_totalTime && !this._initted && (this.add || this._ptLookup)) {
+      if (this._tTime !== _totalTime || !this._dur && !suppressEvents || this._initted && Math.abs(this._zTime) === _tinyNum || !this._initted && this._dur && _totalTime || !_totalTime && !this._initted && (this.add || this._ptLookup)) {
         this._ts || (this._pTime = _totalTime);
 
         _lazySafeRender(this, _totalTime, suppressEvents);
@@ -1685,9 +1655,9 @@
 
     _proto.startTime = function startTime(value) {
       if (arguments.length) {
-        this._start = value;
+        this._start = _roundPrecise(value);
         var parent = this.parent || this._dp;
-        parent && (parent._sort || !this.parent) && _addToTimeline(parent, this, value - this._delay);
+        parent && (parent._sort || !this.parent) && _addToTimeline(parent, this, this._start - this._delay);
         return this;
       }
 
@@ -1834,12 +1804,14 @@
     };
 
     _proto.then = function then(onFulfilled) {
-      var self = this;
+      var self = this,
+          prevProm = self._prom;
       return new Promise(function (resolve) {
         var f = _isFunction(onFulfilled) ? onFulfilled : _passThrough,
             _resolve = function _resolve() {
           var _then = self.then;
           self.then = null;
+          prevProm && prevProm();
           _isFunction(f) && (f = f(self)) && (f.then || f === self) && (self.then = _then);
           resolve(f);
           self.then = _then;
@@ -2036,7 +2008,11 @@
             this.render(prevTime || (isYoyo ? 0 : _roundPrecise(iteration * cycleDuration)), suppressEvents, !dur)._lock = 0;
             this._tTime = tTime;
             !suppressEvents && this.parent && _callback(this, "onRepeat");
-            this.vars.repeatRefresh && !isYoyo && (this.invalidate()._lock = 1);
+
+            if (this.vars.repeatRefresh && !isYoyo) {
+              this.invalidate()._lock = 1;
+              prevIteration = iteration;
+            }
 
             if (prevTime && prevTime !== this._time || prevPaused !== !this._ts || this.vars.onRepeat && !this.parent && !this._act) {
               return this;
@@ -2057,8 +2033,6 @@
             if (!this._ts && !prevPaused) {
               return this;
             }
-
-            _propagateYoyoEase(this, isYoyo);
           }
         }
 
@@ -2072,7 +2046,7 @@
 
         this._tTime = tTime;
         this._time = time;
-        this._act = !timeScale;
+        this._act = !!timeScale;
 
         if (!this._initted) {
           this._onUpdate = this.vars.onUpdate;
@@ -2081,7 +2055,7 @@
           prevTime = 0;
         }
 
-        if (!prevTime && tTime && !suppressEvents && !prevIteration) {
+        if (!prevTime && tTime && dur && !suppressEvents && !prevIteration) {
           _callback(this, "onStart");
 
           if (this._tTime !== tTime) {
@@ -2410,6 +2384,7 @@
       var child = this._first,
           labels = this.labels,
           p;
+      amount = _roundPrecise(amount);
 
       while (child) {
         if (child._start >= ignoreBeforeTime) {
@@ -2494,7 +2469,7 @@
             max -= start;
 
             if (!parent && !self._dp || parent && parent.smoothChildTiming) {
-              self._start += start / self._ts;
+              self._start += _roundPrecise(start / self._ts);
               self._time -= start;
               self._tTime -= start;
             }
@@ -2694,6 +2669,7 @@
         fullTargets = parent && parent.data === "nested" ? parent.vars.targets : targets,
         autoOverwrite = tween._overwrite === "auto" && !_suppressOverwrites,
         tl = tween.timeline,
+        reverseEase = vars.easeReverse || yoyoEase,
         cleanVars,
         i,
         p,
@@ -2709,15 +2685,9 @@
         overwritten;
     tl && (!keyframes || !ease) && (ease = "none");
     tween._ease = _parseEase(ease, _defaults.ease);
-    tween._yEase = yoyoEase ? _invertEase(_parseEase(yoyoEase === true ? ease : yoyoEase, _defaults.ease)) : 0;
-
-    if (yoyoEase && tween._yoyo && !tween._repeat) {
-      yoyoEase = tween._yEase;
-      tween._yEase = tween._ease;
-      tween._ease = yoyoEase;
-    }
-
+    tween._rEase = reverseEase && (_parseEase(reverseEase) || tween._ease);
     tween._from = !tl && !!vars.runBackwards;
+    if (tween._from) tween.ratio = 1;
 
     if (!tl || keyframes && !vars.stagger) {
       harness = targets[0] ? _getCache(targets[0]).harness : 0;
@@ -2865,7 +2835,7 @@
           _initTween(tween, time);
 
           _forceAllPropTweens = 0;
-          return skipRecursion ? _warn(property + " not eligible for reset") : 1;
+          return skipRecursion ? _warn(property + " not eligible for reset. Try splitting into individual properties") : 1;
         }
 
         ptCache.push(pt);
@@ -2938,7 +2908,7 @@
       _parseFuncOrString = function _parseFuncOrString(value, tween, i, target, targets) {
     return _isFunction(value) ? value.call(tween, i, target, targets) : _isString(value) && ~value.indexOf("random(") ? _replaceRandom(value) : value;
   },
-      _staggerTweenProps = _callbackNames + "repeat,repeatDelay,yoyo,repeatRefresh,yoyoEase,autoRevert",
+      _staggerTweenProps = _callbackNames + "repeat,repeatDelay,yoyo,repeatRefresh,yoyoEase,easeReverse,autoRevert",
       _staggerPropsToSkip = {};
 
   _forEachName(_staggerTweenProps + ",id,stagger,delay,duration,paused,scrollTrigger", function (name) {
@@ -2967,7 +2937,6 @@
           keyframes = _this3$vars.keyframes,
           defaults = _this3$vars.defaults,
           scrollTrigger = _this3$vars.scrollTrigger,
-          yoyoEase = _this3$vars.yoyoEase,
           parent = vars.parent || _globalTimeline,
           parsedTargets = (_isArray(targets) || _isTypedArray(targets) ? _isNumber(targets[0]) : "length" in vars) ? [targets] : toArray(targets),
           tl,
@@ -2984,6 +2953,7 @@
 
       if (keyframes || stagger || _isFuncOrString(duration) || _isFuncOrString(delay)) {
         vars = _this3.vars;
+        var easeReverse = vars.easeReverse || vars.yoyoEase;
         tl = _this3.timeline = new Timeline({
           data: "nested",
           defaults: defaults || {},
@@ -3009,7 +2979,7 @@
           for (i = 0; i < l; i++) {
             copy = _copyExcluding(vars, _staggerPropsToSkip);
             copy.stagger = 0;
-            yoyoEase && (copy.yoyoEase = yoyoEase);
+            easeReverse && (copy.easeReverse = easeReverse);
             staggerVarsToMerge && _merge(copy, staggerVarsToMerge);
             curTarget = parsedTargets[i];
             copy.duration = +_parseFuncOrString(duration, _assertThisInitialized(_this3), i, curTarget, parsedTargets);
@@ -3116,8 +3086,7 @@
           prevIteration,
           isYoyo,
           ratio,
-          timeline,
-          yoyoEase;
+          timeline;
 
       if (!dur) {
         _renderZeroDurationTween(this, totalTime, suppressEvents, force);
@@ -3150,12 +3119,7 @@
           }
 
           isYoyo = this._yoyo && iteration & 1;
-
-          if (isYoyo) {
-            yoyoEase = this._yEase;
-            time = dur - time;
-          }
-
+          if (isYoyo) time = dur - time;
           prevIteration = _animationCycle(this._tTime, cycleDuration);
 
           if (time === prevTime && !force && this._initted && iteration === prevIteration) {
@@ -3164,8 +3128,6 @@
           }
 
           if (iteration !== prevIteration) {
-            timeline && this._yEase && _propagateYoyoEase(timeline, isYoyo);
-
             if (this.vars.repeatRefresh && !isYoyo && !this._lock && time !== cycleDuration && this._initted) {
               this._lock = force = 1;
               this.render(_roundPrecise(cycleDuration * iteration), true).invalidate()._lock = 0;
@@ -3188,18 +3150,32 @@
           }
         }
 
+        if (this._rEase) {
+          var inv = time < prevTime;
+
+          if (inv !== this._inv) {
+            var segDur = inv ? prevTime : dur - prevTime;
+            this._inv = inv;
+            if (this._from) this.ratio = 1 - this.ratio;
+            this._invRatio = this.ratio;
+            this._invTime = prevTime;
+            this._invRecip = segDur ? (inv ? -1 : 1) / segDur : 0;
+            this._invScale = inv ? -this.ratio : 1 - this.ratio;
+            this._invEase = inv ? this._rEase : this._ease;
+          }
+
+          this.ratio = ratio = this._invRatio + this._invScale * this._invEase((time - this._invTime) * this._invRecip);
+        } else {
+          this.ratio = ratio = this._ease(time / dur);
+        }
+
+        if (this._from) this.ratio = ratio = 1 - ratio;
         this._tTime = tTime;
         this._time = time;
 
         if (!this._act && this._ts) {
           this._act = 1;
           this._lazy = 0;
-        }
-
-        this.ratio = ratio = (yoyoEase || this._ease)(time / dur);
-
-        if (this._from) {
-          this.ratio = ratio = 1 - ratio;
         }
 
         if (!prevTime && tTime && !suppressEvents && !prevIteration) {
@@ -3560,7 +3536,7 @@
     return PropTween;
   }();
 
-  _forEachName(_callbackNames + "parent,duration,ease,delay,overwrite,runBackwards,startAt,yoyo,immediateRender,repeat,repeatDelay,data,paused,reversed,lazy,callbackScope,stringFilter,id,yoyoEase,stagger,inherit,repeatRefresh,keyframes,autoRevert,scrollTrigger", function (name) {
+  _forEachName(_callbackNames + "parent,duration,ease,delay,overwrite,runBackwards,startAt,yoyo,immediateRender,repeat,repeatDelay,data,paused,reversed,lazy,callbackScope,stringFilter,id,yoyoEase,stagger,inherit,repeatRefresh,keyframes,autoRevert,scrollTrigger,easeReverse", function (name) {
     return _reservedProps[name] = 1;
   });
 
@@ -4152,7 +4128,7 @@
       }
     }
   }, _buildModifierPlugin("roundProps", _roundModifier), _buildModifierPlugin("modifiers"), _buildModifierPlugin("snap", snap)) || _gsap;
-  Tween.version = Timeline.version = gsap.version = "3.13.0";
+  Tween.version = Timeline.version = gsap.version = "3.15.0";
   _coreReady = 1;
   _windowExists() && _wake();
   var Power0 = _easeMap.Power0,
@@ -4206,6 +4182,9 @@
   },
       _renderCSSPropWithBeginning = function _renderCSSPropWithBeginning(ratio, data) {
     return data.set(data.t, data.p, ratio ? Math.round((data.s + data.c * ratio) * 10000) / 10000 + data.u : data.b, data);
+  },
+      _renderCSSPropWithBeginningAndEnd = function _renderCSSPropWithBeginningAndEnd(ratio, data) {
+    return data.set(data.t, data.p, ratio === 1 ? data.e : ratio ? Math.round((data.s + data.c * ratio) * 10000) / 10000 + data.u : data.b, data);
   },
       _renderRoundedCSSProp = function _renderRoundedCSSProp(ratio, data) {
     var value = data.s + data.c * ratio;
@@ -5375,7 +5354,8 @@
           cache,
           smooth,
           hasPriority,
-          inlineProps;
+          inlineProps,
+          finalTransformValue;
       _pluginInitted || _initCore();
       this.styles = this.styles || _getStyleSaver(target);
       inlineProps = this.styles.props;
@@ -5414,9 +5394,9 @@
           if (!_colorExp.test(startValue)) {
             startUnit = getUnit(startValue);
             endUnit = getUnit(endValue);
+            endUnit ? startUnit !== endUnit && (startValue = _convertToUnit(target, p, startValue, endUnit) + endUnit) : startUnit && (endValue += startUnit);
           }
 
-          endUnit ? startUnit !== endUnit && (startValue = _convertToUnit(target, p, startValue, endUnit) + endUnit) : startUnit && (endValue += startUnit);
           this.add(style, "setProperty", startValue, endValue, index, targets, 0, 0, p);
           props.push(p);
           inlineProps.push(p, 0, style[p]);
@@ -5456,9 +5436,18 @@
 
           if (isTransformRelated) {
             this.styles.save(p);
+            finalTransformValue = endValue;
 
             if (type === "string" && endValue.substring(0, 6) === "var(--") {
               endValue = _getComputedProperty(target, endValue.substring(4, endValue.indexOf(")")));
+
+              if (endValue.substring(0, 5) === "calc(") {
+                var origPerspective = target.style.perspective;
+                target.style.perspective = endValue;
+                endValue = _getComputedProperty(target, "perspective");
+                origPerspective ? target.style.perspective = origPerspective : _removeProperty(target, "perspective");
+              }
+
               endNum = parseFloat(endValue);
             }
 
@@ -5521,7 +5510,11 @@
             this._pt = new PropTween(this._pt, isTransformRelated ? cache : style, p, startNum, (relative ? _parseRelative(startNum, relative + endNum) : endNum) - startNum, !isTransformRelated && (endUnit === "px" || p === "zIndex") && vars.autoRound !== false ? _renderRoundedCSSProp : _renderCSSProp);
             this._pt.u = endUnit || 0;
 
-            if (startUnit !== endUnit && endUnit !== "%") {
+            if (isTransformRelated && finalTransformValue !== endValue) {
+              this._pt.b = startValue;
+              this._pt.e = finalTransformValue;
+              this._pt.r = _renderCSSPropWithBeginningAndEnd;
+            } else if (startUnit !== endUnit && endUnit !== "%") {
               this._pt.b = startValue;
               this._pt.r = _renderCSSPropWithBeginning;
             }

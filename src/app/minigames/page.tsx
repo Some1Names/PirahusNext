@@ -11,6 +11,9 @@ function Lobby() {
       <Link href="/minigames/mysterybox">
         <button>mystery box</button>
       </Link>
+      <Link href="/minigames/sudoku">
+        <button>sudoku</button>
+      </Link>
     </div>
   )
 }

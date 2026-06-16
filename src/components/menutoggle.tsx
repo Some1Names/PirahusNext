@@ -11,7 +11,7 @@ const MenuToggle = ({ isOpen, toggle }: MenuToggleProps) => {
         <button
             onClick={toggle}
             className={`
-        fixed top-8 right-8 z-2000 
+        top-8 right-8 z-2000 
         flex items-center justify-center 
         w-14 h-14 
         transition-all duration-500 ease-in-out
