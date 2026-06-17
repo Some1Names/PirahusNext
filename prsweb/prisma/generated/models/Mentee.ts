@@ -27,6 +27,7 @@ export type AggregateMentee = {
 export type MenteeMinAggregateOutputType = {
   id: string | null
   studentId: string | null
+  password: string | null
   mentorId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -35,6 +36,7 @@ export type MenteeMinAggregateOutputType = {
 export type MenteeMaxAggregateOutputType = {
   id: string | null
   studentId: string | null
+  password: string | null
   mentorId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -43,6 +45,7 @@ export type MenteeMaxAggregateOutputType = {
 export type MenteeCountAggregateOutputType = {
   id: number
   studentId: number
+  password: number
   mentorId: number
   createdAt: number
   updatedAt: number
@@ -53,6 +56,7 @@ export type MenteeCountAggregateOutputType = {
 export type MenteeMinAggregateInputType = {
   id?: true
   studentId?: true
+  password?: true
   mentorId?: true
   createdAt?: true
   updatedAt?: true
@@ -61,6 +65,7 @@ export type MenteeMinAggregateInputType = {
 export type MenteeMaxAggregateInputType = {
   id?: true
   studentId?: true
+  password?: true
   mentorId?: true
   createdAt?: true
   updatedAt?: true
@@ -69,6 +74,7 @@ export type MenteeMaxAggregateInputType = {
 export type MenteeCountAggregateInputType = {
   id?: true
   studentId?: true
+  password?: true
   mentorId?: true
   createdAt?: true
   updatedAt?: true
@@ -150,6 +156,7 @@ export type MenteeGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 export type MenteeGroupByOutputType = {
   id: string
   studentId: string
+  password: string | null
   mentorId: string
   createdAt: Date
   updatedAt: Date
@@ -179,6 +186,7 @@ export type MenteeWhereInput = {
   NOT?: Prisma.MenteeWhereInput | Prisma.MenteeWhereInput[]
   id?: Prisma.StringFilter<"Mentee"> | string
   studentId?: Prisma.StringFilter<"Mentee"> | string
+  password?: Prisma.StringNullableFilter<"Mentee"> | string | null
   mentorId?: Prisma.StringFilter<"Mentee"> | string
   createdAt?: Prisma.DateTimeFilter<"Mentee"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Mentee"> | Date | string
@@ -188,6 +196,7 @@ export type MenteeWhereInput = {
 export type MenteeOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
+  password?: Prisma.SortOrderInput | Prisma.SortOrder
   mentorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -201,6 +210,7 @@ export type MenteeWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.MenteeWhereInput | Prisma.MenteeWhereInput[]
   OR?: Prisma.MenteeWhereInput[]
   NOT?: Prisma.MenteeWhereInput | Prisma.MenteeWhereInput[]
+  password?: Prisma.StringNullableFilter<"Mentee"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Mentee"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Mentee"> | Date | string
   mentor?: Prisma.XOR<Prisma.MentorScalarRelationFilter, Prisma.MentorWhereInput>
@@ -209,6 +219,7 @@ export type MenteeWhereUniqueInput = Prisma.AtLeast<{
 export type MenteeOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
+  password?: Prisma.SortOrderInput | Prisma.SortOrder
   mentorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -223,6 +234,7 @@ export type MenteeScalarWhereWithAggregatesInput = {
   NOT?: Prisma.MenteeScalarWhereWithAggregatesInput | Prisma.MenteeScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Mentee"> | string
   studentId?: Prisma.StringWithAggregatesFilter<"Mentee"> | string
+  password?: Prisma.StringNullableWithAggregatesFilter<"Mentee"> | string | null
   mentorId?: Prisma.StringWithAggregatesFilter<"Mentee"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Mentee"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Mentee"> | Date | string
@@ -231,6 +243,7 @@ export type MenteeScalarWhereWithAggregatesInput = {
 export type MenteeCreateInput = {
   id?: string
   studentId: string
+  password?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   mentor: Prisma.MentorCreateNestedOneWithoutMenteeInput
@@ -239,6 +252,7 @@ export type MenteeCreateInput = {
 export type MenteeUncheckedCreateInput = {
   id?: string
   studentId: string
+  password?: string | null
   mentorId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -247,6 +261,7 @@ export type MenteeUncheckedCreateInput = {
 export type MenteeUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mentor?: Prisma.MentorUpdateOneRequiredWithoutMenteeNestedInput
@@ -255,6 +270,7 @@ export type MenteeUpdateInput = {
 export type MenteeUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mentorId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -263,6 +279,7 @@ export type MenteeUncheckedUpdateInput = {
 export type MenteeCreateManyInput = {
   id?: string
   studentId: string
+  password?: string | null
   mentorId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -271,6 +288,7 @@ export type MenteeCreateManyInput = {
 export type MenteeUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -278,6 +296,7 @@ export type MenteeUpdateManyMutationInput = {
 export type MenteeUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mentorId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -291,6 +310,7 @@ export type MenteeNullableScalarRelationFilter = {
 export type MenteeCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
+  password?: Prisma.SortOrder
   mentorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -299,6 +319,7 @@ export type MenteeCountOrderByAggregateInput = {
 export type MenteeMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
+  password?: Prisma.SortOrder
   mentorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -307,6 +328,7 @@ export type MenteeMaxOrderByAggregateInput = {
 export type MenteeMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
+  password?: Prisma.SortOrder
   mentorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -347,6 +369,7 @@ export type MenteeUncheckedUpdateOneWithoutMentorNestedInput = {
 export type MenteeCreateWithoutMentorInput = {
   id?: string
   studentId: string
+  password?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -354,6 +377,7 @@ export type MenteeCreateWithoutMentorInput = {
 export type MenteeUncheckedCreateWithoutMentorInput = {
   id?: string
   studentId: string
+  password?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -377,6 +401,7 @@ export type MenteeUpdateToOneWithWhereWithoutMentorInput = {
 export type MenteeUpdateWithoutMentorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -384,6 +409,7 @@ export type MenteeUpdateWithoutMentorInput = {
 export type MenteeUncheckedUpdateWithoutMentorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -393,6 +419,7 @@ export type MenteeUncheckedUpdateWithoutMentorInput = {
 export type MenteeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   studentId?: boolean
+  password?: boolean
   mentorId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -402,6 +429,7 @@ export type MenteeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 export type MenteeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   studentId?: boolean
+  password?: boolean
   mentorId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -411,6 +439,7 @@ export type MenteeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
 export type MenteeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   studentId?: boolean
+  password?: boolean
   mentorId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -420,12 +449,13 @@ export type MenteeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
 export type MenteeSelectScalar = {
   id?: boolean
   studentId?: boolean
+  password?: boolean
   mentorId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type MenteeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "mentorId" | "createdAt" | "updatedAt", ExtArgs["result"]["mentee"]>
+export type MenteeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "password" | "mentorId" | "createdAt" | "updatedAt", ExtArgs["result"]["mentee"]>
 export type MenteeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   mentor?: boolean | Prisma.MentorDefaultArgs<ExtArgs>
 }
@@ -444,6 +474,7 @@ export type $MenteePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     studentId: string
+    password: string | null
     mentorId: string
     createdAt: Date
     updatedAt: Date
@@ -873,6 +904,7 @@ export interface Prisma__MenteeClient<T, Null = never, ExtArgs extends runtime.T
 export interface MenteeFieldRefs {
   readonly id: Prisma.FieldRef<"Mentee", 'String'>
   readonly studentId: Prisma.FieldRef<"Mentee", 'String'>
+  readonly password: Prisma.FieldRef<"Mentee", 'String'>
   readonly mentorId: Prisma.FieldRef<"Mentee", 'String'>
   readonly createdAt: Prisma.FieldRef<"Mentee", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Mentee", 'DateTime'>

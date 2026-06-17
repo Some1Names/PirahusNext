@@ -17,6 +17,7 @@ model AdmissionYear {
 model Mentor {
   id         String @id @default(cuid())
   studentId  String @unique
+  password   String?
   hints      Hint[]
 
   mentee     Mentee?
@@ -28,6 +29,7 @@ model Mentor {
 model Mentee {
   id         String @id @default(cuid())
   studentId  String @unique
+  password   String?
 
   mentorId   String @unique
   mentor     Mentor @relation(fields: [mentorId], references: [id])

@@ -754,6 +754,7 @@ export type AdmissionYearScalarFieldEnum = (typeof AdmissionYearScalarFieldEnum)
 export const MentorScalarFieldEnum = {
   id: 'id',
   studentId: 'studentId',
+  password: 'password',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -764,6 +765,7 @@ export type MentorScalarFieldEnum = (typeof MentorScalarFieldEnum)[keyof typeof 
 export const MenteeScalarFieldEnum = {
   id: 'id',
   studentId: 'studentId',
+  password: 'password',
   mentorId: 'mentorId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -796,6 +798,14 @@ export const QueryMode = {
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
 
