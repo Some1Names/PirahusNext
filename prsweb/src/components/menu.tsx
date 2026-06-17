@@ -8,7 +8,7 @@ function Menu() {
   const [hovered, setHovered] = useState<number | null>(null);
 
   const links = [
-    { name: "HOME", href: "/home" },
+    { name: "HOME", href: "/" },
     { name: "MINIGAMES", href: "/minigames" },
     { name: "ARCHIVE", href: "/archive" },
   ];

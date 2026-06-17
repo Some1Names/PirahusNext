@@ -2,17 +2,18 @@
 
 import React, { useEffect, useState } from "react";
 import Menu from "../components/menu";
-import MenuToggle from "@/src/components/menutoggle";
-import ScrollHero from "@/src/components/zoomscroll";
-import Loader from "@/src/components/loader";
+import MenuToggle from "../components/menutoggle";
+import LoginButton from "../components/LoginButton";
+import ScrollHero from "../components/zoomscroll";
+import Loader from "../components/loader";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import NavbarLogo from "@/src/components/NavbarLogo";
-import Dither from "@/src/components/reactbits/Dither";
-import ASCIISection from "@/src/components/ASCIISection";
-import Info from "@/src/components/info";
-import ToMinigame from "@/src/components/ToMinigame";
-import FAQ from "@/src/components/FAQ";
-import Silk from "@/src/components/reactbits/Silk";
+import NavbarLogo from "../components/NavbarLogo";
+import Dither from "../components/reactbits/Dither";
+import ASCIISection from "../components/ASCIISection";
+import Info from "../components/info";
+import ToMinigame from "../components/ToMinigame";
+import FAQ from "../components/FAQ";
+import Silk from "../components/reactbits/Silk";
 
 function Page() {
   const [isOpen, setIsOpen] = useState(false);
@@ -44,13 +45,16 @@ function Page() {
 
   return (
     <div className="relative">
-      {loading && <Loader onComplete={() => {}} />}
+      {loading && <Loader onComplete={() => { }} />}
 
       <div className="fixed top-8 left-8 z-2000">
         <NavbarLogo />
       </div>
 
-      <MenuToggle isOpen={isOpen} toggle={toggleMenu} />
+      <div className="fixed top-8 right-8 flex items-center gap-4" style={{ zIndex: 2000 }}>
+        <LoginButton />
+        <MenuToggle isOpen={isOpen} toggle={toggleMenu} />
+      </div>
 
       {!loading && (
         <>
