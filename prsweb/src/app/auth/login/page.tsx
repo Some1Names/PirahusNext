@@ -40,7 +40,6 @@ export default function Page() {
 
   const studentId = watch("studentId");
 
-  // Reset password visibility if studentId is modified
   useEffect(() => {
     setShowPasswordInput(false);
     setErrorMsg("");
@@ -51,20 +50,16 @@ export default function Page() {
     setLoading(true);
     try {
       if (!showPasswordInput) {
-        // Step 1: Check if password is set / login for first time
         const res = await authService.login({
           studentId: data.studentId,
         });
 
         if (res.firstLogin) {
-          // If first login (password is null), they are already authenticated. Redirect to set password.
           router.push("/auth/password");
         } else if (res.hasPassword) {
-          // If user has a password, display password field
           setShowPasswordInput(true);
         }
       } else {
-        // Step 2: Send both studentId and password
         await authService.login({
           studentId: data.studentId,
           password: data.password,
@@ -258,7 +253,9 @@ export default function Page() {
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
                   {...register("password", {
-                    required: showPasswordInput ? "Password is required" : false,
+                    required: showPasswordInput
+                      ? "Password is required"
+                      : false,
                   })}
                   style={{
                     flex: 1,
@@ -334,8 +331,8 @@ export default function Page() {
             {loading
               ? "SIGNING IN..."
               : showPasswordInput
-              ? "SIGN IN"
-              : "CONTINUE"}{" "}
+                ? "SIGN IN"
+                : "CONTINUE"}{" "}
             <FaArrowRight size={14} />
           </button>
         </form>
