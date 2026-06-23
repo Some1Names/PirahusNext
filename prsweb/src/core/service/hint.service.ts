@@ -5,7 +5,7 @@ import { addHintsSchema, updateHintsSchema } from "../schema/hint";
 
 export class HintService {
   constructor(private readonly hintRepository: IHintRepository) {}
-  async addHints(data: IAddHints): Promise<IHint[]> {
+  async addHints(data: IAddHints): Promise<{ count: number }> {
     try {
       const parsedData = parseSchema(addHintsSchema, data);
       const res = await this.hintRepository.addHints(parsedData);
@@ -14,7 +14,7 @@ export class HintService {
       throw error;
     }
   }
-  async updateHints(id: string, data: IUpdateHints): Promise<IHint[]> {
+  async updateHints(id: string, data: IUpdateHints): Promise<IHint> {
     try {
       const parsedData = parseSchema(updateHintsSchema, data);
       const res = await this.hintRepository.updateHints(id, parsedData);

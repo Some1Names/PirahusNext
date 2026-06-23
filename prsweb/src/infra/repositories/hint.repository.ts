@@ -4,14 +4,14 @@ import { IHint, IAddHints, IUpdateHints } from "@/src/core/domain/hint";
 import { IHintRepository } from "@/src/core/ports/hint.repository";
 
 export class HintRepository implements IHintRepository {
-  async addHints(data: IAddHints): Promise<ApiResponse<IHint[]>> {
-    return httpClient.post<IHint[]>("/api/hint", data);
+  async addHints(data: IAddHints): Promise<ApiResponse<{ count: number }>> {
+    return httpClient.post<{ count: number }>("/api/hint", data);
   }
   async updateHints(
     id: string,
     data: IUpdateHints,
-  ): Promise<ApiResponse<IHint[]>> {
-    return httpClient.put<IHint[]>(`/api/hint/${id}`, data);
+  ): Promise<ApiResponse<IHint>> {
+    return httpClient.put<IHint>(`/api/hint/${id}`, data);
   }
   async deleteHint(id: string): Promise<ApiResponse<IHint>> {
     return httpClient.delete<IHint>(`/api/hint/${id}`);

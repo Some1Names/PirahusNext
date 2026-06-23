@@ -6,11 +6,14 @@ import { MenteeRepository } from "./repositories/mentee.repository";
 import { MenteeService } from "../core/service/mentee.service";
 import { MentorRepository } from "./repositories/mentor.repository";
 import { MentorService } from "../core/service/mentor.service";
+import { HintRepository } from "./repositories/hint.repository";
+import { HintService } from "../core/service/hint.service";
 
 const admissionYearRepository = new AdmissionYearRepository();
 const authRepository = new AuthRepository();
 const menteeRepository = new MenteeRepository();
 const mentorRepository = new MentorRepository();
+const hintRepository = new HintRepository();
 
 export const admissionYearService = new AdmissionYearService(
   admissionYearRepository,
@@ -18,3 +21,4 @@ export const admissionYearService = new AdmissionYearService(
 export const authService = new AuthService(authRepository);
 export const menteeService = new MenteeService(menteeRepository);
 export const mentorService = new MentorService(mentorRepository);
+export const hintService = new HintService(hintRepository);
