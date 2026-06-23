@@ -124,7 +124,7 @@ export default function Page() {
             Restart
           </button>
           <Link
-            href="/"
+            href="/minigames"
             style={buttonStyle}
             onMouseEnter={(e) => (e.currentTarget.style.color = "#d1d5db")}
             onMouseLeave={(e) => (e.currentTarget.style.color = "#6b7280")}

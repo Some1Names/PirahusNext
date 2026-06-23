@@ -4,7 +4,11 @@ import React, { useState } from "react";
 import SlidingTextReveal from "./SlidingTextRevealProps";
 import SplitText from "./SplitText";
 
-function Menu() {
+interface MenuProps {
+  onNavigate?: () => void; // call this to close the menu before route change
+}
+
+function Menu({ onNavigate }: MenuProps) {
   const [hovered, setHovered] = useState<number | null>(null);
 
   const links = [
@@ -22,6 +26,7 @@ function Menu() {
           <li key={link.name}>
             <a
               href={link.href}
+              onClick={() => onNavigate?.()}
               className="group relative inline-block"
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered((h) => (h === i ? null : h))}

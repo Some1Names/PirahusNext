@@ -82,7 +82,6 @@ export default function Page() {
         height: "100vh",
         display: "flex",
         overflow: "hidden",
-        backgroundColor: "#000",
       }}
     >
       <div
@@ -132,7 +131,7 @@ export default function Page() {
           >
             Student Portal
           </span>
-          <h1 style={{ fontSize: "60px", fontWeight: 500, lineHeight: 1.2 }}>
+          <h1 style={{ fontSize: "50px", fontWeight: 500, lineHeight: 1.2 }}>
             <GradientText
               colors={["#5227FF", "#FF9FFC", "#B497CF"]}
               animationSpeed={8}
@@ -359,22 +358,21 @@ export default function Page() {
         </p>
       </div>
 
-      <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0 }}>
-          <SideRays
-            speed={2.5}
-            rayColor1="#ea08c9"
-            rayColor2="#9727d7"
-            intensity={2}
-            spread={2}
-            origin="top-right"
-            tilt={0}
-            saturation={1.5}
-            blend={0.75}
-            falloff={1.6}
-            opacity={1}
-          />
-        </div>
+
+      <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
+        <SideRays
+          speed={2.5}
+          rayColor1="#ea08c9"
+          rayColor2="#9727d7"
+          intensity={0.8}
+          spread={1.5}
+          origin="top-right"
+          tilt={0}
+          saturation={0.8}
+          blend={0.75}
+          falloff={2.5}
+          opacity={0.6}
+        />
       </div>
     </div>
   );
