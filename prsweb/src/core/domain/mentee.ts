@@ -3,6 +3,7 @@ import { IMentor } from "./mentor";
 export interface IMentee {
   id: string;
   studentId: string;
+  name?: string | null;
 
   mentorId: string;
   mentor: IMentor;
@@ -14,4 +15,5 @@ export interface IMentee {
 export interface ICreateMentee {
   studentId: string;
   mentorId: string;
+  name?: string | null;
 }

@@ -10,6 +10,7 @@ export async function POST(req: NextRequest) {
     const mentor = await prisma.mentor.create({
       data: {
         studentId: body.studentId,
+        name: body.name,
       },
       include: {
         hints: true,
@@ -51,6 +52,7 @@ export async function PUT(req: NextRequest) {
       },
       data: {
         studentId: body.studentId,
+        name: body.name,
       },
       include: {
         hints: true,

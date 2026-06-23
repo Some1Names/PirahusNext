@@ -191,8 +191,13 @@ function SeniorRow({ senior, onRefresh }: { senior: IMentor; onRefresh: () => Pr
         }}
         onClick={() => setOpen((v) => !v)}
       >
-        <div style={{ flex: 1, minWidth: "170px" }}>
+        <div style={{ flex: 1, minWidth: "170px", display: "flex", alignItems: "center", gap: "10px" }}>
           <SeniorId id={senior.studentId} />
+          {senior.name && (
+            <span style={{ fontSize: "14px", fontWeight: 600, color: "#d8e8b8", fontFamily: "monospace" }}>
+              {senior.name}
+            </span>
+          )}
         </div>
 
         {senior.hints.length > 0 && (
@@ -235,7 +240,19 @@ function SeniorRow({ senior, onRefresh }: { senior: IMentor; onRefresh: () => Pr
             <FaUser size={12} style={{ color: senior.mentee ? "#4a9eff" : "#ff644a", flexShrink: 0 }} />
             {senior.mentee ? (
               <>
-                <JuniorId id={senior.mentee.studentId} />
+                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                  <JuniorId id={senior.mentee.studentId} />
+                  {senior.mentee.name && (
+                    <span style={{
+                      fontSize: "14px",
+                      fontWeight: 600,
+                      color: "#7ab8e8",
+                      fontFamily: "'Share Tech Mono', monospace",
+                    }}>
+                      {senior.mentee.name}
+                    </span>
+                  )}
+                </div>
                 <span style={{
                   marginLeft: "auto",
                   fontSize: "10px",

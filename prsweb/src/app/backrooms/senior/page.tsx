@@ -14,10 +14,9 @@ import { useRouter } from "next/navigation";
 import { authService, hintService } from "@/src/infra/container";
 import Swal from "sweetalert2";
 import { IHint } from "@/src/core/domain/hint";
+import { IMentee } from "@/src/core/domain/mentee";
 
-
-
-function JuniorCard({ junior }: { junior: { id: string } | null }) {
+function JuniorCard({ junior }: { junior: IMentee | null }) {
   if (!junior) {
     return (
       <div
@@ -84,8 +83,8 @@ function JuniorCard({ junior }: { junior: { id: string } | null }) {
     );
   }
 
-  const firstTwo = junior.id.length >= 2 ? junior.id.slice(0, 2) : "";
-  const rest = junior.id.length >= 2 ? junior.id.slice(2) : junior.id;
+  const firstTwo = junior.studentId.length >= 2 ? junior.studentId.slice(0, 2) : "";
+  const rest = junior.studentId.length >= 2 ? junior.studentId.slice(2) : junior.studentId;
 
   return (
     <div
@@ -146,6 +145,18 @@ function JuniorCard({ junior }: { junior: { id: string } | null }) {
             {firstTwo && <span style={{ color: "#4a9eff" }}>{firstTwo}</span>}
             <span style={{ color: "#8aaccc" }}>{rest}</span>
           </span>
+          {junior.name && (
+            <span
+              style={{
+                fontSize: "15px",
+                fontWeight: 600,
+                color: "#7ab8e8",
+                fontFamily: "'Share Tech Mono', monospace",
+              }}
+            >
+              {junior.name}
+            </span>
+          )}
         </div>
       </div>
     </div>
@@ -587,6 +598,7 @@ export default function HintPage() {
             Logged in as{" "}
             {firstTwo && <span style={{ color: "#d45c2a" }}>{firstTwo}</span>}
             <span style={{ color: "#c8d4a8" }}>{rest}</span>
+            {mentor.name && <span style={{ color: "#d8e8b8" }}> {mentor.name}</span>}
           </p>
         </div>
 
@@ -597,7 +609,7 @@ export default function HintPage() {
           }}
         />
 
-        <JuniorCard junior={mentor.mentee ? { id: mentor.mentee.studentId } : null} />
+        <JuniorCard junior={mentor.mentee} />
 
         <div
           style={{
