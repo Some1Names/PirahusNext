@@ -31,7 +31,7 @@ export async function GET() {
         mentee: true,
       },
       orderBy: {
-        createdAt: "desc",
+        studentId: "asc",
       },
     });
 
