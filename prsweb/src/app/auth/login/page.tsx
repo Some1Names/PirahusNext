@@ -15,11 +15,13 @@ import {
 } from "react-icons/fa";
 import { Pixelify_Sans } from "next/font/google";
 import { authService } from "@/src/infra/container";
+import { useUserStore } from "@/src/store/auth";
 
 const pixelifySans = Pixelify_Sans({ subsets: ["latin"] });
 
 export default function Page() {
   const router = useRouter();
+  const { getUser } = useUserStore();
   const [showPassword, setShowPassword] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [showPasswordInput, setShowPasswordInput] = useState(false);
@@ -64,6 +66,7 @@ export default function Page() {
           studentId: data.studentId,
           password: data.password,
         });
+        await getUser();
         router.push("/");
       }
     } catch (err: unknown) {
