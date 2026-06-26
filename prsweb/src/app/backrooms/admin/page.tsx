@@ -14,6 +14,7 @@ import {
 } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { authService, mentorService, hintService } from "@/src/infra/container";
+import { useUserStore } from "@/src/store/auth";
 import Swal from "sweetalert2";
 import { IMentor } from "@/src/core/domain/mentor";
 
@@ -65,6 +66,43 @@ function SeniorRow({
   const [editVal, setEditVal] = useState("");
   const [adding, setAdding] = useState(false);
   const [newHint, setNewHint] = useState("");
+  const [togglingAdmin, setTogglingAdmin] = useState(false);
+
+  const toggleAdmin = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const next = !senior.isAdmin;
+    const label = next ? "แอดมิน" : "Senior";
+    const result = await Swal.fire({
+      title: `เปลี่ยน role เป็น ${label}?`,
+      text: `${senior.name || senior.studentId} จะถูกเปลี่ยนเป็น ${label}`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "ยืนยัน",
+      cancelButtonText: "ยกเลิก",
+      confirmButtonColor: next ? "#a8c060" : "#4a6030",
+      cancelButtonColor: "#4a5a30",
+      background: "#0a0e08",
+      color: "#d8e8b8",
+    });
+    if (!result.isConfirmed) return;
+    try {
+      setTogglingAdmin(true);
+      await mentorService.setAdminRole(senior.id, next);
+      await onRefresh();
+    } catch (err) {
+      console.error("Failed to toggle admin:", err);
+      Swal.fire({
+        title: "เกิดข้อผิดพลาด",
+        text: "ไม่สามารถเปลี่ยน role ได้",
+        icon: "error",
+        confirmButtonColor: "#708840",
+        background: "#0a0e08",
+        color: "#d8e8b8",
+      });
+    } finally {
+      setTogglingAdmin(false);
+    }
+  };
 
   const saveEdit = async (hintId: string) => {
     if (!editVal.trim()) return;
@@ -252,6 +290,33 @@ function SeniorRow({
             {senior.hints.length} hint{senior.hints.length > 1 ? "s" : ""}
           </span>
         )}
+
+        <div onClick={(e) => e.stopPropagation()}>
+          <button
+            onClick={toggleAdmin}
+            disabled={togglingAdmin}
+            title={senior.isAdmin ? "คลิกเพื่อลด role เป็น Senior" : "คลิกเพื่อเพิ่มเป็น Admin"}
+            style={{
+              fontSize: "10px",
+              fontFamily: "monospace",
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              padding: "2px 8px",
+              borderRadius: "2px",
+              cursor: togglingAdmin ? "not-allowed" : "pointer",
+              opacity: togglingAdmin ? 0.5 : 1,
+              border: senior.isAdmin
+                ? "1px solid rgba(168, 192, 96, 0.7)"
+                : "1px solid rgba(112, 136, 64, 0.3)",
+              backgroundColor: senior.isAdmin
+                ? "rgba(168, 192, 96, 0.15)"
+                : "rgba(30, 40, 20, 0.4)",
+              color: senior.isAdmin ? "#a8c060" : "#708840",
+            }}
+          >
+            {senior.isAdmin ? "ADMIN" : "SENIOR"}
+          </button>
+        </div>
 
         <div onClick={(e) => e.stopPropagation()}>
           {open ? (
@@ -573,6 +638,7 @@ function SeniorRow({
 
 export default function AdminPage() {
   const router = useRouter();
+  const { user, loading: authLoading, getUser } = useUserStore();
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [students, setStudents] = useState<IMentor[]>([]);
@@ -587,24 +653,19 @@ export default function AdminPage() {
   };
 
   useEffect(() => {
-    async function init() {
-      try {
-        setLoading(true);
-        const res = await authService.me();
-        if (!res || res?.role !== "admin") {
-          router.push("/");
-          return;
-        }
-        await refreshData();
-      } catch (err) {
-        console.error("Auth check failed:", err);
-        router.push("/");
-      } finally {
-        setLoading(false);
-      }
+    getUser();
+  }, [getUser]);
+
+  useEffect(() => {
+    if (authLoading) return;
+
+    if (!user || user.role !== "admin") {
+      router.push("/");
+      return;
     }
-    init();
-  }, [router]);
+
+    refreshData().finally(() => setLoading(false));
+  }, [user, authLoading, router]);
 
   const filtered = students.filter(
     (s) =>

@@ -19,6 +19,7 @@ model Mentor {
   studentId  String @unique
   password   String?
   name       String?
+  isAdmin    Boolean @default(false)
   hints      Hint[]
 
   mentee     Mentee?

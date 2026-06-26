@@ -87,6 +87,7 @@ export const MentorScalarFieldEnum = {
   studentId: 'studentId',
   password: 'password',
   name: 'name',
+  isAdmin: 'isAdmin',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

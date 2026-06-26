@@ -29,6 +29,7 @@ export type MentorMinAggregateOutputType = {
   studentId: string | null
   password: string | null
   name: string | null
+  isAdmin: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -38,6 +39,7 @@ export type MentorMaxAggregateOutputType = {
   studentId: string | null
   password: string | null
   name: string | null
+  isAdmin: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -47,6 +49,7 @@ export type MentorCountAggregateOutputType = {
   studentId: number
   password: number
   name: number
+  isAdmin: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -58,6 +61,7 @@ export type MentorMinAggregateInputType = {
   studentId?: true
   password?: true
   name?: true
+  isAdmin?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -67,6 +71,7 @@ export type MentorMaxAggregateInputType = {
   studentId?: true
   password?: true
   name?: true
+  isAdmin?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -76,6 +81,7 @@ export type MentorCountAggregateInputType = {
   studentId?: true
   password?: true
   name?: true
+  isAdmin?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -158,6 +164,7 @@ export type MentorGroupByOutputType = {
   studentId: string
   password: string | null
   name: string | null
+  isAdmin: boolean
   createdAt: Date
   updatedAt: Date
   _count: MentorCountAggregateOutputType | null
@@ -188,6 +195,7 @@ export type MentorWhereInput = {
   studentId?: Prisma.StringFilter<"Mentor"> | string
   password?: Prisma.StringNullableFilter<"Mentor"> | string | null
   name?: Prisma.StringNullableFilter<"Mentor"> | string | null
+  isAdmin?: Prisma.BoolFilter<"Mentor"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Mentor"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Mentor"> | Date | string
   hints?: Prisma.HintListRelationFilter
@@ -199,6 +207,7 @@ export type MentorOrderByWithRelationInput = {
   studentId?: Prisma.SortOrder
   password?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
+  isAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   hints?: Prisma.HintOrderByRelationAggregateInput
@@ -213,6 +222,7 @@ export type MentorWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.MentorWhereInput | Prisma.MentorWhereInput[]
   password?: Prisma.StringNullableFilter<"Mentor"> | string | null
   name?: Prisma.StringNullableFilter<"Mentor"> | string | null
+  isAdmin?: Prisma.BoolFilter<"Mentor"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Mentor"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Mentor"> | Date | string
   hints?: Prisma.HintListRelationFilter
@@ -224,6 +234,7 @@ export type MentorOrderByWithAggregationInput = {
   studentId?: Prisma.SortOrder
   password?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
+  isAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.MentorCountOrderByAggregateInput
@@ -239,6 +250,7 @@ export type MentorScalarWhereWithAggregatesInput = {
   studentId?: Prisma.StringWithAggregatesFilter<"Mentor"> | string
   password?: Prisma.StringNullableWithAggregatesFilter<"Mentor"> | string | null
   name?: Prisma.StringNullableWithAggregatesFilter<"Mentor"> | string | null
+  isAdmin?: Prisma.BoolWithAggregatesFilter<"Mentor"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Mentor"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Mentor"> | Date | string
 }
@@ -248,6 +260,7 @@ export type MentorCreateInput = {
   studentId: string
   password?: string | null
   name?: string | null
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   hints?: Prisma.HintCreateNestedManyWithoutMentorInput
@@ -259,6 +272,7 @@ export type MentorUncheckedCreateInput = {
   studentId: string
   password?: string | null
   name?: string | null
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   hints?: Prisma.HintUncheckedCreateNestedManyWithoutMentorInput
@@ -270,6 +284,7 @@ export type MentorUpdateInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hints?: Prisma.HintUpdateManyWithoutMentorNestedInput
@@ -281,6 +296,7 @@ export type MentorUncheckedUpdateInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hints?: Prisma.HintUncheckedUpdateManyWithoutMentorNestedInput
@@ -292,6 +308,7 @@ export type MentorCreateManyInput = {
   studentId: string
   password?: string | null
   name?: string | null
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -301,6 +318,7 @@ export type MentorUpdateManyMutationInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -310,6 +328,7 @@ export type MentorUncheckedUpdateManyInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -319,6 +338,7 @@ export type MentorCountOrderByAggregateInput = {
   studentId?: Prisma.SortOrder
   password?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  isAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -328,6 +348,7 @@ export type MentorMaxOrderByAggregateInput = {
   studentId?: Prisma.SortOrder
   password?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  isAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -337,6 +358,7 @@ export type MentorMinOrderByAggregateInput = {
   studentId?: Prisma.SortOrder
   password?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  isAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -348,6 +370,10 @@ export type MentorScalarRelationFilter = {
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -387,6 +413,7 @@ export type MentorCreateWithoutMenteeInput = {
   studentId: string
   password?: string | null
   name?: string | null
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   hints?: Prisma.HintCreateNestedManyWithoutMentorInput
@@ -397,6 +424,7 @@ export type MentorUncheckedCreateWithoutMenteeInput = {
   studentId: string
   password?: string | null
   name?: string | null
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   hints?: Prisma.HintUncheckedCreateNestedManyWithoutMentorInput
@@ -423,6 +451,7 @@ export type MentorUpdateWithoutMenteeInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hints?: Prisma.HintUpdateManyWithoutMentorNestedInput
@@ -433,6 +462,7 @@ export type MentorUncheckedUpdateWithoutMenteeInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hints?: Prisma.HintUncheckedUpdateManyWithoutMentorNestedInput
@@ -443,6 +473,7 @@ export type MentorCreateWithoutHintsInput = {
   studentId: string
   password?: string | null
   name?: string | null
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   mentee?: Prisma.MenteeCreateNestedOneWithoutMentorInput
@@ -453,6 +484,7 @@ export type MentorUncheckedCreateWithoutHintsInput = {
   studentId: string
   password?: string | null
   name?: string | null
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   mentee?: Prisma.MenteeUncheckedCreateNestedOneWithoutMentorInput
@@ -479,6 +511,7 @@ export type MentorUpdateWithoutHintsInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mentee?: Prisma.MenteeUpdateOneWithoutMentorNestedInput
@@ -489,6 +522,7 @@ export type MentorUncheckedUpdateWithoutHintsInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mentee?: Prisma.MenteeUncheckedUpdateOneWithoutMentorNestedInput
@@ -530,6 +564,7 @@ export type MentorSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   studentId?: boolean
   password?: boolean
   name?: boolean
+  isAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   hints?: boolean | Prisma.Mentor$hintsArgs<ExtArgs>
@@ -542,6 +577,7 @@ export type MentorSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   studentId?: boolean
   password?: boolean
   name?: boolean
+  isAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["mentor"]>
@@ -551,6 +587,7 @@ export type MentorSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   studentId?: boolean
   password?: boolean
   name?: boolean
+  isAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["mentor"]>
@@ -560,11 +597,12 @@ export type MentorSelectScalar = {
   studentId?: boolean
   password?: boolean
   name?: boolean
+  isAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type MentorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "password" | "name" | "createdAt" | "updatedAt", ExtArgs["result"]["mentor"]>
+export type MentorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "password" | "name" | "isAdmin" | "createdAt" | "updatedAt", ExtArgs["result"]["mentor"]>
 export type MentorInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   hints?: boolean | Prisma.Mentor$hintsArgs<ExtArgs>
   mentee?: boolean | Prisma.Mentor$menteeArgs<ExtArgs>
@@ -584,6 +622,7 @@ export type $MentorPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     studentId: string
     password: string | null
     name: string | null
+    isAdmin: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["mentor"]>
@@ -1015,6 +1054,7 @@ export interface MentorFieldRefs {
   readonly studentId: Prisma.FieldRef<"Mentor", 'String'>
   readonly password: Prisma.FieldRef<"Mentor", 'String'>
   readonly name: Prisma.FieldRef<"Mentor", 'String'>
+  readonly isAdmin: Prisma.FieldRef<"Mentor", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Mentor", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Mentor", 'DateTime'>
 }

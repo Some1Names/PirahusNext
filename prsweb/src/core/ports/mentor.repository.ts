@@ -7,4 +7,5 @@ export interface IMentorRepository {
   deleteMentor(id: string): Promise<ApiResponse<IMentor>>;
   getMentorById(id: string): Promise<ApiResponse<IMentor>>;
   getAllMentors(): Promise<ApiResponse<IMentor[]>>;
+  setAdminRole(id: string, isAdmin: boolean): Promise<ApiResponse<IMentor>>;
 }

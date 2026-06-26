@@ -41,8 +41,7 @@ const LoginButton = () => {
     );
   }
 
-  const innerUser = (user as any)?.user;
-  const role = innerUser?.role;
+  const role = user?.role;
 
   return (
     <div className="flex items-center gap-3">
@@ -64,7 +63,10 @@ const LoginButton = () => {
           onClick={() => router.push("/backrooms/admin")}
           className="flex items-center gap-3 px-5 bg-[#0d0d0d] hover:bg-[#a8c060] hover:text-[#0a0e08] transition-all duration-500 ease-in-out group focus:outline-none shadow-lg h-14 cursor-pointer"
         >
-          <FaUser size={18} className="text-[#F1F1F1] group-hover:text-[#0a0e08] transition-colors" />
+          <FaUser
+            size={18}
+            className="text-[#F1F1F1] group-hover:text-[#0a0e08] transition-colors"
+          />
           <div className="w-px h-5 bg-[#F1F1F1] group-hover:bg-[#0a0e08] opacity-30 transition-colors" />
           <span className="text-[#F1F1F1] group-hover:text-[#0a0e08] text-sm font-medium tracking-widest uppercase transition-colors">
             ระบบแอดมิน
