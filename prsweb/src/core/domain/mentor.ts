@@ -4,6 +4,7 @@ import { IHint } from "./hint";
 export interface IMentor {
   id: string;
   studentId: string;
+  name?: string | null;
 
   hints: IHint[];
 
@@ -15,4 +16,5 @@ export interface IMentor {
 
 export interface ICreateMentor {
   studentId: string;
+  name?: string | null;
 }

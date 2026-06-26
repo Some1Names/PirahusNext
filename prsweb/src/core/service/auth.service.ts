@@ -33,4 +33,12 @@ export class AuthService {
       throw error;
     }
   }
+
+  async logout(): Promise<void> {
+    try {
+      await this.authRepository.logout();
+    } catch (error) {
+      throw error;
+    }
+  }
 }

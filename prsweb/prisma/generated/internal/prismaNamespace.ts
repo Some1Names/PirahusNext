@@ -755,6 +755,7 @@ export const MentorScalarFieldEnum = {
   id: 'id',
   studentId: 'studentId',
   password: 'password',
+  name: 'name',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -766,6 +767,7 @@ export const MenteeScalarFieldEnum = {
   id: 'id',
   studentId: 'studentId',
   password: 'password',
+  name: 'name',
   mentorId: 'mentorId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

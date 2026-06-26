@@ -8,7 +8,7 @@ interface UserStore {
 
   setUser: (user: CurrentUser | null) => void;
   getUser: () => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 export const useUserStore = create<UserStore>((set) => ({
@@ -34,7 +34,13 @@ export const useUserStore = create<UserStore>((set) => ({
     }
   },
 
-  logout: () => {
-    set({ user: null });
+  logout: async () => {
+    try {
+      await authService.logout();
+    } catch (error) {
+      console.error("Error logging out:", error);
+    } finally {
+      set({ user: null });
+    }
   },
 }));

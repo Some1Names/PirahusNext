@@ -11,6 +11,7 @@ export async function POST(req: NextRequest) {
       data: {
         studentId: body.studentId,
         mentorId: body.mentorId,
+        name: body.name,
       },
       include: {
         mentor: {

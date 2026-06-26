@@ -40,4 +40,13 @@ export class AuthRepository implements IAuthRepository {
       throw error;
     }
   }
+  async logout(): Promise<ApiResponse<null>> {
+    try {
+      const response = await httpClient.post<null>("/api/auth/logout");
+      return response;
+    } catch (error) {
+      console.error("Logout error:", error);
+      throw error;
+    }
+  }
 }
