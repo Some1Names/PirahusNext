@@ -12,6 +12,7 @@ import {
 } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { authService, hintService } from "@/src/infra/container";
+import { useUserStore } from "@/src/store/auth";
 import Swal from "sweetalert2";
 import { IHint } from "@/src/core/domain/hint";
 import { IMentee } from "@/src/core/domain/mentee";
@@ -83,8 +84,10 @@ function JuniorCard({ junior }: { junior: IMentee | null }) {
     );
   }
 
-  const firstTwo = junior.studentId.length >= 2 ? junior.studentId.slice(0, 2) : "";
-  const rest = junior.studentId.length >= 2 ? junior.studentId.slice(2) : junior.studentId;
+  const firstTwo =
+    junior.studentId.length >= 2 ? junior.studentId.slice(0, 2) : "";
+  const rest =
+    junior.studentId.length >= 2 ? junior.studentId.slice(2) : junior.studentId;
 
   return (
     <div
@@ -306,6 +309,7 @@ function HintItem({
 
 export default function HintPage() {
   const router = useRouter();
+  const { user, loading: authLoading, getUser } = useUserStore();
   const [mentor, setMentor] = useState<any>(null);
   const [hints, setHints] = useState<IHint[]>([]);
   const [newHint, setNewHint] = useState("");
@@ -322,29 +326,24 @@ export default function HintPage() {
   };
 
   useEffect(() => {
-    async function loadData() {
-      try {
-        setLoading(true);
-        const res = await authService.me() as any;
+    getUser();
+  }, [getUser]);
 
-        if (!res?.user || !res?.user?.id || !("mentee" in res.user)) {
-          router.push("/auth/login");
-          return;
-        }
+  useEffect(() => {
+    if (authLoading) return;
 
-        setMentor(res.user);
-
-        const hintList = await hintService.getHintsByMentorId(res.user.id);
-        setHints(hintList);
-      } catch (err) {
-        console.error("Failed to load mentor session:", err);
-        router.push("/auth/login");
-      } finally {
-        setLoading(false);
-      }
+    if (!user || (user.role !== "mentor" && user.role !== "admin")) {
+      router.push("/auth/login");
+      return;
     }
-    loadData();
-  }, [router]);
+
+    setMentor(user);
+    hintService
+      .getHintsByMentorId(user.id)
+      .then(setHints)
+      .catch((err) => console.error("Failed to load hints:", err))
+      .finally(() => setLoading(false));
+  }, [user, authLoading, router]);
 
   const addHint = async () => {
     if (!newHint.trim() || !mentor) return;
@@ -505,8 +504,10 @@ export default function HintPage() {
     );
   }
 
-  const firstTwo = mentor.studentId.length >= 2 ? mentor.studentId.slice(0, 2) : "";
-  const rest = mentor.studentId.length >= 2 ? mentor.studentId.slice(2) : mentor.studentId;
+  const firstTwo =
+    mentor.studentId.length >= 2 ? mentor.studentId.slice(0, 2) : "";
+  const rest =
+    mentor.studentId.length >= 2 ? mentor.studentId.slice(2) : mentor.studentId;
 
   return (
     <div
@@ -598,7 +599,9 @@ export default function HintPage() {
             Logged in as{" "}
             {firstTwo && <span style={{ color: "#d45c2a" }}>{firstTwo}</span>}
             <span style={{ color: "#c8d4a8" }}>{rest}</span>
-            {mentor.name && <span style={{ color: "#d8e8b8" }}> {mentor.name}</span>}
+            {mentor.name && (
+              <span style={{ color: "#d8e8b8" }}> {mentor.name}</span>
+            )}
           </p>
         </div>
 

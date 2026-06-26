@@ -50,4 +50,13 @@ export class MentorService {
       throw error;
     }
   }
+
+  async setAdminRole(id: string, isAdmin: boolean): Promise<IMentor> {
+    try {
+      const mentor = await this.mentorRepository.setAdminRole(id, isAdmin);
+      return mentor.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

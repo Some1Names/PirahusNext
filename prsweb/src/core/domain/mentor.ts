@@ -5,6 +5,7 @@ export interface IMentor {
   id: string;
   studentId: string;
   name?: string | null;
+  isAdmin: boolean;
 
   hints: IHint[];
 
@@ -17,4 +18,5 @@ export interface IMentor {
 export interface ICreateMentor {
   studentId: string;
   name?: string | null;
+  isAdmin?: boolean;
 }

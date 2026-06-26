@@ -1,1 +1,0 @@
-export const ADMIN_STUDENT_IDS = ["68090500429"];
