@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { prisma } from "@/src/lib/prisma";
-import { verifyToken } from "@/src/lib/jwt";
+import { verifyToken, signToken } from "@/src/lib/jwt";
 import { successResponse } from "@/src/lib/api-response";
 import { handleError } from "@/src/lib/handle-error";
 
@@ -16,6 +16,7 @@ export async function GET() {
     }
 
     const payload = verifyToken(token);
+    let currentRole: "admin" | "mentor" | "mentee" = "mentee";
 
     if (payload.type === "mentor") {
       const mentor = await prisma.mentor.findUnique({
@@ -35,9 +36,28 @@ export async function GET() {
         });
       }
 
+      currentRole = mentor.isAdmin ? "admin" : "mentor";
+
+      if (payload.role !== currentRole) {
+        const newToken = signToken({
+          studentId: payload.studentId,
+          type: payload.type,
+          role: currentRole,
+        });
+
+        const cookieStore = await cookies();
+        cookieStore.set("access_token", newToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          maxAge: 60 * 60 * 24 * 7,
+          path: "/",
+        });
+      }
+
       return successResponse({
         ...mentor,
-        role: mentor.isAdmin ? "admin" : "mentor",
+        role: currentRole,
       });
     }
 
@@ -62,9 +82,28 @@ export async function GET() {
         });
       }
 
+      currentRole = "mentee";
+
+      if (payload.role !== currentRole) {
+        const newToken = signToken({
+          studentId: payload.studentId,
+          type: payload.type,
+          role: currentRole,
+        });
+
+        const cookieStore = await cookies();
+        cookieStore.set("access_token", newToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          maxAge: 60 * 60 * 24 * 7,
+          path: "/",
+        });
+      }
+
       return successResponse({
         ...mentee,
-        role: "mentee",
+        role: currentRole,
       });
     }
   } catch (error) {

@@ -2,14 +2,14 @@ import { prisma } from "@/src/lib/prisma";
 import { NextRequest } from "next/server";
 import { successResponse } from "@/src/lib/api-response";
 import { handleError } from "@/src/lib/handle-error";
-import { getCurrentUser } from "@/src/lib/get-current-user";
-import { ForbiddenError } from "@/src/core/error/error";
+import { requireAuth } from "@/src/lib/get-current-user";
 
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    await requireAuth(["admin", "mentor", "mentee"]);
     const { id } = await params;
 
     const mentor = await prisma.mentor.findUnique({
@@ -40,15 +40,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const session = await getCurrentUser();
-
-    const requestingMentor = await prisma.mentor.findUnique({
-      where: { studentId: session.studentId },
-    });
-
-    if (!requestingMentor?.isAdmin) {
-      throw new ForbiddenError("Only admins can assign roles");
-    }
+    await requireAuth(["admin"]);
 
     const { id } = await params;
     const body = await req.json();
@@ -70,6 +62,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    await requireAuth(["admin"]);
     const { id } = await params;
 
     const mentor = await prisma.mentor.delete({
