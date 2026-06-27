@@ -73,7 +73,12 @@ export async function POST(req: NextRequest) {
       const token = signToken({
         studentId,
         type: userType,
-        role: userType === "mentor" ? ((user as Mentor).isAdmin ? "admin" : "mentor") : "mentee",
+        role:
+          userType === "mentor"
+            ? (user as Mentor).isAdmin
+              ? "admin"
+              : "mentor"
+            : "mentee",
       });
 
       const cookieStore = await cookies();
@@ -108,7 +113,12 @@ export async function POST(req: NextRequest) {
       const token = signToken({
         studentId,
         type: userType,
-        role: userType === "mentor" ? ((user as Mentor).isAdmin ? "admin" : "mentor") : "mentee",
+        role:
+          userType === "mentor"
+            ? (user as Mentor).isAdmin
+              ? "admin"
+              : "mentor"
+            : "mentee",
       });
 
       const cookieStore = await cookies();

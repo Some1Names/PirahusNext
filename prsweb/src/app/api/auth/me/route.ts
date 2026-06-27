@@ -57,7 +57,6 @@ export async function GET() {
 
       return successResponse({
         ...mentor,
-        role: currentRole,
       });
     }
 
@@ -103,7 +102,6 @@ export async function GET() {
 
       return successResponse({
         ...mentee,
-        role: currentRole,
       });
     }
   } catch (error) {
