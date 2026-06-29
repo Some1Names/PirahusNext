@@ -18,7 +18,6 @@ export interface SetupPasswordResponse {
 export interface CurrentUser {
   id: string;
   studentId: string;
-  role: "mentor" | "mentee" | "admin";
 
   mentor?: {
     id: string;

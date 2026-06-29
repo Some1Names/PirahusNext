@@ -2,12 +2,14 @@ import { prisma } from "@/src/lib/prisma";
 import { successResponse } from "@/src/lib/api-response";
 import { handleError } from "@/src/lib/handle-error";
 import { NextRequest } from "next/server";
+import { requireAuth } from "@/src/lib/get-current-user";
 
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    await requireAuth(["admin", "mentor", "mentee"]);
     const { id } = await params;
 
     const mentee = await prisma.mentee.findUnique({
@@ -41,6 +43,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    await requireAuth(["admin"]);
     const { id } = await params;
 
     const mentee = await prisma.mentee.delete({

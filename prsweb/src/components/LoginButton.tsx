@@ -5,7 +5,7 @@ import { FaUser, FaSignOutAlt, FaCog } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/src/store/auth";
 
-const LoginButton = () => {
+const LoginButton = ({ role }: { role: string | null }) => {
   const router = useRouter();
   const { user, getUser, logout, loading } = useUserStore();
 
@@ -40,8 +40,6 @@ const LoginButton = () => {
       </button>
     );
   }
-
-  const role = user?.role;
 
   return (
     <div className="flex items-center gap-3">
