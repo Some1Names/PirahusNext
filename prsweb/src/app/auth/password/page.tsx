@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import GradientText from "@/src/components/reactbits/GradientText";
-import SideRays from "@/src/components/reactbits/SideRays";
+import GradientText from "@/src/components/reactbits/background/GradientText";
+import SideRays from "@/src/components/reactbits/background/SideRays";
 import {
   FaLock,
   FaEye,

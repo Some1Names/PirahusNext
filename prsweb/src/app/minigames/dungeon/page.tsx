@@ -6,7 +6,7 @@ import { generateGame } from "@/src/lib/game/mapGen";
 import { gameReducer } from "@/src/lib/game/gameReducer";
 import MapDisplay from "../../../components/minigame/MapDisplay";
 import GameTerminal from "../../../components/minigame/GameTerminal";
-import FaultyTerminal from "../../../components/reactbits/FaultyTerminal";
+import FaultyTerminal from "../../../components/reactbits/background/FaultyTerminal";
 import { Pixelify_Sans } from "next/font/google";
 
 const pixelifySans = Pixelify_Sans({

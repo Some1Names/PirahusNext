@@ -1,6 +1,6 @@
 "use client";
 
-import ASCIIText from "../components/reactbits/ASCIIText";
+import ASCIIText from "./reactbits/background/ASCIIText";
 
 export default function ASCIISection() {
   return (

@@ -587,6 +587,9 @@ const PixelBlast: React.FC<PixelBlastProps> = ({
           raf = requestAnimationFrame(animate);
           return;
         }
+
+        timer.update();
+        
         uniforms.uTime.value = timeOffset + timer.getElapsed() * speedRef.current;
         if (liquidEffect) {
           const liqEffect = liquidEffect as Effect & { uniforms: Map<string, THREE.Uniform> };

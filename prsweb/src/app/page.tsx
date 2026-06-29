@@ -8,12 +8,12 @@ import ScrollHero from "../components/zoomscroll";
 import Loader from "../components/loader";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import NavbarLogo from "../components/NavbarLogo";
-import Dither from "../components/reactbits/Dither";
+import Dither from "../components/reactbits/background/Dither";
 import ASCIISection from "../components/ASCIISection";
 import Info from "../components/info";
 import ToMinigame from "../components/ToMinigame";
 import FAQ from "../components/FAQ";
-import Silk from "../components/reactbits/Silk";
+import Silk from "../components/reactbits/background/Silk";
 
 function Page() {
   const [isOpen, setIsOpen] = useState(false);

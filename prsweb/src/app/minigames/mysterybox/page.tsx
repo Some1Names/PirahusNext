@@ -1,5 +1,5 @@
 import MysteryHintBox from "../../../components/minigame/MysteryHintBox";
-import Balatro from "../../../components/reactbits/Balatro";
+import Balatro from "../../../components/reactbits/background/Balatro";
 
 export default function Page() {
   return <div className="min-h-screen flex items-center justify-center p-4">

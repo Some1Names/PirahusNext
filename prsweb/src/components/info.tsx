@@ -3,7 +3,7 @@
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Grainient from "../components/reactbits/Grainient";
+import Grainient from "./reactbits/background/Grainient";
 
 export default function Info() {
   const wrapperRef = useRef<HTMLDivElement | null>(null);

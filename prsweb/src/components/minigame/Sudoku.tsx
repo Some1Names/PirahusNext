@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef, memo } from "react";
-import FaultyTerminal from "@/src/components/reactbits/FaultyTerminal";
+import FaultyTerminal from "@/src/components/reactbits/background/FaultyTerminal";
 import { Pixelify_Sans, Share_Tech_Mono } from "next/font/google";
 
 const pixelifySans = Pixelify_Sans({
