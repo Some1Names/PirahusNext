@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import {
   mentorService,
   menteeService,
@@ -21,12 +21,16 @@ export function useGamePoints(game: GameName) {
   const [popupPoints, setPopupPoints] = useState<number | null>(null);
   const [showPopup, setShowPopup] = useState(false);
 
+  const isSubmittingRef = useRef(false);
+
   const awardPoints = useCallback(
     async (
       points: number,
       meta?: Record<string, unknown>,
     ): Promise<AwardResult> => {
       if (points <= 0) return { success: false, error: "No points to award" };
+      if (isSubmittingRef.current) return { success: false, error: "Already submitting" };
+      isSubmittingRef.current = true;
 
       setPopupPoints(points);
       setShowPopup(true);
@@ -59,6 +63,7 @@ export function useGamePoints(game: GameName) {
         return { success: false, error: message };
       } finally {
         setSubmitting(false);
+        isSubmittingRef.current = false;
       }
     },
     [game],

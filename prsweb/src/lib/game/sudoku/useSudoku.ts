@@ -79,17 +79,22 @@ export function useSudoku() {
       }
     }
 
+    let wonThisMove = false;
     setBoard((b) => {
       const nb = [...b];
       nb[selected] = n;
       if (nb.every((v, i) => v === solution[i])) {
-        setWin(true);
-        if (timerRef.current) clearInterval(timerRef.current);
-        const pts = calculateSudokuPts(diff, mistakes);
-        awardPoints(pts, { diff, mistakes, timer });
+        wonThisMove = true;
       }
       return nb;
     });
+
+    if (wonThisMove) {
+      setWin(true);
+      if (timerRef.current) clearInterval(timerRef.current);
+      const pts = calculateSudokuPts(diff, mistakes);
+      awardPoints(pts, { diff, mistakes, timer });
+    }
 
     if (isCorrect) {
       setNotes((prev) => {
