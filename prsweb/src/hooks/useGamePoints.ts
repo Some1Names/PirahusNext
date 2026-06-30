@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 
-type GameName = "sudoku" | "sort" | "trace";
+type GameName = "dungeon" | "sudoku" | "sort" | "trace";
 
 interface AwardResult {
     success: boolean;

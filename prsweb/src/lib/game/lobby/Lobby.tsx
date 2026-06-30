@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { Gift } from 'lucide-react'
 import Menu from '@/src/components/menu'
 import MenuToggle from '@/src/components/menutoggle'
 import PixelBlast from '@/src/components/reactbits/background/PixelBlast'
@@ -11,10 +13,19 @@ import PtsBadge from '@/src/components/minigame/points'
 
 export default function Lobby() {
     const [isOpen, setIsOpen] = useState(false)
+    const router = useRouter()
 
     return (
         <div style={{ position: 'relative' }}>
             <div className="fixed top-8 right-8 flex items-center gap-4" style={{ zIndex: 2000 }}>
+                <button
+                    onClick={() => router.push('/minigames/mysterybox')}
+                    className="flex items-center justify-center w-14 h-14 bg-[#0d0d0d] hover:bg-[#6812D2] transition-all duration-500 ease-in-out group focus:outline-none shadow-lg"
+                    aria-label="Open Mystery Box"
+                >
+                    <Gift size={28} strokeWidth={1.5} className="text-[#F1F1F1] transition-all duration-500" />
+                </button>
+
                 <MenuToggle isOpen={isOpen} toggle={() => setIsOpen(!isOpen)} />
             </div>
 
@@ -46,7 +57,7 @@ export default function Lobby() {
                 </FadeContent>
             </div>
 
-            <div style={{ position: 'fixed', top: '1.25rem', left: '1.25rem', zIndex: 1000 }}>
+            <div style={{ position: 'fixed', top: '2.5rem', left: '2rem', zIndex: 1000 }}>
                 <PtsBadge pts={796} />
             </div>
 

@@ -19,7 +19,7 @@ export function useTraceGame() {
   const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
   const [bonusFlash, setBonusFlash] = useState<number | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const { awardPoints } = useGamePoints("trace");
+  const { awardPoints, popupPoints, showPopup, closePopup } = useGamePoints("trace");
 
   const currentQ = questions[qIdx] ?? null;
 
@@ -101,5 +101,6 @@ export function useTraceGame() {
     phase, currentQ, qIdx, timeLeft, score, streak,
     input, setInput, selectedChoice, feedback, bonusFlash,
     startGame, handleTypeSubmit, handleChoiceClick,
+    popupPoints, showPopup, closePopup,
   };
 }

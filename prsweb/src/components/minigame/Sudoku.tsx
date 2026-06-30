@@ -6,6 +6,8 @@ import FaultyTerminal from "@/src/components/reactbits/background/FaultyTerminal
 import { useSudoku, MAX_MISTAKES } from "@/src/lib/game/sudoku/useSudoku";
 import { Difficulty } from "@/src/lib/game/sudoku/types";
 import PointsPopup from "@/src/components/minigame/PointsPopup";
+import InfoPopup from "../InfoPopup";
+import { Info } from "lucide-react";
 
 const pixelifySans = Pixelify_Sans({ subsets: ["latin"], weight: ["400", "700"] });
 const shareTechMono = Share_Tech_Mono({ subsets: ["latin"], weight: "400" });
@@ -61,6 +63,8 @@ function HoverBtn({ onClick, children, active, style }: {
 const gridSize = "min(360px, 88vw)";
 
 export default function Sudoku() {
+  const [showInfo, setShowInfo] = useState(false);
+
   const {
     board, solution, given, notes, selected, setSelected,
     notesMode, toggleNotesMode, mistakes, diff,
@@ -126,11 +130,32 @@ export default function Sudoku() {
 
       <div style={{ position: "relative", zIndex: 1, minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "5rem 1rem 2rem", gap: "1rem" }}>
 
-        {/* Top-left: title only */}
+        {/* Top-left: title + info icon */}
         <div style={{ position: "absolute", top: "1rem", left: "1rem" }}>
-          <h1 style={{ color: "#d1d5db", fontSize: "1.5rem", fontWeight: "bold", letterSpacing: "0.2em", textTransform: "uppercase", margin: 0 }}>
-            Sudoku
-          </h1>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <h1 style={{ color: "#d1d5db", fontSize: "1.5rem", fontWeight: "bold", letterSpacing: "0.2em", textTransform: "uppercase", margin: 0 }}>
+              Sudoku
+            </h1>
+            <button
+              onClick={() => setShowInfo(true)}
+              aria-label="Game Info"
+              style={{
+                display: "flex", alignItems: "center", justifyContent: "center",
+                width: "1.75rem", height: "1.75rem",
+                background: "transparent", cursor: "pointer", padding: 0,
+                color: "#6b7280", transition: "color 0.15s, border-color 0.15s",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = "#d1d5db"; e.currentTarget.style.borderColor = "#6b7280"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = "#6b7280"; e.currentTarget.style.borderColor = "#374151"; }}
+            >
+              <Info size={16} strokeWidth={1.5} />
+            </button>
+          </div>
+
+          <InfoPopup isOpen={showInfo} onClose={() => setShowInfo(false)} title="Sudoku">
+            <p>Fill the grid so each row, column, and 3×3 box contains 1–9 with no repeats. You have {MAX_MISTAKES} lives — use them wisely.</p>
+          </InfoPopup>
+
           <HoverBtn onClick={() => window.history.back()} style={{ marginTop: "0.25rem", width: "fit-content" }}>← BACK</HoverBtn>
         </div>
 

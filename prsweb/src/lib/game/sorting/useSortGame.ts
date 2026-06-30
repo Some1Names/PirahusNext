@@ -14,7 +14,7 @@ export function useSortGame() {
   const [history, setHistory] = useState<number[][]>([]);
   const [timer, setTimer] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
-  const { awardPoints } = useGamePoints("sort");
+  const { awardPoints, popupPoints, showPopup, closePopup } = useGamePoints("sort");
 
   const par = LEVELS[diff].par;
 
@@ -82,5 +82,6 @@ export function useSortGame() {
   return {
     diff, bars, selected, swaps, won, history,
     timer, par, startGame, handleBarClick, undo, reset,
+    popupPoints, showPopup, closePopup,
   };
 }

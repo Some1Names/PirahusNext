@@ -5,6 +5,14 @@ const BASE_PTS: Record<"easy" | "medium" | "hard", number> = {
   hard: 50,
 };
 
+// ── Dungeon ─────────────────────────────────────────────────────────────
+export function calculateDungeonPts(fragmentsFound: number, trapCount: number): number {
+  const base = 50;
+  const fragmentBonus = fragmentsFound * 15; // up to 4 fragments
+  const trapPenalty = trapCount * 3; // total trap count in the dungeon, not hits
+  return Math.max(10, base + fragmentBonus - trapPenalty);
+}
+
 // ── Sudoku ───────────────────────────────────────────────────────────────
 export function calculateSudokuPts(
   diff: "easy" | "medium" | "hard",

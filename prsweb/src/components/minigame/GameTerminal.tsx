@@ -27,160 +27,79 @@ export default function GameTerminal({ state, dispatch }: Props) {
   const logs = state.logs.slice(-5);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "0.5rem",
-        fontFamily: "monospace",
-        fontSize: "0.875rem",
-        backgroundColor: "transparent",
-        color: "inherit",
-      }}
-    >
+    <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", fontFamily: "monospace", fontSize: "0.875rem", backgroundColor: "transparent", color: "inherit" }}>
       {/* Log output */}
-      <div
-        style={{
-          backgroundColor: "#030712",
-          border: "1px solid #374151",
-          borderRadius: "0.25rem",
-          padding: "0.75rem",
-          display: "flex",
-          flexDirection: "column",
-          gap: "0.25rem",
-          minHeight: "7rem",
-        }}
-      >
+      <div style={{ backgroundColor: "#030712", border: "1px solid #374151", borderRadius: "0.25rem", padding: "0.75rem", display: "flex", flexDirection: "column", gap: "0.25rem", minHeight: "7rem" }}>
         {logs.length === 0 ? (
-          <div style={{ color: "#4b5563", lineHeight: "1.25rem" }}>
-            Entering the dungeon...
-          </div>
+          <div style={{ color: "#4b5563", lineHeight: "1.25rem" }}>Entering the dungeon...</div>
         ) : (
           logs.map((line, i) => (
-            <div
-              key={i}
-              style={{ color: getLogColor(line), lineHeight: "1.25rem" }}
-            >
-              {line}
-            </div>
+            <div key={i} style={{ color: getLogColor(line), lineHeight: "1.25rem" }}>{line}</div>
           ))
         )}
       </div>
 
       {/* HUD */}
-      <div
-        style={{
-          display: "flex",
-          gap: "1rem",
-          fontSize: "0.75rem",
-          color: "#6b7280",
-          paddingLeft: "0.25rem",
-          backgroundColor: "transparent",
-        }}
-      >
+      <div style={{ display: "flex", gap: "1rem", fontSize: "0.75rem", color: "#6b7280", paddingLeft: "0.25rem", backgroundColor: "transparent" }}>
         <span>🧩 Fragments: {state.collectedParts.length} / 4</span>
-        <span>
-          📍 ({state.playerX}, {state.playerY})
-        </span>
+        <span>📍 ({state.playerX}, {state.playerY})</span>
       </div>
 
-      {/* Key fragments collected */}
+      {/* Key fragments collected — shown as cipher, with shift hint */}
       {state.collectedParts.length > 0 && (
-        <div
-          style={{
-            backgroundColor: "#111827",
-            border: "1px solid #374151",
-            borderRadius: "0.25rem",
-            padding: "0.5rem 0.75rem",
-            fontSize: "0.75rem",
-            color: "#fde047",
-          }}
-        >
-          Key fragments: {state.collectedParts.join(" · ")}
+        <div style={{ backgroundColor: "#111827", border: "1px solid #374151", borderRadius: "0.25rem", padding: "0.5rem 0.75rem", fontSize: "0.75rem", color: "#fde047", display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+          <span>Ciphered fragments (shift +2): {state.collectedParts.join(" · ")}</span>
+          <span style={{ color: "#6b7280", fontSize: "0.7rem" }}>
+            Decode each (shift back 2) and join in order to form the key.
+          </span>
         </div>
       )}
 
       {/* Enter key phase */}
       {state.phase === "enterKey" && (
-        <div
-          style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
-        >
-          <div
-            style={{
-              color: "#facc15",
-              fontSize: "0.75rem",
-              paddingLeft: "0.25rem",
-            }}
-          >
-            Hint: ค่ายครั้งนี้ — Enter the full key:
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem", paddingLeft: "0.25rem" }}>
+            <span style={{ color: "#facc15", fontSize: "0.75rem" }}>
+              Combine and decode your fragments (shift -2) to form the full key:
+            </span>
+            <span style={{ color: "#9ca3af", fontSize: "0.85rem", letterSpacing: "0.1em", fontFamily: "monospace" }}>
+              {state.collectedParts.length < 4
+                ? `Only ${state.collectedParts.length}/4 fragments found — explore more before guessing.`
+                : state.collectedParts.join("")}
+            </span>
           </div>
           <div style={{ display: "flex", gap: "0.5rem" }}>
             <input
               autoFocus
               type="text"
               value={state.keyInput}
-              onChange={(e) =>
-                dispatch({ type: "SET_KEY_INPUT", value: e.target.value })
-              }
+              onChange={(e) => dispatch({ type: "SET_KEY_INPUT", value: e.target.value })}
               onKeyDown={(e) => {
                 if (e.key === "Enter") dispatch({ type: "SUBMIT_KEY" });
                 if (e.key === "Escape") dispatch({ type: "CANCEL_KEY" });
               }}
               style={{
-                flex: 1,
-                backgroundColor: "#111827",
-                border: "1px solid #4b5563",
-                borderRadius: "0.25rem",
-                padding: "0.375rem 0.75rem",
-                color: "#ffffff",
-                fontSize: "0.875rem",
-                outline: "none",
-                fontFamily: "monospace",
+                flex: 1, backgroundColor: "#111827", border: "1px solid #4b5563",
+                borderRadius: "0.25rem", padding: "0.375rem 0.75rem", color: "#ffffff",
+                fontSize: "0.875rem", outline: "none", fontFamily: "monospace",
               }}
               onFocus={(e) => (e.target.style.borderColor = "#facc15")}
               onBlur={(e) => (e.target.style.borderColor = "#4b5563")}
-              placeholder="Enter key..."
+              placeholder="Enter decoded key..."
             />
             <button
               onClick={() => dispatch({ type: "SUBMIT_KEY" })}
-              style={{
-                backgroundColor: "#eab308",
-                color: "#000000",
-                borderRadius: "0.25rem",
-                padding: "0.375rem 0.75rem",
-                fontSize: "0.875rem",
-                fontWeight: 500,
-                border: "none",
-                cursor: "pointer",
-                fontFamily: "monospace",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = "#facc15")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "#eab308")
-              }
+              style={{ backgroundColor: "#eab308", color: "#000000", borderRadius: "0.25rem", padding: "0.375rem 0.75rem", fontSize: "0.875rem", fontWeight: 500, border: "none", cursor: "pointer", fontFamily: "monospace" }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#facc15")}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#eab308")}
             >
               Submit
             </button>
             <button
               onClick={() => dispatch({ type: "CANCEL_KEY" })}
-              style={{
-                backgroundColor: "#374151",
-                color: "#ffffff",
-                borderRadius: "0.25rem",
-                padding: "0.375rem 0.75rem",
-                fontSize: "0.875rem",
-                border: "none",
-                cursor: "pointer",
-                fontFamily: "monospace",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = "#4b5563")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "#374151")
-              }
+              style={{ backgroundColor: "#374151", color: "#ffffff", borderRadius: "0.25rem", padding: "0.375rem 0.75rem", fontSize: "0.875rem", border: "none", cursor: "pointer", fontFamily: "monospace" }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#4b5563")}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#374151")}
             >
               Cancel
             </button>
@@ -192,24 +111,9 @@ export default function GameTerminal({ state, dispatch }: Props) {
       {(state.phase === "dead" || state.phase === "escaped") && (
         <button
           onClick={() => dispatch({ type: "RESTART" })}
-          style={{
-            width: "100%",
-            padding: "0.5rem",
-            borderRadius: "0.25rem",
-            backgroundColor: "#374151",
-            color: "#ffffff",
-            fontSize: "0.875rem",
-            fontWeight: 500,
-            border: "none",
-            cursor: "pointer",
-            fontFamily: "monospace",
-          }}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.backgroundColor = "#4b5563")
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.backgroundColor = "#374151")
-          }
+          style={{ width: "100%", padding: "0.5rem", borderRadius: "0.25rem", backgroundColor: "#374151", color: "#ffffff", fontSize: "0.875rem", fontWeight: 500, border: "none", cursor: "pointer", fontFamily: "monospace" }}
+          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#4b5563")}
+          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#374151")}
         >
           {state.phase === "escaped" ? "🎉 Play Again" : "💀 Try Again"}
         </button>
