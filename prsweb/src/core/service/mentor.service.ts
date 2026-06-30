@@ -59,4 +59,20 @@ export class MentorService {
       throw error;
     }
   }
+  async getMentorPoint(mentorId: string): Promise<number> {
+    try {
+      const res = await this.mentorRepository.getMentorPoint(mentorId);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async addMentorPoint(mentorId: string, point: number): Promise<number> {
+    try {
+      const res = await this.mentorRepository.addMentorPoint(mentorId, point);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

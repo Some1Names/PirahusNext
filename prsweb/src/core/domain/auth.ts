@@ -15,16 +15,33 @@ export interface SetupPasswordResponse {
   message: string;
 }
 
-export interface CurrentUser {
+export type CurrentUser = MentorUser | MenteeUser;
+
+interface BaseUser {
   id: string;
   studentId: string;
+  name: string | null;
+  role: "admin" | "mentor" | "mentee";
+}
 
-  mentor?: {
+export interface MentorUser extends BaseUser {
+  type: "mentor";
+  point: number;
+  mentee: {
     id: string;
-    hints: IHint[];
-  };
+    studentId: string;
+    name: string | null;
+  }[];
+}
 
-  mentee?: {
+export interface MenteeUser extends BaseUser {
+  type: "mentee";
+  point: number;
+  unlockedHintLevels: number[];
+  mentorId: string | null;
+  mentor: {
     id: string;
-  };
+    studentId: string;
+    name: string | null;
+  } | null;
 }

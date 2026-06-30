@@ -1,23 +1,15 @@
 import { NextRequest } from "next/server";
-import { cookies } from "next/headers";
 import { prisma } from "@/src/lib/prisma";
-import { verifyToken } from "@/src/lib/jwt";
 import { successResponse } from "@/src/lib/api-response";
 import { HINT_PRICING } from "@/src/core/config/hint-pricing";
-import {
-  UnauthorizedError,
-  NotFoundError,
-  AppError,
-} from "@/src/core/error/error";
+import { NotFoundError, AppError } from "@/src/core/error/error";
 import { handleError } from "@/src/lib/handle-error";
 import { unlockHintSchema } from "@/src/core/schema/hint";
+import { requireAuth } from "@/src/lib/get-current-user";
 
 export async function POST(req: NextRequest) {
   try {
-    const token = (await cookies()).get("access_token")?.value;
-    if (!token) throw new UnauthorizedError();
-    const payload = verifyToken(token);
-    if (payload.type !== "mentee") throw new UnauthorizedError();
+    const session = await requireAuth(["mentee"]);
 
     const body = await req.json();
     const validatedData = unlockHintSchema.parse(body);
@@ -25,7 +17,7 @@ export async function POST(req: NextRequest) {
 
     const result = await prisma.$transaction(async (tx) => {
       const mentee = await tx.mentee.findUnique({
-        where: { studentId: payload.studentId },
+        where: { studentId: session.studentId },
         include: {
           mentor: {
             include: { hints: true },
@@ -56,7 +48,7 @@ export async function POST(req: NextRequest) {
       const updatedMentee = await tx.mentee.update({
         where: { id: mentee.id },
         data: {
-          point: mentee.point - cost,
+          point: { decrement: cost },
           unlockedHintLevels: { push: level },
         },
       });

@@ -24,4 +24,13 @@ export class MentorRepository implements IMentorRepository {
   async setAdminRole(id: string, isAdmin: boolean): Promise<ApiResponse<IMentor>> {
     return httpClient.patch<IMentor>(`/api/mentors/${id}`, { isAdmin });
   }
+  async getMentorPoint(mentorId: string): Promise<ApiResponse<number>> {
+    return httpClient.get<number>(`/api/point/mentor/${mentorId}`);
+  }
+  async addMentorPoint(
+    mentorId: string,
+    point: number,
+  ): Promise<ApiResponse<number>> {
+    return httpClient.post<number>(`/api/point/mentor/${mentorId}`, { point });
+  }
 }

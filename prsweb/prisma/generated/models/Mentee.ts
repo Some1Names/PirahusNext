@@ -488,14 +488,6 @@ export type MenteeCreateunlockedHintLevelsInput = {
   set: number[]
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type MenteeUpdateunlockedHintLevelsInput = {
   set?: number[]
   push?: number | number[]

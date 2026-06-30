@@ -1,60 +1,70 @@
 import { useState, useCallback } from "react";
+import {
+  mentorService,
+  menteeService,
+  authService,
+} from "@/src/infra/container";
+import { useUserStore } from "@/src/store/auth";
 
-type GameName = "sudoku" | "sort" | "trace";
+type GameName = "dungeon" | "sudoku" | "sort" | "trace";
 
 interface AwardResult {
-    success: boolean;
-    totalPoints?: number;
-    error?: string;
+  success: boolean;
+  totalPoints?: number;
+  error?: string;
 }
 
 export function useGamePoints(game: GameName) {
-    const [submitting, setSubmitting] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [popupPoints, setPopupPoints] = useState<number | null>(null);
-    const [showPopup, setShowPopup] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const getUser = useUserStore((s) => s.getUser);
+  const [error, setError] = useState<string | null>(null);
+  const [popupPoints, setPopupPoints] = useState<number | null>(null);
+  const [showPopup, setShowPopup] = useState(false);
 
-    const awardPoints = useCallback(async (
-        points: number,
-        meta?: Record<string, unknown>
+  const awardPoints = useCallback(
+    async (
+      points: number,
+      meta?: Record<string, unknown>,
     ): Promise<AwardResult> => {
-        if (points <= 0) return { success: false, error: "No points to award" };
+      if (points <= 0) return { success: false, error: "No points to award" };
+
+      setPopupPoints(points);
+      setShowPopup(true);
+
+      setSubmitting(true);
+      setError(null);
+
+      try {
+        const user = await authService.me();
+
+        if (!user) throw new Error("Not logged in");
+
+        let totalPoints = 0;
+
+        if (user.type === "mentor") {
+          totalPoints = await mentorService.addMentorPoint(user.id, points);
+        } else if (user.type === "mentee") {
+          totalPoints = await menteeService.addMenteePoint(user.id, points);
+        }
 
         setPopupPoints(points);
         setShowPopup(true);
+        
+        await getUser();
 
-        setSubmitting(true);
-        setError(null);
+        return { success: true, totalPoints };
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "Unknown error";
+        setError(message);
+        return { success: false, error: message };
+      } finally {
+        setSubmitting(false);
+      }
+    },
+    [game],
+  );
 
-        try {
-            const res = await fetch("/api/points", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ points, game, meta }),
-            });
+  const closePopup = useCallback(() => setShowPopup(false), []);
 
-            if (!res.ok) {
-                const data = await res.json().catch(() => ({}));
-                throw new Error(data.error ?? "Failed to award points");
-            }
-
-            const data = await res.json();
-
-            // trigger popup
-            setPopupPoints(points);
-            setShowPopup(true);
-
-            return { success: true, totalPoints: data.totalPoints };
-        } catch (err) {
-            const message = err instanceof Error ? err.message : "Unknown error";
-            setError(message);
-            return { success: false, error: message };
-        } finally {
-            setSubmitting(false);
-        }
-    }, [game]);
-
-    const closePopup = useCallback(() => setShowPopup(false), []);
-
-    return { awardPoints, submitting, error, popupPoints, showPopup, closePopup };
+  return { awardPoints, submitting, error, popupPoints, showPopup, closePopup };
 }

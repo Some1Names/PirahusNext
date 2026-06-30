@@ -1,20 +1,16 @@
-import { cookies } from "next/headers";
 import { prisma } from "@/src/lib/prisma";
-import { verifyToken } from "@/src/lib/jwt";
 import { successResponse } from "@/src/lib/api-response";
 import { HINT_PRICING } from "@/src/core/config/hint-pricing";
-import { UnauthorizedError, NotFoundError } from "@/src/core/error/error";
+import { NotFoundError } from "@/src/core/error/error";
 import { handleError } from "@/src/lib/handle-error";
+import { requireAuth } from "@/src/lib/get-current-user";
 
 export async function GET() {
   try {
-    const token = (await cookies()).get("access_token")?.value;
-    if (!token) throw new UnauthorizedError();
-    const payload = verifyToken(token);
-    if (payload.type !== "mentee") throw new UnauthorizedError();
+    const session = await requireAuth(["mentee"]);
 
     const mentee = await prisma.mentee.findUnique({
-      where: { studentId: payload.studentId },
+      where: { studentId: session.studentId },
       include: {
         mentor: {
           include: { hints: true },

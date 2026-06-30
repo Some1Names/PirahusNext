@@ -6,6 +6,7 @@ export interface IMentor {
   studentId: string;
   name?: string | null;
   isAdmin: boolean;
+  point: number;
 
   hints: IHint[];
 

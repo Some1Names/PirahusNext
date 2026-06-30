@@ -22,7 +22,6 @@ export async function GET() {
           studentId: payload.studentId,
         },
         include: {
-          hints: true,
           mentee: true,
         },
       });
@@ -50,8 +49,12 @@ export async function GET() {
         });
       }
 
+      const { password, isAdmin, ...userData } = mentor;
+
       return successResponse({
-        ...mentor,
+        ...userData,
+        type: "mentor",
+        role: currentRole,
       });
     }
 
@@ -88,8 +91,12 @@ export async function GET() {
         });
       }
 
+      const { password, ...menteeWithoutPassword } = mentee;
+
       return successResponse({
-        ...mentee,
+        ...menteeWithoutPassword,
+        type: "mentee",
+        role: currentRole,
       });
     }
   } catch (error) {

@@ -20,6 +20,7 @@ model Mentor {
   password   String?
   name       String?
   isAdmin    Boolean @default(false)
+  point      Int     @default(0)
   hints      Hint[]
 
   mentee     Mentee?
