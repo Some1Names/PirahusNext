@@ -3,7 +3,7 @@ import { prisma } from "@/src/lib/prisma";
 import { successResponse } from "@/src/lib/api-response";
 import { NotFoundError } from "@/src/core/error/error";
 import { handleError } from "@/src/lib/handle-error";
-import { updateMenteePointSchema } from "@/src/core/schema/point";
+import { addMenteePointSchema } from "@/src/core/schema/point";
 
 export async function GET(
   req: NextRequest,
@@ -37,7 +37,7 @@ export async function POST(
     const { id } = await params;
     const body = await req.json();
 
-    const validatedData = updateMenteePointSchema.parse(body);
+    const validatedData = addMenteePointSchema.parse(body);
 
     let mentee = await prisma.mentee.findUnique({ where: { id } });
 
@@ -49,7 +49,9 @@ export async function POST(
     const updatedMentee = await prisma.mentee.update({
       where: { id: mentee.id },
       data: {
-        point: validatedData.point,
+        point: {
+          increment: validatedData.point,
+        },
       },
     });
 

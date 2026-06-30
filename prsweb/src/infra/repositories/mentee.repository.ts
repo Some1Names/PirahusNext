@@ -28,7 +28,7 @@ export class MenteeRepository implements IMenteeRepository {
     );
     return response;
   }
-  async updateMenteePoint(
+  async addMenteePoint(
     menteeId: string,
     point: number,
   ): Promise<ApiResponse<number>> {

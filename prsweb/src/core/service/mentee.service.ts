@@ -56,9 +56,9 @@ export class MenteeService {
       throw error;
     }
   }
-  async updateMenteePoint(menteeId: string, point: number): Promise<number> {
+  async addMenteePoint(menteeId: string, point: number): Promise<number> {
     try {
-      const res = await this.menteeRepository.updateMenteePoint(menteeId, point);
+      const res = await this.menteeRepository.addMenteePoint(menteeId, point);
       return res.data;
     } catch (error) {
       throw error;

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-export const updateMenteePointSchema = z.object({
-  point: z.number().int().min(0),
+export const addMenteePointSchema = z.object({
+  point: z.number().int(),
 });
 
-export type UpdateMenteePointInput = z.infer<typeof updateMenteePointSchema>;
+export type AddMenteePointInput = z.infer<typeof addMenteePointSchema>;
