@@ -20,8 +20,20 @@ export type MenteeModel = runtime.Types.Result.DefaultSelection<Prisma.$MenteePa
 
 export type AggregateMentee = {
   _count: MenteeCountAggregateOutputType | null
+  _avg: MenteeAvgAggregateOutputType | null
+  _sum: MenteeSumAggregateOutputType | null
   _min: MenteeMinAggregateOutputType | null
   _max: MenteeMaxAggregateOutputType | null
+}
+
+export type MenteeAvgAggregateOutputType = {
+  point: number | null
+  unlockedHintLevels: number | null
+}
+
+export type MenteeSumAggregateOutputType = {
+  point: number | null
+  unlockedHintLevels: number[]
 }
 
 export type MenteeMinAggregateOutputType = {
@@ -29,6 +41,7 @@ export type MenteeMinAggregateOutputType = {
   studentId: string | null
   password: string | null
   name: string | null
+  point: number | null
   mentorId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -39,6 +52,7 @@ export type MenteeMaxAggregateOutputType = {
   studentId: string | null
   password: string | null
   name: string | null
+  point: number | null
   mentorId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -49,6 +63,8 @@ export type MenteeCountAggregateOutputType = {
   studentId: number
   password: number
   name: number
+  point: number
+  unlockedHintLevels: number
   mentorId: number
   createdAt: number
   updatedAt: number
@@ -56,11 +72,22 @@ export type MenteeCountAggregateOutputType = {
 }
 
 
+export type MenteeAvgAggregateInputType = {
+  point?: true
+  unlockedHintLevels?: true
+}
+
+export type MenteeSumAggregateInputType = {
+  point?: true
+  unlockedHintLevels?: true
+}
+
 export type MenteeMinAggregateInputType = {
   id?: true
   studentId?: true
   password?: true
   name?: true
+  point?: true
   mentorId?: true
   createdAt?: true
   updatedAt?: true
@@ -71,6 +98,7 @@ export type MenteeMaxAggregateInputType = {
   studentId?: true
   password?: true
   name?: true
+  point?: true
   mentorId?: true
   createdAt?: true
   updatedAt?: true
@@ -81,6 +109,8 @@ export type MenteeCountAggregateInputType = {
   studentId?: true
   password?: true
   name?: true
+  point?: true
+  unlockedHintLevels?: true
   mentorId?: true
   createdAt?: true
   updatedAt?: true
@@ -125,6 +155,18 @@ export type MenteeAggregateArgs<ExtArgs extends runtime.Types.Extensions.Interna
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: MenteeAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: MenteeSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: MenteeMinAggregateInputType
@@ -155,6 +197,8 @@ export type MenteeGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   _count?: MenteeCountAggregateInputType | true
+  _avg?: MenteeAvgAggregateInputType
+  _sum?: MenteeSumAggregateInputType
   _min?: MenteeMinAggregateInputType
   _max?: MenteeMaxAggregateInputType
 }
@@ -164,10 +208,14 @@ export type MenteeGroupByOutputType = {
   studentId: string
   password: string | null
   name: string | null
+  point: number
+  unlockedHintLevels: number[]
   mentorId: string
   createdAt: Date
   updatedAt: Date
   _count: MenteeCountAggregateOutputType | null
+  _avg: MenteeAvgAggregateOutputType | null
+  _sum: MenteeSumAggregateOutputType | null
   _min: MenteeMinAggregateOutputType | null
   _max: MenteeMaxAggregateOutputType | null
 }
@@ -195,6 +243,8 @@ export type MenteeWhereInput = {
   studentId?: Prisma.StringFilter<"Mentee"> | string
   password?: Prisma.StringNullableFilter<"Mentee"> | string | null
   name?: Prisma.StringNullableFilter<"Mentee"> | string | null
+  point?: Prisma.IntFilter<"Mentee"> | number
+  unlockedHintLevels?: Prisma.IntNullableListFilter<"Mentee">
   mentorId?: Prisma.StringFilter<"Mentee"> | string
   createdAt?: Prisma.DateTimeFilter<"Mentee"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Mentee"> | Date | string
@@ -206,6 +256,8 @@ export type MenteeOrderByWithRelationInput = {
   studentId?: Prisma.SortOrder
   password?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
+  point?: Prisma.SortOrder
+  unlockedHintLevels?: Prisma.SortOrder
   mentorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -221,6 +273,8 @@ export type MenteeWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.MenteeWhereInput | Prisma.MenteeWhereInput[]
   password?: Prisma.StringNullableFilter<"Mentee"> | string | null
   name?: Prisma.StringNullableFilter<"Mentee"> | string | null
+  point?: Prisma.IntFilter<"Mentee"> | number
+  unlockedHintLevels?: Prisma.IntNullableListFilter<"Mentee">
   createdAt?: Prisma.DateTimeFilter<"Mentee"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Mentee"> | Date | string
   mentor?: Prisma.XOR<Prisma.MentorScalarRelationFilter, Prisma.MentorWhereInput>
@@ -231,12 +285,16 @@ export type MenteeOrderByWithAggregationInput = {
   studentId?: Prisma.SortOrder
   password?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
+  point?: Prisma.SortOrder
+  unlockedHintLevels?: Prisma.SortOrder
   mentorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.MenteeCountOrderByAggregateInput
+  _avg?: Prisma.MenteeAvgOrderByAggregateInput
   _max?: Prisma.MenteeMaxOrderByAggregateInput
   _min?: Prisma.MenteeMinOrderByAggregateInput
+  _sum?: Prisma.MenteeSumOrderByAggregateInput
 }
 
 export type MenteeScalarWhereWithAggregatesInput = {
@@ -247,6 +305,8 @@ export type MenteeScalarWhereWithAggregatesInput = {
   studentId?: Prisma.StringWithAggregatesFilter<"Mentee"> | string
   password?: Prisma.StringNullableWithAggregatesFilter<"Mentee"> | string | null
   name?: Prisma.StringNullableWithAggregatesFilter<"Mentee"> | string | null
+  point?: Prisma.IntWithAggregatesFilter<"Mentee"> | number
+  unlockedHintLevels?: Prisma.IntNullableListFilter<"Mentee">
   mentorId?: Prisma.StringWithAggregatesFilter<"Mentee"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Mentee"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Mentee"> | Date | string
@@ -257,6 +317,8 @@ export type MenteeCreateInput = {
   studentId: string
   password?: string | null
   name?: string | null
+  point?: number
+  unlockedHintLevels?: Prisma.MenteeCreateunlockedHintLevelsInput | number[]
   createdAt?: Date | string
   updatedAt?: Date | string
   mentor: Prisma.MentorCreateNestedOneWithoutMenteeInput
@@ -267,6 +329,8 @@ export type MenteeUncheckedCreateInput = {
   studentId: string
   password?: string | null
   name?: string | null
+  point?: number
+  unlockedHintLevels?: Prisma.MenteeCreateunlockedHintLevelsInput | number[]
   mentorId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -277,6 +341,8 @@ export type MenteeUpdateInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  point?: Prisma.IntFieldUpdateOperationsInput | number
+  unlockedHintLevels?: Prisma.MenteeUpdateunlockedHintLevelsInput | number[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mentor?: Prisma.MentorUpdateOneRequiredWithoutMenteeNestedInput
@@ -287,6 +353,8 @@ export type MenteeUncheckedUpdateInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  point?: Prisma.IntFieldUpdateOperationsInput | number
+  unlockedHintLevels?: Prisma.MenteeUpdateunlockedHintLevelsInput | number[]
   mentorId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -297,6 +365,8 @@ export type MenteeCreateManyInput = {
   studentId: string
   password?: string | null
   name?: string | null
+  point?: number
+  unlockedHintLevels?: Prisma.MenteeCreateunlockedHintLevelsInput | number[]
   mentorId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -307,6 +377,8 @@ export type MenteeUpdateManyMutationInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  point?: Prisma.IntFieldUpdateOperationsInput | number
+  unlockedHintLevels?: Prisma.MenteeUpdateunlockedHintLevelsInput | number[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -316,6 +388,8 @@ export type MenteeUncheckedUpdateManyInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  point?: Prisma.IntFieldUpdateOperationsInput | number
+  unlockedHintLevels?: Prisma.MenteeUpdateunlockedHintLevelsInput | number[]
   mentorId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -326,14 +400,29 @@ export type MenteeNullableScalarRelationFilter = {
   isNot?: Prisma.MenteeWhereInput | null
 }
 
+export type IntNullableListFilter<$PrismaModel = never> = {
+  equals?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel> | null
+  has?: number | Prisma.IntFieldRefInput<$PrismaModel> | null
+  hasEvery?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel>
+  hasSome?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
+}
+
 export type MenteeCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   password?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  point?: Prisma.SortOrder
+  unlockedHintLevels?: Prisma.SortOrder
   mentorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type MenteeAvgOrderByAggregateInput = {
+  point?: Prisma.SortOrder
+  unlockedHintLevels?: Prisma.SortOrder
 }
 
 export type MenteeMaxOrderByAggregateInput = {
@@ -341,6 +430,7 @@ export type MenteeMaxOrderByAggregateInput = {
   studentId?: Prisma.SortOrder
   password?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  point?: Prisma.SortOrder
   mentorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -351,9 +441,15 @@ export type MenteeMinOrderByAggregateInput = {
   studentId?: Prisma.SortOrder
   password?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  point?: Prisma.SortOrder
   mentorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type MenteeSumOrderByAggregateInput = {
+  point?: Prisma.SortOrder
+  unlockedHintLevels?: Prisma.SortOrder
 }
 
 export type MenteeCreateNestedOneWithoutMentorInput = {
@@ -388,11 +484,30 @@ export type MenteeUncheckedUpdateOneWithoutMentorNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MenteeUpdateToOneWithWhereWithoutMentorInput, Prisma.MenteeUpdateWithoutMentorInput>, Prisma.MenteeUncheckedUpdateWithoutMentorInput>
 }
 
+export type MenteeCreateunlockedHintLevelsInput = {
+  set: number[]
+}
+
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type MenteeUpdateunlockedHintLevelsInput = {
+  set?: number[]
+  push?: number | number[]
+}
+
 export type MenteeCreateWithoutMentorInput = {
   id?: string
   studentId: string
   password?: string | null
   name?: string | null
+  point?: number
+  unlockedHintLevels?: Prisma.MenteeCreateunlockedHintLevelsInput | number[]
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -402,6 +517,8 @@ export type MenteeUncheckedCreateWithoutMentorInput = {
   studentId: string
   password?: string | null
   name?: string | null
+  point?: number
+  unlockedHintLevels?: Prisma.MenteeCreateunlockedHintLevelsInput | number[]
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -427,6 +544,8 @@ export type MenteeUpdateWithoutMentorInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  point?: Prisma.IntFieldUpdateOperationsInput | number
+  unlockedHintLevels?: Prisma.MenteeUpdateunlockedHintLevelsInput | number[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -436,6 +555,8 @@ export type MenteeUncheckedUpdateWithoutMentorInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  point?: Prisma.IntFieldUpdateOperationsInput | number
+  unlockedHintLevels?: Prisma.MenteeUpdateunlockedHintLevelsInput | number[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -447,6 +568,8 @@ export type MenteeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   studentId?: boolean
   password?: boolean
   name?: boolean
+  point?: boolean
+  unlockedHintLevels?: boolean
   mentorId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -458,6 +581,8 @@ export type MenteeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   studentId?: boolean
   password?: boolean
   name?: boolean
+  point?: boolean
+  unlockedHintLevels?: boolean
   mentorId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -469,6 +594,8 @@ export type MenteeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   studentId?: boolean
   password?: boolean
   name?: boolean
+  point?: boolean
+  unlockedHintLevels?: boolean
   mentorId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -480,12 +607,14 @@ export type MenteeSelectScalar = {
   studentId?: boolean
   password?: boolean
   name?: boolean
+  point?: boolean
+  unlockedHintLevels?: boolean
   mentorId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type MenteeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "password" | "name" | "mentorId" | "createdAt" | "updatedAt", ExtArgs["result"]["mentee"]>
+export type MenteeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "password" | "name" | "point" | "unlockedHintLevels" | "mentorId" | "createdAt" | "updatedAt", ExtArgs["result"]["mentee"]>
 export type MenteeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   mentor?: boolean | Prisma.MentorDefaultArgs<ExtArgs>
 }
@@ -506,6 +635,8 @@ export type $MenteePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     studentId: string
     password: string | null
     name: string | null
+    point: number
+    unlockedHintLevels: number[]
     mentorId: string
     createdAt: Date
     updatedAt: Date
@@ -937,6 +1068,8 @@ export interface MenteeFieldRefs {
   readonly studentId: Prisma.FieldRef<"Mentee", 'String'>
   readonly password: Prisma.FieldRef<"Mentee", 'String'>
   readonly name: Prisma.FieldRef<"Mentee", 'String'>
+  readonly point: Prisma.FieldRef<"Mentee", 'Int'>
+  readonly unlockedHintLevels: Prisma.FieldRef<"Mentee", 'Int[]'>
   readonly mentorId: Prisma.FieldRef<"Mentee", 'String'>
   readonly createdAt: Prisma.FieldRef<"Mentee", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Mentee", 'DateTime'>

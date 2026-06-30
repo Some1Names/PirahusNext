@@ -19,6 +19,23 @@ export class MenteeRepository implements IMenteeRepository {
     return httpClient.get<IMentee>(`/api/mentees/${id}`);
   }
   async getAllMentees(): Promise<ApiResponse<IMentee[]>> {
-    return httpClient.get<IMentee[]>("/api/mentees");
+    const response = await httpClient.get<IMentee[]>("/api/mentees");
+    return response;
+  }
+  async getMenteePoint(menteeId: string): Promise<ApiResponse<number>> {
+    const response = await httpClient.get<number>(
+      `/api/point/mentee/${menteeId}`,
+    );
+    return response;
+  }
+  async addMenteePoint(
+    menteeId: string,
+    point: number,
+  ): Promise<ApiResponse<number>> {
+    const response = await httpClient.post<number>(
+      `/api/point/mentee/${menteeId}`,
+      { point },
+    );
+    return response;
   }
 }

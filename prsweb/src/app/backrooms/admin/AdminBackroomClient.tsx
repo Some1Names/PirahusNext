@@ -66,6 +66,7 @@ function SeniorRow({
   const [editVal, setEditVal] = useState("");
   const [adding, setAdding] = useState(false);
   const [newHint, setNewHint] = useState("");
+  const [newLevel, setNewLevel] = useState(1);
   const [togglingAdmin, setTogglingAdmin] = useState(false);
 
   const toggleAdmin = async (e: React.MouseEvent) => {
@@ -203,9 +204,10 @@ function SeniorRow({
       });
       await hintService.addHints({
         mentorId: senior.id,
-        hints: [newHint.trim()],
+        hints: [{ content: newHint.trim(), level: newLevel }],
       });
       setNewHint("");
+      setNewLevel(1);
       setAdding(false);
       await onRefresh();
       Swal.fire({
@@ -425,27 +427,34 @@ function SeniorRow({
             >
               [ hints ]
             </span>
-            <button
-              onClick={() => {
-                setAdding(true);
-                setEditingIdx(null);
-              }}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "5px",
-                background: "rgba(112, 136, 64, 0.12)",
-                border: "1px solid rgba(112,136,64,0.35)",
-                borderRadius: "2px",
-                color: "#a8c060",
-                fontSize: "11px",
-                fontFamily: "monospace",
-                padding: "3px 8px",
-                cursor: "pointer",
-              }}
-            >
-              <FaPlus size={9} /> ADD
-            </button>
+            {senior.hints.length < 5 && (
+              <button
+                onClick={() => {
+                  const usedLevels = senior.hints.map(h => h.level);
+                  const availableLevels = [1, 2, 3, 4, 5].filter(l => !usedLevels.includes(l));
+                  if (availableLevels.length > 0) {
+                    setNewLevel(availableLevels[0]);
+                  }
+                  setAdding(true);
+                  setEditingIdx(null);
+                }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "5px",
+                  background: "rgba(112, 136, 64, 0.12)",
+                  border: "1px solid rgba(112,136,64,0.35)",
+                  borderRadius: "2px",
+                  color: "#a8c060",
+                  fontSize: "11px",
+                  fontFamily: "monospace",
+                  padding: "3px 8px",
+                  cursor: "pointer",
+                }}
+              >
+                <FaPlus size={9} /> ADD
+              </button>
+            )}
           </div>
 
           {senior.hints.length === 0 && !adding && (
@@ -475,12 +484,18 @@ function SeniorRow({
               <span
                 style={{
                   fontSize: "11px",
-                  color: "#3a4a20",
+                  fontWeight: 700,
+                  color: "#a8c060",
+                  backgroundColor: "rgba(168, 192, 96, 0.12)",
+                  border: "1px solid rgba(168, 192, 96, 0.3)",
+                  borderRadius: "2px",
+                  padding: "3px 6px",
                   fontFamily: "monospace",
-                  minWidth: "16px",
+                  minWidth: "56px",
+                  textAlign: "center",
                 }}
               >
-                {i + 1}.
+                Level {h.level}
               </span>
 
               {editingIdx === i ? (
@@ -575,6 +590,29 @@ function SeniorRow({
 
           {adding && (
             <div style={{ display: "flex", gap: "6px", marginTop: "8px" }}>
+              <select
+                value={newLevel}
+                onChange={(e) => setNewLevel(Number(e.target.value))}
+                style={{
+                  background: "rgba(140,170,80,0.08)",
+                  border: "1px solid rgba(140,170,80,0.3)",
+                  borderRadius: "2px",
+                  color: "#d8e8b8",
+                  fontSize: "13px",
+                  padding: "5px",
+                  fontFamily: "monospace",
+                  outline: "none",
+                }}
+              >
+                {[1, 2, 3, 4, 5].map((l) => {
+                  const isUsed = senior.hints.some(h => h.level === l);
+                  return (
+                    <option key={l} value={l} disabled={isUsed} style={{ background: "#0a0e08", color: isUsed ? "#4a5a3a" : "#d8e8b8" }}>
+                      L{l} {isUsed ? "(เลือกแล้ว)" : ""}
+                    </option>
+                  );
+                })}
+              </select>
               <input
                 autoFocus
                 placeholder="type hint here..."

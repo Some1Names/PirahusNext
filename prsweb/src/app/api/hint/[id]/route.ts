@@ -5,6 +5,8 @@ import { prisma } from "@/src/lib/prisma";
 import { requireAuth } from "@/src/lib/get-current-user";
 import { ForbiddenError } from "@/src/core/error/error";
 
+import { updateHintsSchema } from "@/src/core/schema/hint";
+
 export async function PUT(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -12,7 +14,8 @@ export async function PUT(
   try {
     const session = await requireAuth(["admin", "mentor"]);
     const { id } = await params;
-    const { content } = await req.json();
+    const body = await req.json();
+    const { content } = updateHintsSchema.parse(body);
 
     if (session.role === "mentor") {
       const hint = await prisma.hint.findUnique({
@@ -39,7 +42,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const session = await requireAuth(["admin", "mentor", "mentee"]);
+    const session = await requireAuth(["admin", "mentor"]);
     const { id } = await params; // mentorId
 
     if (session.role === "mentor") {
@@ -47,13 +50,6 @@ export async function GET(
         where: { studentId: session.studentId },
       });
       if (!dbMentor || dbMentor.id !== id) {
-        throw new ForbiddenError("You cannot view other mentors' hints");
-      }
-    } else if (session.role === "mentee") {
-      const dbMentee = await prisma.mentee.findUnique({
-        where: { studentId: session.studentId },
-      });
-      if (!dbMentee || dbMentee.mentorId !== id) {
         throw new ForbiddenError("You cannot view other mentors' hints");
       }
     }

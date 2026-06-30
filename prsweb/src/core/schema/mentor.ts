@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { idSchema, IdInput } from "./common";
 
 export const createMentorSchema = z.object({
   studentId: z.string().min(1),
@@ -7,17 +8,19 @@ export const createMentorSchema = z.object({
 
 export type CreateMentorInput = z.infer<typeof createMentorSchema>;
 
-export const deleteMentorSchema = z.object({
+export const updateMentorSchema = z.object({
   id: z.string().min(1),
+  studentId: z.string().min(1),
+  name: z.string().optional().nullable(),
 });
 
-export type DeleteMentorInput = z.infer<typeof deleteMentorSchema>;
+export type UpdateMentorInput = z.infer<typeof updateMentorSchema>;
 
-export const getMentorByIdSchema = z.object({
-  id: z.string().min(1),
-});
+export const deleteMentorSchema = idSchema;
+export type DeleteMentorInput = IdInput;
 
-export type GetMentorByIdInput = z.infer<typeof getMentorByIdSchema>;
+export const getMentorByIdSchema = idSchema;
+export type GetMentorByIdInput = IdInput;
 
 export const getAllMentorsSchema = z.object({});
 

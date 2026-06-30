@@ -3,14 +3,17 @@ import { successResponse } from "@/src/lib/api-response";
 import { handleError } from "@/src/lib/handle-error";
 import { NextRequest } from "next/server";
 import { requireAuth } from "@/src/lib/get-current-user";
+import { z } from "zod";
+import { createMentorSchema } from "@/src/core/schema/mentor";
 
 export async function POST(req: NextRequest) {
   try {
     await requireAuth(["admin"]);
     const body = await req.json();
+    const validatedData = z.array(createMentorSchema).parse(body);
 
     await prisma.mentor.createMany({
-      data: body,
+      data: validatedData,
       skipDuplicates: true,
     });
 

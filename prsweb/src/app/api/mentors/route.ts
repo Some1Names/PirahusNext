@@ -3,16 +3,18 @@ import { successResponse } from "@/src/lib/api-response";
 import { handleError } from "@/src/lib/handle-error";
 import { NextRequest } from "next/server";
 import { requireAuth } from "@/src/lib/get-current-user";
+import { createMentorSchema, updateMentorSchema } from "@/src/core/schema/mentor";
 
 export async function POST(req: NextRequest) {
   try {
     await requireAuth(["admin"]);
     const body = await req.json();
+    const validatedData = createMentorSchema.parse(body);
 
     const mentor = await prisma.mentor.create({
       data: {
-        studentId: body.studentId,
-        name: body.name,
+        studentId: validatedData.studentId,
+        name: validatedData.name,
       },
       include: {
         hints: true,
@@ -28,7 +30,7 @@ export async function POST(req: NextRequest) {
 
 export async function GET() {
   try {
-    await requireAuth(["admin", "mentor", "mentee"]);
+    await requireAuth(["admin", "mentor"]);
     const mentors = await prisma.mentor.findMany({
       include: {
         hints: true,
@@ -49,14 +51,15 @@ export async function PUT(req: NextRequest) {
   try {
     await requireAuth(["admin"]);
     const body = await req.json();
+    const validatedData = updateMentorSchema.parse(body);
 
     const mentor = await prisma.mentor.update({
       where: {
-        id: body.id,
+        id: validatedData.id,
       },
       data: {
-        studentId: body.studentId,
-        name: body.name,
+        studentId: validatedData.studentId,
+        name: validatedData.name,
       },
       include: {
         hints: true,

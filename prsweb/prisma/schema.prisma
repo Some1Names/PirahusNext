@@ -33,6 +33,8 @@ model Mentee {
   studentId  String @unique
   password   String?
   name       String?
+  point               Int     @default(0)
+  unlockedHintLevels  Int[]   @default([])
 
   mentorId   String @unique
   mentor     Mentor @relation(fields: [mentorId], references: [id])
@@ -44,9 +46,12 @@ model Mentee {
 model Hint {
   id         String   @id @default(cuid())
   content    String
+  level      Int
 
   mentorId   String
   mentor     Mentor @relation(fields: [mentorId], references: [id], onDelete: Cascade)
 
   createdAt  DateTime @default(now())
+
+  @@unique([mentorId, level])
 }

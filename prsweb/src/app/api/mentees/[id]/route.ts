@@ -9,7 +9,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    await requireAuth(["admin", "mentor", "mentee"]);
+    await requireAuth(["admin", "mentor"]);
     const { id } = await params;
 
     const mentee = await prisma.mentee.findUnique({

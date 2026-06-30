@@ -100,6 +100,8 @@ export const MenteeScalarFieldEnum = {
   studentId: 'studentId',
   password: 'password',
   name: 'name',
+  point: 'point',
+  unlockedHintLevels: 'unlockedHintLevels',
   mentorId: 'mentorId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -111,6 +113,7 @@ export type MenteeScalarFieldEnum = (typeof MenteeScalarFieldEnum)[keyof typeof 
 export const HintScalarFieldEnum = {
   id: 'id',
   content: 'content',
+  level: 'level',
   mentorId: 'mentorId',
   createdAt: 'createdAt'
 } as const

@@ -203,12 +203,18 @@ function HintItem({
       <span
         style={{
           fontSize: "11px",
-          color: "#3a4a20",
+          fontWeight: 700,
+          color: "#a8c060",
+          backgroundColor: "rgba(168, 192, 96, 0.12)",
+          border: "1px solid rgba(168, 192, 96, 0.3)",
+          borderRadius: "2px",
+          padding: "3px 6px",
           fontFamily: "monospace",
-          minWidth: "20px",
+          minWidth: "56px",
+          textAlign: "center",
         }}
       >
-        {index + 1}.
+        Level {hint.level}
       </span>
 
       {editing ? (
@@ -313,6 +319,7 @@ export default function SeniorBackroomClient() {
   const [mentor, setMentor] = useState<any>(null);
   const [hints, setHints] = useState<IHint[]>([]);
   const [newHint, setNewHint] = useState("");
+  const [newLevel, setNewLevel] = useState<number>(1);
   const [adding, setAdding] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -355,9 +362,10 @@ export default function SeniorBackroomClient() {
 
       await hintService.addHints({
         mentorId: mentor.id,
-        hints: [newHint.trim()],
+        hints: [{ content: newHint.trim(), level: newLevel }],
       });
       setNewHint("");
+      setNewLevel(1);
       setAdding(false);
       await refreshHints(mentor.id);
 
@@ -629,24 +637,33 @@ export default function SeniorBackroomClient() {
           >
             [ HINTS ] — {hints.length} added
           </span>
-          <button
-            onClick={() => setAdding(true)}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "5px",
-              background: "rgba(112, 136, 64, 0.12)",
-              border: "1px solid rgba(112,136,64,0.35)",
-              borderRadius: "2px",
-              color: "#a8c060",
-              fontSize: "11px",
-              fontFamily: "monospace",
-              padding: "4px 10px",
-              cursor: "pointer",
-            }}
-          >
-            <FaPlus size={9} /> ADD HINT
-          </button>
+          {hints.length < 5 && (
+            <button
+              onClick={() => {
+                const usedLevels = hints.map(h => h.level);
+                const availableLevels = [1, 2, 3, 4, 5].filter(l => !usedLevels.includes(l));
+                if (availableLevels.length > 0) {
+                  setNewLevel(availableLevels[0]);
+                }
+                setAdding(true);
+              }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "5px",
+                background: "rgba(112, 136, 64, 0.12)",
+                border: "1px solid rgba(112,136,64,0.35)",
+                borderRadius: "2px",
+                color: "#a8c060",
+                fontSize: "11px",
+                fontFamily: "monospace",
+                padding: "4px 10px",
+                cursor: "pointer",
+              }}
+            >
+              <FaPlus size={9} /> ADD HINT
+            </button>
+          )}
         </div>
 
         {hints.length === 0 && !adding && (
@@ -693,6 +710,31 @@ export default function SeniorBackroomClient() {
             >
               NEW HINT
             </p>
+            <select
+              value={newLevel}
+              onChange={(e) => setNewLevel(Number(e.target.value))}
+              style={{
+                width: "100%",
+                background: "rgba(140,170,80,0.06)",
+                border: "1px solid rgba(140,170,80,0.25)",
+                borderRadius: "2px",
+                color: "#d8e8b8",
+                fontSize: "14px",
+                padding: "8px 12px",
+                fontFamily: "monospace",
+                outline: "none",
+                marginBottom: "10px",
+              }}
+            >
+              {[1, 2, 3, 4, 5].map((l) => {
+                const isUsed = hints.some(h => h.level === l);
+                return (
+                  <option key={l} value={l} disabled={isUsed} style={{ background: "#0a0e08", color: isUsed ? "#4a5a3a" : "#d8e8b8" }}>
+                    Level {l} {isUsed ? "(เลือกแล้ว)" : ""}
+                  </option>
+                );
+              })}
+            </select>
             <textarea
               autoFocus
               placeholder="เขียนคำใบ้ที่นี่..."

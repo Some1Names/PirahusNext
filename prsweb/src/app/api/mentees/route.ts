@@ -3,17 +3,19 @@ import { successResponse } from "@/src/lib/api-response";
 import { handleError } from "@/src/lib/handle-error";
 import { NextRequest } from "next/server";
 import { requireAuth } from "@/src/lib/get-current-user";
+import { createMenteeSchema } from "@/src/core/schema/mentee";
 
 export async function POST(req: NextRequest) {
   try {
     await requireAuth(["admin"]);
     const body = await req.json();
+    const validatedData = createMenteeSchema.parse(body);
 
     const mentee = await prisma.mentee.create({
       data: {
-        studentId: body.studentId,
-        mentorId: body.mentorId,
-        name: body.name,
+        studentId: validatedData.studentId,
+        mentorId: validatedData.mentorId,
+        name: validatedData.name,
       },
       include: {
         mentor: {
@@ -32,7 +34,7 @@ export async function POST(req: NextRequest) {
 
 export async function GET() {
   try {
-    await requireAuth(["admin", "mentor", "mentee"]);
+    await requireAuth(["admin", "mentor"]);
     const mentees = await prisma.mentee.findMany({
       include: {
         mentor: {

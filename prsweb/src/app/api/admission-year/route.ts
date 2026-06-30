@@ -3,6 +3,7 @@ import { successResponse } from "@/src/lib/api-response";
 import { handleError } from "@/src/lib/handle-error";
 import { NextRequest } from "next/server";
 import { requireAuth } from "@/src/lib/get-current-user";
+import { CreateAdmissionYearSchema, UpdateAdmissionYearSchema } from "@/src/core/schema/admission-year";
 
 export async function GET() {
   try {
@@ -19,15 +20,9 @@ export async function POST(req: NextRequest) {
   try {
     await requireAuth(["admin"]);
     const body = await req.json();
+    const validatedData = CreateAdmissionYearSchema.parse(body);
 
-    const { mentorYear, menteeYear } = body;
-
-    if (!mentorYear || !menteeYear) {
-      return handleError({
-        status: 400,
-        message: "mentorYear and menteeYear are required",
-      });
-    }
+    const { mentorYear, menteeYear } = validatedData;
 
     const existing = await prisma.admissionYear.findFirst();
 
@@ -55,8 +50,9 @@ export async function PATCH(req: NextRequest) {
   try {
     await requireAuth(["admin"]);
     const body = await req.json();
+    const validatedData = UpdateAdmissionYearSchema.parse(body);
 
-    const { mentorYear, menteeYear } = body;
+    const { mentorYear, menteeYear } = validatedData;
 
     const setting = await prisma.admissionYear.findFirst();
 

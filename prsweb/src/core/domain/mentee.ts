@@ -4,6 +4,8 @@ export interface IMentee {
   id: string;
   studentId: string;
   name?: string | null;
+  point: number;
+  unlockedHintLevels: number[];
 
   mentorId: string;
   mentor: IMentor;

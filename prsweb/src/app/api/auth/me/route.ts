@@ -3,16 +3,14 @@ import { prisma } from "@/src/lib/prisma";
 import { verifyToken, signToken } from "@/src/lib/jwt";
 import { successResponse } from "@/src/lib/api-response";
 import { handleError } from "@/src/lib/handle-error";
+import { UnauthorizedError, NotFoundError } from "@/src/core/error/error";
 
 export async function GET() {
   try {
     const token = (await cookies()).get("access_token")?.value;
 
     if (!token) {
-      return handleError({
-        status: 401,
-        message: "Unauthorized",
-      });
+      return handleError(new UnauthorizedError("Unauthorized"));
     }
 
     const payload = verifyToken(token);
@@ -30,10 +28,7 @@ export async function GET() {
       });
 
       if (!mentor) {
-        return handleError({
-          status: 404,
-          message: "Mentor not found",
-        });
+        return handleError(new NotFoundError("Mentor not found"));
       }
 
       currentRole = mentor.isAdmin ? "admin" : "mentor";
@@ -66,19 +61,12 @@ export async function GET() {
           studentId: payload.studentId,
         },
         include: {
-          mentor: {
-            include: {
-              hints: true,
-            },
-          },
+          mentor: true,
         },
       });
 
       if (!mentee) {
-        return handleError({
-          status: 404,
-          message: "Mentee not found",
-        });
+        return handleError(new NotFoundError("Mentee not found"));
       }
 
       currentRole = "mentee";

@@ -48,4 +48,20 @@ export class MenteeService {
       throw error;
     }
   }
+  async getMenteePoint(menteeId: string): Promise<number> {
+    try {
+      const res = await this.menteeRepository.getMenteePoint(menteeId);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async addMenteePoint(menteeId: string, point: number): Promise<number> {
+    try {
+      const res = await this.menteeRepository.addMenteePoint(menteeId, point);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

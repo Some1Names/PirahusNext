@@ -8,12 +8,14 @@ import bcrypt from "bcryptjs";
 import { UnauthorizedError } from "@/src/core/error/error";
 
 import { Mentor, Mentee } from "@/prisma/generated/client";
+import { loginSchema } from "@/src/core/schema/auth";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const studentId = body.studentId;
-    const password = body.password;
+    const validatedData = loginSchema.parse(body);
+    const studentId = validatedData.studentId;
+    const password = validatedData.password;
 
     if (!studentId) {
       return handleError({

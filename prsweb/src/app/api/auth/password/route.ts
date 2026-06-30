@@ -3,17 +3,14 @@ import { prisma } from "@/src/lib/prisma";
 import { getCurrentUser } from "@/src/lib/get-current-user";
 import { successResponse } from "@/src/lib/api-response";
 import { handleError } from "@/src/lib/handle-error";
-import { ValidationError } from "@/src/core/error/error";
 import bcrypt from "bcryptjs";
+import { setupPasswordSchema } from "@/src/core/schema/auth";
 
 export async function POST(req: NextRequest) {
   try {
     const userSession = await getCurrentUser();
-    const { password } = await req.json();
-
-    if (!password || password.length < 4) {
-      throw new ValidationError("Password must be at least 4 characters long");
-    }
+    const body = await req.json();
+    const { password } = setupPasswordSchema.parse(body);
 
     const hashedPassword = bcrypt.hashSync(password, 10);
 

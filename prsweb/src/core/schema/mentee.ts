@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { idSchema, IdInput } from "./common";
 
 export const createMenteeSchema = z.object({
   studentId: z.string().min(1),
@@ -8,17 +9,11 @@ export const createMenteeSchema = z.object({
 
 export type CreateMenteeInput = z.infer<typeof createMenteeSchema>;
 
-export const deleteMenteeSchema = z.object({
-  id: z.string().min(1),
-});
+export const deleteMenteeSchema = idSchema;
+export type DeleteMenteeInput = IdInput;
 
-export type DeleteMenteeInput = z.infer<typeof deleteMenteeSchema>;
-
-export const getMenteeByIdSchema = z.object({
-  id: z.string().min(1),
-});
-
-export type GetMenteeByIdInput = z.infer<typeof getMenteeByIdSchema>;
+export const getMenteeByIdSchema = idSchema;
+export type GetMenteeByIdInput = IdInput;
 
 export const getAllMenteesSchema = z.object({});
 

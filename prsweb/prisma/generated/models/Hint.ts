@@ -20,13 +20,24 @@ export type HintModel = runtime.Types.Result.DefaultSelection<Prisma.$HintPayloa
 
 export type AggregateHint = {
   _count: HintCountAggregateOutputType | null
+  _avg: HintAvgAggregateOutputType | null
+  _sum: HintSumAggregateOutputType | null
   _min: HintMinAggregateOutputType | null
   _max: HintMaxAggregateOutputType | null
+}
+
+export type HintAvgAggregateOutputType = {
+  level: number | null
+}
+
+export type HintSumAggregateOutputType = {
+  level: number | null
 }
 
 export type HintMinAggregateOutputType = {
   id: string | null
   content: string | null
+  level: number | null
   mentorId: string | null
   createdAt: Date | null
 }
@@ -34,6 +45,7 @@ export type HintMinAggregateOutputType = {
 export type HintMaxAggregateOutputType = {
   id: string | null
   content: string | null
+  level: number | null
   mentorId: string | null
   createdAt: Date | null
 }
@@ -41,15 +53,25 @@ export type HintMaxAggregateOutputType = {
 export type HintCountAggregateOutputType = {
   id: number
   content: number
+  level: number
   mentorId: number
   createdAt: number
   _all: number
 }
 
 
+export type HintAvgAggregateInputType = {
+  level?: true
+}
+
+export type HintSumAggregateInputType = {
+  level?: true
+}
+
 export type HintMinAggregateInputType = {
   id?: true
   content?: true
+  level?: true
   mentorId?: true
   createdAt?: true
 }
@@ -57,6 +79,7 @@ export type HintMinAggregateInputType = {
 export type HintMaxAggregateInputType = {
   id?: true
   content?: true
+  level?: true
   mentorId?: true
   createdAt?: true
 }
@@ -64,6 +87,7 @@ export type HintMaxAggregateInputType = {
 export type HintCountAggregateInputType = {
   id?: true
   content?: true
+  level?: true
   mentorId?: true
   createdAt?: true
   _all?: true
@@ -107,6 +131,18 @@ export type HintAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: HintAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: HintSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: HintMinAggregateInputType
@@ -137,6 +173,8 @@ export type HintGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   _count?: HintCountAggregateInputType | true
+  _avg?: HintAvgAggregateInputType
+  _sum?: HintSumAggregateInputType
   _min?: HintMinAggregateInputType
   _max?: HintMaxAggregateInputType
 }
@@ -144,9 +182,12 @@ export type HintGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type HintGroupByOutputType = {
   id: string
   content: string
+  level: number
   mentorId: string
   createdAt: Date
   _count: HintCountAggregateOutputType | null
+  _avg: HintAvgAggregateOutputType | null
+  _sum: HintSumAggregateOutputType | null
   _min: HintMinAggregateOutputType | null
   _max: HintMaxAggregateOutputType | null
 }
@@ -172,6 +213,7 @@ export type HintWhereInput = {
   NOT?: Prisma.HintWhereInput | Prisma.HintWhereInput[]
   id?: Prisma.StringFilter<"Hint"> | string
   content?: Prisma.StringFilter<"Hint"> | string
+  level?: Prisma.IntFilter<"Hint"> | number
   mentorId?: Prisma.StringFilter<"Hint"> | string
   createdAt?: Prisma.DateTimeFilter<"Hint"> | Date | string
   mentor?: Prisma.XOR<Prisma.MentorScalarRelationFilter, Prisma.MentorWhereInput>
@@ -180,6 +222,7 @@ export type HintWhereInput = {
 export type HintOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  level?: Prisma.SortOrder
   mentorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   mentor?: Prisma.MentorOrderByWithRelationInput
@@ -187,23 +230,28 @@ export type HintOrderByWithRelationInput = {
 
 export type HintWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  mentorId_level?: Prisma.HintMentorIdLevelCompoundUniqueInput
   AND?: Prisma.HintWhereInput | Prisma.HintWhereInput[]
   OR?: Prisma.HintWhereInput[]
   NOT?: Prisma.HintWhereInput | Prisma.HintWhereInput[]
   content?: Prisma.StringFilter<"Hint"> | string
+  level?: Prisma.IntFilter<"Hint"> | number
   mentorId?: Prisma.StringFilter<"Hint"> | string
   createdAt?: Prisma.DateTimeFilter<"Hint"> | Date | string
   mentor?: Prisma.XOR<Prisma.MentorScalarRelationFilter, Prisma.MentorWhereInput>
-}, "id">
+}, "id" | "mentorId_level">
 
 export type HintOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  level?: Prisma.SortOrder
   mentorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.HintCountOrderByAggregateInput
+  _avg?: Prisma.HintAvgOrderByAggregateInput
   _max?: Prisma.HintMaxOrderByAggregateInput
   _min?: Prisma.HintMinOrderByAggregateInput
+  _sum?: Prisma.HintSumOrderByAggregateInput
 }
 
 export type HintScalarWhereWithAggregatesInput = {
@@ -212,6 +260,7 @@ export type HintScalarWhereWithAggregatesInput = {
   NOT?: Prisma.HintScalarWhereWithAggregatesInput | Prisma.HintScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Hint"> | string
   content?: Prisma.StringWithAggregatesFilter<"Hint"> | string
+  level?: Prisma.IntWithAggregatesFilter<"Hint"> | number
   mentorId?: Prisma.StringWithAggregatesFilter<"Hint"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Hint"> | Date | string
 }
@@ -219,6 +268,7 @@ export type HintScalarWhereWithAggregatesInput = {
 export type HintCreateInput = {
   id?: string
   content: string
+  level: number
   createdAt?: Date | string
   mentor: Prisma.MentorCreateNestedOneWithoutHintsInput
 }
@@ -226,6 +276,7 @@ export type HintCreateInput = {
 export type HintUncheckedCreateInput = {
   id?: string
   content: string
+  level: number
   mentorId: string
   createdAt?: Date | string
 }
@@ -233,6 +284,7 @@ export type HintUncheckedCreateInput = {
 export type HintUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  level?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mentor?: Prisma.MentorUpdateOneRequiredWithoutHintsNestedInput
 }
@@ -240,6 +292,7 @@ export type HintUpdateInput = {
 export type HintUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  level?: Prisma.IntFieldUpdateOperationsInput | number
   mentorId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -247,6 +300,7 @@ export type HintUncheckedUpdateInput = {
 export type HintCreateManyInput = {
   id?: string
   content: string
+  level: number
   mentorId: string
   createdAt?: Date | string
 }
@@ -254,12 +308,14 @@ export type HintCreateManyInput = {
 export type HintUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  level?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type HintUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  level?: Prisma.IntFieldUpdateOperationsInput | number
   mentorId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -274,16 +330,27 @@ export type HintOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type HintMentorIdLevelCompoundUniqueInput = {
+  mentorId: string
+  level: number
+}
+
 export type HintCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  level?: Prisma.SortOrder
   mentorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type HintAvgOrderByAggregateInput = {
+  level?: Prisma.SortOrder
 }
 
 export type HintMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  level?: Prisma.SortOrder
   mentorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -291,8 +358,13 @@ export type HintMaxOrderByAggregateInput = {
 export type HintMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  level?: Prisma.SortOrder
   mentorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type HintSumOrderByAggregateInput = {
+  level?: Prisma.SortOrder
 }
 
 export type HintCreateNestedManyWithoutMentorInput = {
@@ -340,12 +412,14 @@ export type HintUncheckedUpdateManyWithoutMentorNestedInput = {
 export type HintCreateWithoutMentorInput = {
   id?: string
   content: string
+  level: number
   createdAt?: Date | string
 }
 
 export type HintUncheckedCreateWithoutMentorInput = {
   id?: string
   content: string
+  level: number
   createdAt?: Date | string
 }
 
@@ -381,6 +455,7 @@ export type HintScalarWhereInput = {
   NOT?: Prisma.HintScalarWhereInput | Prisma.HintScalarWhereInput[]
   id?: Prisma.StringFilter<"Hint"> | string
   content?: Prisma.StringFilter<"Hint"> | string
+  level?: Prisma.IntFilter<"Hint"> | number
   mentorId?: Prisma.StringFilter<"Hint"> | string
   createdAt?: Prisma.DateTimeFilter<"Hint"> | Date | string
 }
@@ -388,24 +463,28 @@ export type HintScalarWhereInput = {
 export type HintCreateManyMentorInput = {
   id?: string
   content: string
+  level: number
   createdAt?: Date | string
 }
 
 export type HintUpdateWithoutMentorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  level?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type HintUncheckedUpdateWithoutMentorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  level?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type HintUncheckedUpdateManyWithoutMentorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  level?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -414,6 +493,7 @@ export type HintUncheckedUpdateManyWithoutMentorInput = {
 export type HintSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   content?: boolean
+  level?: boolean
   mentorId?: boolean
   createdAt?: boolean
   mentor?: boolean | Prisma.MentorDefaultArgs<ExtArgs>
@@ -422,6 +502,7 @@ export type HintSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 export type HintSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   content?: boolean
+  level?: boolean
   mentorId?: boolean
   createdAt?: boolean
   mentor?: boolean | Prisma.MentorDefaultArgs<ExtArgs>
@@ -430,6 +511,7 @@ export type HintSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 export type HintSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   content?: boolean
+  level?: boolean
   mentorId?: boolean
   createdAt?: boolean
   mentor?: boolean | Prisma.MentorDefaultArgs<ExtArgs>
@@ -438,11 +520,12 @@ export type HintSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 export type HintSelectScalar = {
   id?: boolean
   content?: boolean
+  level?: boolean
   mentorId?: boolean
   createdAt?: boolean
 }
 
-export type HintOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "content" | "mentorId" | "createdAt", ExtArgs["result"]["hint"]>
+export type HintOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "content" | "level" | "mentorId" | "createdAt", ExtArgs["result"]["hint"]>
 export type HintInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   mentor?: boolean | Prisma.MentorDefaultArgs<ExtArgs>
 }
@@ -461,6 +544,7 @@ export type $HintPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     content: string
+    level: number
     mentorId: string
     createdAt: Date
   }, ExtArgs["result"]["hint"]>
@@ -889,6 +973,7 @@ export interface Prisma__HintClient<T, Null = never, ExtArgs extends runtime.Typ
 export interface HintFieldRefs {
   readonly id: Prisma.FieldRef<"Hint", 'String'>
   readonly content: Prisma.FieldRef<"Hint", 'String'>
+  readonly level: Prisma.FieldRef<"Hint", 'Int'>
   readonly mentorId: Prisma.FieldRef<"Hint", 'String'>
   readonly createdAt: Prisma.FieldRef<"Hint", 'DateTime'>
 }
