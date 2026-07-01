@@ -1,4 +1,5 @@
 import type { ShopItem } from "@/src/lib/shop/Types";
+import { HINT_PRICING } from "@/src/core/config/hint-pricing";
 
 export const SHOP_ITEMS: ShopItem[] = [
   {
@@ -17,7 +18,7 @@ export const SHOP_ITEMS: ShopItem[] = [
     category: "hint",
     name: "Hint Lv.1",
     description: "คำใบ้กว้างๆ เช่น หมวดหมู่ทั่วไป",
-    price: 50,
+    price: HINT_PRICING[1],
     icon: "💡",
     hintLevel: 1,
   },
@@ -26,7 +27,7 @@ export const SHOP_ITEMS: ShopItem[] = [
     category: "hint",
     name: "Hint Lv.2",
     description: "คำใบ้เจาะจงขึ้น เช่น ปีการศึกษา/คณะ",
-    price: 90,
+    price: HINT_PRICING[2],
     icon: "💡",
     hintLevel: 2,
   },
@@ -35,7 +36,7 @@ export const SHOP_ITEMS: ShopItem[] = [
     category: "hint",
     name: "Hint Lv.3",
     description: "คำใบ้เจาะจงขึ้น เช่น ตัวอักษรแรกของชื่อ",
-    price: 150,
+    price: HINT_PRICING[3],
     icon: "💡",
     hintLevel: 3,
   },
@@ -44,7 +45,7 @@ export const SHOP_ITEMS: ShopItem[] = [
     category: "hint",
     name: "Hint Lv.4",
     description: "คำใบ้ใกล้เคียงคำตอบมาก เช่น เพศ/ลักษณะเด่น",
-    price: 230,
+    price: HINT_PRICING[4],
     icon: "💡",
     hintLevel: 4,
   },
@@ -53,7 +54,7 @@ export const SHOP_ITEMS: ShopItem[] = [
     category: "hint",
     name: "Hint Lv.5",
     description: "คำใบ้ชัดสุด เกือบเท่าเฉลย",
-    price: 350,
+    price: HINT_PRICING[5],
     icon: "💡",
     hintLevel: 5,
   },

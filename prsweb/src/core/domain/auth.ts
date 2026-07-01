@@ -33,4 +33,5 @@ export interface MentorUser extends BaseUser {
 
 export interface MenteeUser extends BaseUser {
   role: "mentee";
+  unlockedHintLevels: number[];
 }

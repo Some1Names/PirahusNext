@@ -5,16 +5,16 @@ import ShopSection from "@/src/components/shop/Section";
 import GiftPointsButton from "@/src/components/shop/Giftpointsbutton";
 import GiftModal from "@/src/components/shop/Giftmodal";
 import type { ShopItem, GiftTransfer } from "@/src/lib/shop/Types";
-import { SHOP_ITEMS } from "@/src/components/shop/Items"; 
+import { SHOP_ITEMS } from "@/src/components/shop/Items";
+import { hintService } from "@/src/infra/container";
 
 import PtsBadge from "@/src/components/minigame/points";
 import { useUserStore } from "@/src/store/auth";
+import { CurrentUser } from "@/src/core/domain/auth";
+import Swal from "sweetalert2";
 
 export default function Shop() {
-  const user = useUserStore((s) => s.user);
-  const storeLoading = useUserStore((s) => s.loading);
-  const getUser = useUserStore((s) => s.getUser);
-
+  const { user, loading: storeLoading, getUser, setUser } = useUserStore();
   const points = user?.point ?? 0;
   const [giftOpen, setGiftOpen] = useState(false);
 
@@ -22,19 +22,78 @@ export default function Shop() {
     if (!user) getUser();
   }, [user, getUser]);
 
+  const isMentor = user?.role === "mentor" || user?.role === "admin";
+
+  const unlockedHintLevels =
+    user && user.role === "mentee" ? user.unlockedHintLevels : [];
+
   const spinItems = SHOP_ITEMS.filter((i) => i.category === "spin");
-  const hintItems = SHOP_ITEMS.filter((i) => i.category === "hint");
+  const hintItems = SHOP_ITEMS.filter((i) => i.category === "hint").map(
+    (i) => ({
+      ...i,
+      owned:
+        i.hintLevel && unlockedHintLevels.includes(i.hintLevel)
+          ? true
+          : i.owned,
+    }),
+  );
   const cosmeticItems = SHOP_ITEMS.filter((i) => i.category === "cosmetic");
 
-  const handleBuy = async (item: ShopItem) => {
+  const handleBuy = async (item: ShopItem, hintLevel?: number) => {
+    if (isMentor) {
+      Swal.fire({
+        title: "ไม่อนุญาต",
+        text: "ระบบร้านค้าเปิดให้เฉพาะน้องรหัส (Mentee) ใช้งานเท่านั้น",
+        icon: "warning",
+        confirmButtonText: "ตกลง",
+      });
+      return;
+    }
+
     if (item.disabled) {
       // TODO: router.push ไปหน้า spin จริง
       return;
     }
-    // TODO: เรียก API ซื้อสินค้าจริง เช่น mentorService/menteeService.spendPoint(...)
-    // (ต้องเพิ่ม method หัก point ฝั่ง service เอง เพราะตอนนี้มีแต่ addMentorPoint/addMenteePoint)
-    // แล้วค่อย getUser() ใหม่เพื่อ sync ยอด point ล่าสุดจาก store
-    console.log("buy item", item.id);
+    if (item.category == "hint") {
+      if (!hintLevel) return;
+      try {
+        Swal.fire({
+          title: "กำลังดำเนินการ...",
+          text: "โปรดรอสักครู่",
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
+
+        const result = await hintService.unlockHint(hintLevel);
+
+        if (user) {
+          if (user.role === "mentee") {
+            setUser({
+              ...user,
+              point: result.newPoint,
+              unlockedHintLevels: [...user.unlockedHintLevels, hintLevel],
+            } as CurrentUser);
+          }
+        }
+        getUser();
+
+        Swal.fire({
+          title: "สำเร็จ!",
+          text: "ซื้อคำใบ้สำเร็จ",
+          icon: "success",
+          confirmButtonText: "ตกลง",
+        });
+      } catch (error) {
+        Swal.fire({
+          title: " เกืดข้อผิดพลาด!",
+          text: "เกิดข้อผิดพลาดในการซื้อคำใบ้",
+          icon: "error",
+          confirmButtonText: "ตกลง",
+        });
+      }
+    }
   };
 
   const handleSendGift = async (transfer: GiftTransfer): Promise<boolean> => {
@@ -42,6 +101,26 @@ export default function Shop() {
     console.log("send gift", transfer);
     return true;
   };
+
+  if (storeLoading && !user) {
+    return (
+      <div className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-x-hidden bg-[#0a0f0d] px-8 font-mono text-[#d8ffe4]">
+        <div
+          className="pointer-events-none fixed inset-0 z-1 mix-blend-overlay"
+          style={{
+            background:
+              "repeating-linear-gradient(to bottom, rgba(140,255,176,0.035) 0px, rgba(140,255,176,0.035) 1px, transparent 1px, transparent 3px)",
+          }}
+        />
+        <div className="z-10 flex flex-col items-center gap-6">
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-[#16321f] border-t-[#8cffb0]"></div>
+          <p className="font-['Pixelify_Sans'] text-2xl tracking-wider text-[#8cffb0] animate-pulse drop-shadow-[0_0_8px_rgba(140,255,176,.45)]">
+            LOADING SHOP...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden bg-[#0a0f0d] px-8 pt-24 pb-12 font-mono text-[#d8ffe4]">
@@ -75,9 +154,30 @@ export default function Shop() {
         </p>
       </header>
 
-      <ShopSection title="Spin" items={spinItems} currentPoints={points} onBuy={handleBuy} />
-      <ShopSection title="Hint" items={hintItems} currentPoints={points} onBuy={handleBuy} />
-      <ShopSection title="Cosmetic" items={cosmeticItems} currentPoints={points} onBuy={handleBuy} />
+      {isMentor && (
+        <div className="mx-auto mb-8 max-w-5xl border-2 border-[#ff6b6b] bg-[#1a0505] p-4 text-center font-['Pixelify_Sans'] text-lg text-[#ff6b6b] drop-shadow-[0_0_8px_rgba(255,107,107,.45)]">
+          ⚠️ ระบบร้านค้าเปิดให้เฉพาะน้องรหัส (Mentee) ใช้งานเท่านั้น
+        </div>
+      )}
+
+      <ShopSection
+        title="Spin"
+        items={spinItems}
+        currentPoints={points}
+        onBuy={handleBuy}
+      />
+      <ShopSection
+        title="Hint"
+        items={hintItems}
+        currentPoints={points}
+        onBuy={handleBuy}
+      />
+      <ShopSection
+        title="Cosmetic"
+        items={cosmeticItems}
+        currentPoints={points}
+        onBuy={handleBuy}
+      />
 
       <GiftPointsButton onClick={() => setGiftOpen(true)} />
 

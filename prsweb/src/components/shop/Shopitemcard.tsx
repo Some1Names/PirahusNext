@@ -5,10 +5,14 @@ import type { ShopItem } from "@/src/lib/shop/Types";
 interface ShopItemCardProps {
   item: ShopItem;
   currentPoints: number;
-  onBuy: (item: ShopItem) => void;
+  onBuy: (item: ShopItem, hintLevel?: number) => void;
 }
 
-export default function ShopItemCard({ item, currentPoints, onBuy }: ShopItemCardProps) {
+export default function ShopItemCard({
+  item,
+  currentPoints,
+  onBuy,
+}: ShopItemCardProps) {
   const canAfford = currentPoints >= item.price;
   const isBuyDisabled = item.disabled || item.owned || !canAfford;
 
@@ -50,15 +54,15 @@ export default function ShopItemCard({ item, currentPoints, onBuy }: ShopItemCar
       <button
         className="mt-[0.2rem] w-full py-2 bg-[#16321f] border-2 border-[#3f7a4f] text-[#b8ffcf] font-['Share_Tech_Mono'] text-[0.75rem] tracking-[0.06em] cursor-pointer transition-colors duration-120ms ease-in-out enabled:hover:bg-[#6dff9e] enabled:hover:text-[#06210f] enabled:active:scale-[0.96] disabled:cursor-not-allowed disabled:opacity-50"
         disabled={isBuyDisabled}
-        onClick={() => !isBuyDisabled && onBuy(item)}
+        onClick={() => !isBuyDisabled && onBuy(item, item.hintLevel)}
       >
         {item.disabled
           ? "ไปที่หน้า Spin"
           : item.owned
-          ? "ปลดล็อกแล้ว"
-          : canAfford
-          ? "ซื้อ"
-          : "แต้มไม่พอ"}
+            ? "ปลดล็อกแล้ว"
+            : canAfford
+              ? "ซื้อ"
+              : "แต้มไม่พอ"}
       </button>
     </div>
   );

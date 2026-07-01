@@ -7,10 +7,15 @@ interface ShopSectionProps {
   title: string;
   items: ShopItem[];
   currentPoints: number;
-  onBuy: (item: ShopItem) => void;
+  onBuy: (item: ShopItem, hintLevel?: number) => void;
 }
 
-export default function ShopSection({ title, items, currentPoints, onBuy }: ShopSectionProps) {
+export default function ShopSection({
+  title,
+  items,
+  currentPoints,
+  onBuy,
+}: ShopSectionProps) {
   if (items.length === 0) return null;
 
   return (
@@ -20,7 +25,12 @@ export default function ShopSection({ title, items, currentPoints, onBuy }: Shop
       </h2>
       <div className="mx-auto mb-12 grid max-w-5xl grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4">
         {items.map((item) => (
-          <ShopItemCard key={item.id} item={item} currentPoints={currentPoints} onBuy={onBuy} />
+          <ShopItemCard
+            key={item.id}
+            item={item}
+            currentPoints={currentPoints}
+            onBuy={onBuy}
+          />
         ))}
       </div>
     </section>
