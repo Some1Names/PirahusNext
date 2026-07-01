@@ -74,7 +74,6 @@ export async function POST(req: NextRequest) {
     if (isFirstLogin) {
       const token = signToken({
         studentId,
-        type: userType,
         role:
           userType === "mentor"
             ? (user as Mentor).isAdmin
@@ -115,7 +114,6 @@ export async function POST(req: NextRequest) {
 
       const token = signToken({
         studentId,
-        type: userType,
         role:
           userType === "mentor"
             ? (user as Mentor).isAdmin

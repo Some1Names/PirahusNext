@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Menu from "@/src/components/menu";
 import MenuToggle from "@/src/components/menutoggle";
 import PixelBlast from "@/src/components/reactbits/background/PixelBlast";
@@ -8,9 +8,17 @@ import FadeContent from "@/src/components/reactbits/effect/FadeContent";
 import GameCard from "./GameCard";
 import { games } from "./games";
 import PtsBadge from "@/src/components/minigame/points";
+import { useUserStore } from "@/src/store/auth";
 
-export default function Lobby({ points = 0 }: { points?: number }) {
+export default function Lobby() {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, loading, getUser } = useUserStore();
+
+  useEffect(() => {
+    getUser();
+  }, [getUser]);
+
+  const points = user?.point;
 
   return (
     <div style={{ position: "relative" }}>
@@ -119,7 +127,7 @@ export default function Lobby({ points = 0 }: { points?: number }) {
           zIndex: 1000,
         }}
       >
-        <PtsBadge pts={points} />
+        <PtsBadge pts={points} isLoading={loading} />
       </div>
 
       {/* Menu overlay */}

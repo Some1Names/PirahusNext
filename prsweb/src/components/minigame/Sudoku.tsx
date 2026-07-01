@@ -131,7 +131,7 @@ export default function Sudoku() {
           <h1 style={{ color: "#d1d5db", fontSize: "1.5rem", fontWeight: "bold", letterSpacing: "0.2em", textTransform: "uppercase", margin: 0 }}>
             Sudoku
           </h1>
-          <HoverBtn onClick={() => window.history.back()} style={{ marginTop: "0.25rem", width: "fit-content" }}>← BACK</HoverBtn>
+          <HoverBtn onClick={() => window.location.href = '/minigames'} style={{ marginTop: "0.25rem", width: "fit-content" }}>← BACK</HoverBtn>
         </div>
 
         {/* Top-right: timer only */}

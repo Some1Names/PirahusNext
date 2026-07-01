@@ -4,7 +4,6 @@ const SECRET = process.env.JWT_SECRET!;
 
 export interface TokenPayload {
   studentId: string;
-  type: "mentor" | "mentee";
   role: "admin" | "mentor" | "mentee";
   point: number;
 }
@@ -17,8 +16,5 @@ export function signToken(payload: TokenPayload) {
 
 export function verifyToken(token: string) {
   const payload = jwt.verify(token, SECRET) as TokenPayload;
-  if (!payload.role) {
-    payload.role = payload.type === "mentor" ? "mentor" : "mentee";
-  }
   return payload;
 }

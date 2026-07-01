@@ -6,9 +6,10 @@ const pixelify = Pixelify_Sans({ subsets: ["latin"], weight: ["400", "700"] });
 
 interface PtsBadgeProps {
   pts?: number;
+  isLoading?: boolean;
 }
 
-export default function PtsBadge({ pts }: PtsBadgeProps) {
+export default function PtsBadge({ pts, isLoading }: PtsBadgeProps) {
   return (
     <div
       style={{
@@ -40,7 +41,7 @@ export default function PtsBadge({ pts }: PtsBadgeProps) {
           fontWeight: 400,
         }}
       >
-        {pts?.toLocaleString()} pts.
+        {isLoading ? "..." : `${pts?.toLocaleString() || 0} pts.`}
       </span>
     </div>
   );

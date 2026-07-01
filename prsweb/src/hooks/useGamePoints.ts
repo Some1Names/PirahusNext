@@ -29,7 +29,8 @@ export function useGamePoints(game: GameName) {
       meta?: Record<string, unknown>,
     ): Promise<AwardResult> => {
       if (points <= 0) return { success: false, error: "No points to award" };
-      if (isSubmittingRef.current) return { success: false, error: "Already submitting" };
+      if (isSubmittingRef.current)
+        return { success: false, error: "Already submitting" };
       isSubmittingRef.current = true;
 
       setPopupPoints(points);
@@ -45,15 +46,15 @@ export function useGamePoints(game: GameName) {
 
         let totalPoints = 0;
 
-        if (user.type === "mentor") {
+        if (user.role === "admin" || user.role === "mentor") {
           totalPoints = await mentorService.addMentorPoint(user.id, points);
-        } else if (user.type === "mentee") {
+        } else if (user.role === "mentee") {
           totalPoints = await menteeService.addMenteePoint(user.id, points);
         }
 
         setPopupPoints(points);
         setShowPopup(true);
-        
+
         await getUser();
 
         return { success: true, totalPoints };

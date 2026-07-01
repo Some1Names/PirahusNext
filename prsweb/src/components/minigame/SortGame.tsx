@@ -123,7 +123,7 @@ export default function SortGame() {
         {/* Top-left: title only */}
         <div style={{ position: "absolute", top: "1rem", left: "1rem" }}>
           <h1 style={{ color: "#d1d5db", fontSize: "1.5rem", fontWeight: "bold", letterSpacing: "0.2em", textTransform: "uppercase", margin: 0 }}>Sort</h1>
-          <HoverBtn onClick={() => window.history.back()} style={{ marginTop: "0.25rem", width: "fit-content" }}>← BACK</HoverBtn>
+          <HoverBtn onClick={() => window.location.href = '/minigames'} style={{ marginTop: "0.25rem", width: "fit-content" }}>← BACK</HoverBtn>
         </div>
 
         {/* Top-right: timer only */}
