@@ -30,7 +30,7 @@ export default function Lobby() {
         style={{ zIndex: 2000 }}
       >
         <button
-          onClick={() => router.push('/minigames/mysterybox')}
+          onClick={() => router.push('/shop')}
           className="flex items-center justify-center w-14 h-14 bg-[#0d0d0d] hover:bg-[#6812D2] transition-all duration-500 ease-in-out group focus:outline-none shadow-lg"
           aria-label="Open Mystery Box"
         >
