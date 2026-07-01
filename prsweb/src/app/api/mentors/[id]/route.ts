@@ -3,6 +3,7 @@ import { NextRequest } from "next/server";
 import { successResponse } from "@/src/lib/api-response";
 import { handleError } from "@/src/lib/handle-error";
 import { requireAuth } from "@/src/lib/get-current-user";
+import { sanitizeMentor } from "@/src/lib/sanitize";
 
 export async function GET(
   req: NextRequest,
@@ -29,7 +30,7 @@ export async function GET(
       });
     }
 
-    return successResponse(mentor);
+    return successResponse(sanitizeMentor(mentor));
   } catch (error) {
     return handleError(error);
   }
@@ -51,7 +52,7 @@ export async function PATCH(
       include: { hints: true, mentee: true },
     });
 
-    return successResponse(mentor);
+    return successResponse(sanitizeMentor(mentor));
   } catch (error) {
     return handleError(error);
   }
@@ -75,7 +76,7 @@ export async function DELETE(
       },
     });
 
-    return successResponse(mentor);
+    return successResponse(sanitizeMentor(mentor));
   } catch (error) {
     return handleError(error);
   }

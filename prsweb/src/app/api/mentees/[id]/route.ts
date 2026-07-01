@@ -3,6 +3,7 @@ import { successResponse } from "@/src/lib/api-response";
 import { handleError } from "@/src/lib/handle-error";
 import { NextRequest } from "next/server";
 import { requireAuth } from "@/src/lib/get-current-user";
+import { sanitizeMentee } from "@/src/lib/sanitize";
 
 export async function GET(
   req: NextRequest,
@@ -32,7 +33,7 @@ export async function GET(
       });
     }
 
-    return successResponse(mentee);
+    return successResponse(sanitizeMentee(mentee));
   } catch (error) {
     return handleError(error);
   }
@@ -52,7 +53,7 @@ export async function DELETE(
       },
     });
 
-    return successResponse(mentee);
+    return successResponse(sanitizeMentee(mentee));
   } catch (error) {
     return handleError(error);
   }

@@ -19,6 +19,7 @@ export function useTraceGame() {
   const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
   const [bonusFlash, setBonusFlash] = useState<number | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const hasAwardedRef = useRef(false);
   const { awardPoints, popupPoints, showPopup, closePopup } = useGamePoints("trace");
 
   const currentQ = questions[qIdx] ?? null;
@@ -47,6 +48,7 @@ export function useTraceGame() {
     setSelectedChoice(null);
     setFeedback(null);
     setBonusFlash(null);
+    hasAwardedRef.current = false;
     setPhase("playing");
   }, []);
 
@@ -56,6 +58,14 @@ export function useTraceGame() {
     return stopTimer;
   }, [phase, startTimer, stopTimer]);
 
+  useEffect(() => {
+    if (phase === "result" && !hasAwardedRef.current) {
+      hasAwardedRef.current = true;
+      const pts = calculateTracePts(score, timeLeft);
+      awardPoints(pts, { score, timeLeft });
+    }
+  }, [phase, score, timeLeft, awardPoints]);
+
   const advance = useCallback(() => {
     setFeedback(null);
     setInput("");
@@ -64,12 +74,10 @@ export function useTraceGame() {
     const next = qIdx + 1;
     if (next >= MAX_QUESTIONS || next >= questions.length) {
       setPhase("result");
-      const pts = calculateTracePts(score, timeLeft);
-      awardPoints(pts, { score, timeLeft });
     } else {
       setQIdx(next);
     }
-  }, [qIdx, questions.length, score, timeLeft, awardPoints]);
+  }, [qIdx, questions.length]);
 
   const submitAnswer = useCallback((answer: string) => {
     if (!currentQ || feedback) return;

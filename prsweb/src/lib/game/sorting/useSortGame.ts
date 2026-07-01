@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Difficulty } from "./types";
 import { LEVELS, generatePuzzle, isSorted } from "./sortLogic";
 import { useGamePoints } from "@/src/hooks/useGamePoints";
@@ -14,6 +14,7 @@ export function useSortGame() {
   const [history, setHistory] = useState<number[][]>([]);
   const [timer, setTimer] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
+  const hasAwardedRef = useRef(false);
   const { awardPoints, popupPoints, showPopup, closePopup } = useGamePoints("sort");
 
   const par = LEVELS[diff].par;
@@ -28,6 +29,7 @@ export function useSortGame() {
     setHistory([]);
     setDiff(d);
     setTimer(0);
+    hasAwardedRef.current = false;
     setTimerActive(true);
   }, []);
 
@@ -38,6 +40,18 @@ export function useSortGame() {
     const id = setInterval(() => setTimer((t) => t + 1), 1000);
     return () => clearInterval(id);
   }, [timerActive]);
+
+  useEffect(() => {
+    if (hasAwardedRef.current || won || bars.length === 0) return;
+    
+    if (isSorted(bars) && swaps > 0) {
+      hasAwardedRef.current = true;
+      setWon(true);
+      setTimerActive(false);
+      const pts = calculateSortPts(diff, swaps, par);
+      awardPoints(pts, { diff, swaps, par });
+    }
+  }, [bars, diff, par, swaps, won, awardPoints]);
 
   const handleBarClick = useCallback((idx: number) => {
     if (won) return;
@@ -51,14 +65,7 @@ export function useSortGame() {
     setBars(next);
     setSwaps((s) => s + 1);
     setSelected(null);
-
-    if (isSorted(next)) {
-      setWon(true);
-      setTimerActive(false);
-      const pts = calculateSortPts(diff, swaps + 1, par);
-      awardPoints(pts, { diff, swaps: swaps + 1, par });
-    }
-  }, [selected, bars, won, diff, swaps, par, awardPoints]);
+  }, [selected, bars, won]);
 
   const undo = useCallback(() => {
     if (!history.length || won) return;

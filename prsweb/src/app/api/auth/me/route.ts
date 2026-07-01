@@ -16,13 +16,24 @@ export async function GET() {
     const payload = verifyToken(token);
     let currentRole: "admin" | "mentor" | "mentee" = "mentee";
 
-    if (payload.type === "mentor") {
+    if (payload.role === "admin" || payload.role === "mentor") {
       const mentor = await prisma.mentor.findUnique({
         where: {
           studentId: payload.studentId,
         },
-        include: {
-          mentee: true,
+        select: {
+          id: true,
+          studentId: true,
+          name: true,
+          point: true,
+          isAdmin: true,
+          mentee: {
+            select: {
+              id: true,
+              studentId: true,
+              name: true,
+            },
+          },
         },
       });
 
@@ -35,8 +46,8 @@ export async function GET() {
       if (payload.role !== currentRole) {
         const newToken = signToken({
           studentId: payload.studentId,
-          type: payload.type,
           role: currentRole,
+          point: mentor.point,
         });
 
         const cookieStore = await cookies();
@@ -49,22 +60,25 @@ export async function GET() {
         });
       }
 
-      const { password, isAdmin, ...userData } = mentor;
+      const { isAdmin, ...userData } = mentor;
 
       return successResponse({
         ...userData,
-        type: "mentor",
+        mentee: mentor.mentee || null,
         role: currentRole,
       });
     }
 
-    if (payload.type === "mentee") {
+    if (payload.role === "mentee") {
       const mentee = await prisma.mentee.findUnique({
         where: {
           studentId: payload.studentId,
         },
-        include: {
-          mentor: true,
+        select: {
+          id: true,
+          studentId: true,
+          name: true,
+          point: true,
         },
       });
 
@@ -77,8 +91,8 @@ export async function GET() {
       if (payload.role !== currentRole) {
         const newToken = signToken({
           studentId: payload.studentId,
-          type: payload.type,
           role: currentRole,
+          point: mentee.point,
         });
 
         const cookieStore = await cookies();
@@ -91,11 +105,10 @@ export async function GET() {
         });
       }
 
-      const { password, ...menteeWithoutPassword } = mentee;
+      const userData = mentee;
 
       return successResponse({
-        ...menteeWithoutPassword,
-        type: "mentee",
+        ...userData,
         role: currentRole,
       });
     }

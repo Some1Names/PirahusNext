@@ -1,5 +1,3 @@
-import { IHint } from "./hint";
-
 export interface Login {
   studentId: string;
   password?: string | null;
@@ -21,27 +19,18 @@ interface BaseUser {
   id: string;
   studentId: string;
   name: string | null;
-  role: "admin" | "mentor" | "mentee";
+  point: number;
 }
 
 export interface MentorUser extends BaseUser {
-  type: "mentor";
-  point: number;
+  role: "admin" | "mentor";
   mentee: {
     id: string;
     studentId: string;
     name: string | null;
-  }[];
+  } | null;
 }
 
 export interface MenteeUser extends BaseUser {
-  type: "mentee";
-  point: number;
-  unlockedHintLevels: number[];
-  mentorId: string | null;
-  mentor: {
-    id: string;
-    studentId: string;
-    name: string | null;
-  } | null;
+  role: "mentee";
 }

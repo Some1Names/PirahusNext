@@ -5,6 +5,7 @@ import { NextRequest } from "next/server";
 import { requireAuth } from "@/src/lib/get-current-user";
 import { z } from "zod";
 import { createMenteeSchema } from "@/src/core/schema/mentee";
+import { sanitizeMentee } from "@/src/lib/sanitize";
 
 export async function POST(req: NextRequest) {
   try {
@@ -23,7 +24,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return successResponse(mentees, 201, "CREATED");
+    return successResponse(mentees.map(sanitizeMentee), 201, "CREATED");
   } catch (error) {
     return handleError(error);
   }

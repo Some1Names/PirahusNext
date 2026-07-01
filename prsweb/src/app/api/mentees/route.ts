@@ -4,6 +4,7 @@ import { handleError } from "@/src/lib/handle-error";
 import { NextRequest } from "next/server";
 import { requireAuth } from "@/src/lib/get-current-user";
 import { createMenteeSchema } from "@/src/core/schema/mentee";
+import { sanitizeMentee } from "@/src/lib/sanitize";
 
 export async function POST(req: NextRequest) {
   try {
@@ -26,7 +27,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return successResponse(mentee, 201, "CREATED");
+    return successResponse(sanitizeMentee(mentee), 201, "CREATED");
   } catch (error) {
     return handleError(error);
   }
@@ -45,7 +46,7 @@ export async function GET() {
       },
     });
 
-    return successResponse(mentees);
+    return successResponse(mentees.map(sanitizeMentee));
   } catch (error) {
     return handleError(error);
   }

@@ -53,6 +53,10 @@ export async function POST(req: NextRequest) {
         },
       });
 
+      if (updatedMentee.point < 0) {
+        throw new AppError("Not enough points", 400, "INSUFFICIENT_POINTS");
+      }
+
       return {
         hint: {
           id: hint.id,

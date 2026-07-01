@@ -11,13 +11,15 @@ interface UserStore {
   logout: () => Promise<void>;
 }
 
-export const useUserStore = create<UserStore>((set) => ({
+export const useUserStore = create<UserStore>((set, get) => ({
   user: null,
   loading: false,
 
   setUser: (user) => set({ user }),
 
   getUser: async () => {
+    if (get().loading) return;
+
     try {
       set({ loading: true });
 

@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
 
     const hashedPassword = bcrypt.hashSync(password, 10);
 
-    if (userSession.type === "mentor") {
+    if (userSession.role === "admin" || userSession.role === "mentor") {
       await prisma.mentor.update({
         where: {
           studentId: userSession.studentId,
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
           password: hashedPassword,
         },
       });
-    } else if (userSession.type === "mentee") {
+    } else if (userSession.role === "mentee") {
       await prisma.mentee.update({
         where: {
           studentId: userSession.studentId,

@@ -4,6 +4,7 @@ import { handleError } from "@/src/lib/handle-error";
 import { NextRequest } from "next/server";
 import { requireAuth } from "@/src/lib/get-current-user";
 import { createMentorSchema, updateMentorSchema } from "@/src/core/schema/mentor";
+import { sanitizeMentor } from "@/src/lib/sanitize";
 
 export async function POST(req: NextRequest) {
   try {
@@ -22,7 +23,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return successResponse(mentor, 201, "CREATED");
+    return successResponse(sanitizeMentor(mentor), 201, "CREATED");
   } catch (error) {
     return handleError(error);
   }
@@ -41,7 +42,7 @@ export async function GET() {
       },
     });
 
-    return successResponse(mentors);
+    return successResponse(mentors.map(sanitizeMentor));
   } catch (error) {
     return handleError(error);
   }
@@ -67,7 +68,7 @@ export async function PUT(req: NextRequest) {
       },
     });
 
-    return successResponse(mentor);
+    return successResponse(sanitizeMentor(mentor));
   } catch (error) {
     return handleError(error);
   }

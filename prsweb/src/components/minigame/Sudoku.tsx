@@ -132,31 +132,10 @@ export default function Sudoku() {
 
         {/* Top-left: title + info icon */}
         <div style={{ position: "absolute", top: "1rem", left: "1rem" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <h1 style={{ color: "#d1d5db", fontSize: "1.5rem", fontWeight: "bold", letterSpacing: "0.2em", textTransform: "uppercase", margin: 0 }}>
-              Sudoku
-            </h1>
-            <button
-              onClick={() => setShowInfo(true)}
-              aria-label="Game Info"
-              style={{
-                display: "flex", alignItems: "center", justifyContent: "center",
-                width: "1.75rem", height: "1.75rem",
-                background: "transparent", cursor: "pointer", padding: 0,
-                color: "#6b7280", transition: "color 0.15s, border-color 0.15s",
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = "#d1d5db"; e.currentTarget.style.borderColor = "#6b7280"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = "#6b7280"; e.currentTarget.style.borderColor = "#374151"; }}
-            >
-              <Info size={16} strokeWidth={1.5} />
-            </button>
-          </div>
-
-          <InfoPopup isOpen={showInfo} onClose={() => setShowInfo(false)} title="Sudoku">
-            <p>Fill the grid so each row, column, and 3×3 box contains 1–9 with no repeats. You have {MAX_MISTAKES} lives — use them wisely.</p>
-          </InfoPopup>
-
-          <HoverBtn onClick={() => window.history.back()} style={{ marginTop: "0.25rem", width: "fit-content" }}>← BACK</HoverBtn>
+          <h1 style={{ color: "#d1d5db", fontSize: "1.5rem", fontWeight: "bold", letterSpacing: "0.2em", textTransform: "uppercase", margin: 0 }}>
+            Sudoku
+          </h1>
+          <HoverBtn onClick={() => window.location.href = '/minigames'} style={{ marginTop: "0.25rem", width: "fit-content" }}>← BACK</HoverBtn>
         </div>
 
         {/* Top-right: timer only */}
