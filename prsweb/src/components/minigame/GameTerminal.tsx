@@ -48,9 +48,14 @@ export default function GameTerminal({ state, dispatch }: Props) {
       {/* Key fragments collected — shown as cipher, with shift hint */}
       {state.collectedParts.length > 0 && (
         <div style={{ backgroundColor: "#111827", border: "1px solid #374151", borderRadius: "0.25rem", padding: "0.5rem 0.75rem", fontSize: "0.75rem", color: "#fde047", display: "flex", flexDirection: "column", gap: "0.25rem" }}>
-          <span>Ciphered fragments (shift +2): {state.collectedParts.join(" · ")}</span>
+          <span>
+            Ciphered fragments (shift +{state.cipherShift}):{" "}
+            {[...state.collectedParts]
+              .sort((a, b) => state.keyPartsEncrypted.indexOf(a) - state.keyPartsEncrypted.indexOf(b))
+              .join(" · ")}
+          </span>
           <span style={{ color: "#6b7280", fontSize: "0.7rem" }}>
-            Decode each (shift back 2) and join in order to form the key.
+            Decode each (shift -{state.cipherShift}) and join in order to form the key.
           </span>
         </div>
       )}
@@ -64,8 +69,10 @@ export default function GameTerminal({ state, dispatch }: Props) {
             </span>
             <span style={{ color: "#9ca3af", fontSize: "0.85rem", letterSpacing: "0.1em", fontFamily: "monospace" }}>
               {state.collectedParts.length < 4
-                ? `Only ${state.collectedParts.length}/4 fragments found — explore more before guessing.`
-                : state.collectedParts.join("")}
+                ? `Only ${state.collectedParts.length}/4 fragments — explore more.`
+                : [...state.collectedParts]
+                  .sort((a, b) => state.keyPartsEncrypted.indexOf(a) - state.keyPartsEncrypted.indexOf(b))
+                  .join("")}
             </span>
           </div>
           <div style={{ display: "flex", gap: "0.5rem" }}>

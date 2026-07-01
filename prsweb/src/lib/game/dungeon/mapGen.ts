@@ -4,7 +4,17 @@ import { GameState, Room, RoomMessage } from "./gameTypes";
 const MAP_W = 30;
 const MAP_H = 20;
 const ROOM_COUNT = 12;
-const FINAL_KEY = "warmkidcamp2";
+
+const KEY_POOL = [
+  "secretkey",
+  "pirahusnext",
+  "dekwarmkid",
+  "nullpointer",
+  "backrooms",
+  "ciphergate",
+  "tungtungtung",
+  "escapecode",
+];
 
 const ROOM_MESSAGES = [
   "an empty quiet room",
@@ -65,6 +75,10 @@ export function posKey(x: number, y: number): string {
 }
 
 export function generateGame(): GameState {
+
+  // pick a random key for this run
+  const FINAL_KEY = KEY_POOL[Math.floor(Math.random() * KEY_POOL.length)];
+
   // --- Build map ---
   const map: string[][] = Array.from({ length: MAP_H }, () =>
     Array(MAP_W).fill("#")
@@ -162,8 +176,9 @@ export function generateGame(): GameState {
   const ey = randInt(exitRoom[1], exitRoom[1] + exitRoom[3] - 1);
 
   // --- Final key fragments ---
+  const cipherShift = randInt(1, 10);
   const keyParts = splitKey(FINAL_KEY, 3);
-  const encryptedParts = keyParts.map((k) => caesarEncrypt(k, 2));
+  const encryptedParts = keyParts.map((k) => caesarEncrypt(k, cipherShift));
   const finalKeyPositions: Record<string, string> = {};
   const used = new Set<string>([...traps, posKey(ex, ey)]);
 
@@ -195,6 +210,9 @@ export function generateGame(): GameState {
     logs: ["You wake up in a dark dungeon. Find the exit."],
     phase: "playing",
     keyInput: "",
+    finalKeyAnswer: FINAL_KEY,
+    cipherShift,
+    keyPartsEncrypted: encryptedParts,
   };
 }
 
@@ -204,5 +222,4 @@ export function getRoomAt(rooms: Room[], x: number, y: number): Room | null {
   );
 }
 
-export const FINAL_KEY_ANSWER = FINAL_KEY;
 export { MAP_W, MAP_H };

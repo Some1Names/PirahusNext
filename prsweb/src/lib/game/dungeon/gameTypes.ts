@@ -21,6 +21,9 @@ export interface GameState {
   logs: string[];
   phase: GamePhase;
   keyInput: string;
+  cipherShift: number;
+  keyPartsEncrypted: string[];
+  finalKeyAnswer: string;
 }
 
 export type GameAction =

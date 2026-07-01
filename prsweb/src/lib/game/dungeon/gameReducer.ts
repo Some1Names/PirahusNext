@@ -1,5 +1,5 @@
 import { GameState, GameAction, GamePhase } from "./gameTypes";
-import { generateGame, getRoomAt, roomKey, posKey, FINAL_KEY_ANSWER, MAP_W, MAP_H } from "./mapGen";
+import { generateGame, getRoomAt, roomKey, posKey, MAP_W, MAP_H } from "./mapGen";
 import { caesarDecrypt } from "./caesar";
 
 export function gameReducer(state: GameState, action: GameAction): GameState {
@@ -15,7 +15,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return { ...state, phase: "playing", keyInput: "", logs: [...state.logs, "You step back from the exit."] };
 
     case "SUBMIT_KEY": {
-      if (state.keyInput === FINAL_KEY_ANSWER) {
+      if (state.keyInput === state.finalKeyAnswer) {
         return { ...state, phase: "escaped", logs: [...state.logs, "✅ Correct! You escaped the dungeon!"] };
       }
       return { ...state, keyInput: "", logs: [...state.logs, "❌ Wrong key. Try again."] };

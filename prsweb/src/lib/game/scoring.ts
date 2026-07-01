@@ -10,10 +10,10 @@ export function calculateDungeonPts(
   fragmentsFound: number,
   trapCount: number,
 ): number {
-  const base = 50;
-  const fragmentBonus = fragmentsFound * 15; // up to 4 fragments
-  const trapPenalty = trapCount * 3; // total trap count in the dungeon, not hits
-  return Math.max(10, base + fragmentBonus - trapPenalty);
+  const base = 10;
+  const fragmentBonus = fragmentsFound * 10;
+  const completionBonus = fragmentsFound === 4 ? 15 : 0;
+  return base + fragmentBonus + completionBonus;
 }
 
 // ── Sudoku ───────────────────────────────────────────────────────────────
