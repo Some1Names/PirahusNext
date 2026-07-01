@@ -196,14 +196,14 @@ export default function Page() {
           >
             Restart
           </button>
-          <button
-            onClick={() => (window.location.href = "/minigames")}
+          <Link
+            href="/minigames"
             style={buttonStyle}
             onMouseEnter={(e) => (e.currentTarget.style.color = "#d1d5db")}
             onMouseLeave={(e) => (e.currentTarget.style.color = "#6b7280")}
           >
             ← Back
-          </button>
+          </Link>
         </div>
 
         {/* Centered map */}

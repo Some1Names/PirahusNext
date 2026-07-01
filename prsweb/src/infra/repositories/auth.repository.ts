@@ -23,7 +23,7 @@ export class AuthRepository implements IAuthRepository {
   }
   async me(): Promise<ApiResponse<CurrentUser>> {
     try {
-      const response = await httpClient.get<CurrentUser>("/api/auth/me");
+      const response = await httpClient.get<CurrentUser>(`/api/auth/me?_t=${Date.now()}`);
       return response;
     } catch (error) {
       console.error("Error fetching current user:", error);
