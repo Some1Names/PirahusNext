@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Gift } from 'lucide-react'
+import { BarChart3, Gift } from 'lucide-react'
 import Menu from "@/src/components/menu";
 import MenuToggle from "@/src/components/menutoggle";
 import PixelBlast from "@/src/components/reactbits/background/PixelBlast";
@@ -29,6 +29,13 @@ export default function Lobby() {
         className="fixed top-8 right-8 flex items-center gap-4"
         style={{ zIndex: 2000 }}
       >
+        <button
+          onClick={() => router.push('/leaderboard')}
+          className="flex items-center justify-center w-14 h-14 bg-[#0d0d0d] hover:bg-[#6812D2] transition-all duration-500 ease-in-out group focus:outline-none shadow-lg"
+          aria-label="Open Leaderboard"
+        >
+          <BarChart3 size={28} strokeWidth={1.5} className="text-[#F1F1F1] transition-all duration-500" />
+        </button>
         <button
           onClick={() => router.push('/shop')}
           className="flex items-center justify-center w-14 h-14 bg-[#0d0d0d] hover:bg-[#6812D2] transition-all duration-500 ease-in-out group focus:outline-none shadow-lg"
