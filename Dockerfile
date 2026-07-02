@@ -23,8 +23,10 @@ RUN npx prisma generate
 ENV NEXT_TELEMETRY_DISABLED 1
 
 # Provide dummy variables so that Prisma and Next.js can build without needing the real database
-ENV JWT_SECRET="dummy_secret_for_build"
-ENV DATABASE_URL="postgresql://postgres:postgres@localhost:5432/dummy_db?schema=public"
+ARG JWT_SECRET="dummy_secret_for_build"
+ARG DATABASE_URL="postgresql://postgres:postgres@localhost:5432/dummy_db?schema=public"
+ENV JWT_SECRET=${JWT_SECRET}
+ENV DATABASE_URL=${DATABASE_URL}
 
 # Build the application
 RUN npm run build
@@ -43,7 +45,6 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
 COPY --from=builder /app/public ./public
 
