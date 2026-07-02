@@ -37,7 +37,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       if (state.map[ny][nx] !== ".") return state;
 
       const newLogs = [...state.logs];
-      let newCollected = [...state.collectedParts];
+      const newCollected = [...state.collectedParts];
       let newPhase: GamePhase = state.phase;
 
       // Room message on entering new room
