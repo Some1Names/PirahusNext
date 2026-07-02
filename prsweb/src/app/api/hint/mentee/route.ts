@@ -1,6 +1,5 @@
 import { prisma } from "@/src/lib/prisma";
 import { successResponse } from "@/src/lib/api-response";
-import { HINT_PRICING } from "@/src/core/config/hint-pricing";
 import { NotFoundError } from "@/src/core/error/error";
 import { handleError } from "@/src/lib/handle-error";
 import { requireAuth } from "@/src/lib/get-current-user";
@@ -20,12 +19,17 @@ export async function GET() {
 
     if (!mentee) throw new NotFoundError("Mentee not found");
 
+    const hintShopItems = await prisma.shopItem.findMany({
+      where: { category: "hint" },
+    });
+
     const hints = mentee.mentor.hints.map((hint) => {
       const isUnlocked = mentee.unlockedHintLevels.includes(hint.level);
+      const shopItem = hintShopItems.find((s) => s.hintLevel === hint.level);
       return {
         id: hint.id,
         level: hint.level,
-        cost: HINT_PRICING[hint.level] || 0,
+        cost: shopItem?.price || 0,
         isUnlocked,
         content: isUnlocked ? hint.content : null,
       };

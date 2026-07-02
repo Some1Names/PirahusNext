@@ -5,7 +5,6 @@ import { NotFoundError, AppError } from "@/src/core/error/error";
 import { handleError } from "@/src/lib/handle-error";
 import { unlockCosmeticSchema } from "@/src/core/schema/cosmetic";
 import { requireAuth } from "@/src/lib/get-current-user";
-import { SHOP_ITEMS } from "@/src/components/shop/Items";
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,8 +14,8 @@ export async function POST(req: NextRequest) {
     const validatedData = unlockCosmeticSchema.parse(body);
     const { id } = validatedData;
 
-    const item = SHOP_ITEMS.find((i) => i.id === id && i.category === "cosmetic");
-    if (!item) {
+    const item = await prisma.shopItem.findUnique({ where: { id } });
+    if (!item || item.category !== "cosmetic") {
       throw new NotFoundError("Cosmetic item not found");
     }
 

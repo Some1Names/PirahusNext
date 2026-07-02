@@ -1,7 +1,6 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/src/lib/prisma";
 import { successResponse } from "@/src/lib/api-response";
-import { HINT_PRICING } from "@/src/core/config/hint-pricing";
 import { NotFoundError, AppError } from "@/src/core/error/error";
 import { handleError } from "@/src/lib/handle-error";
 import { unlockHintSchema } from "@/src/core/schema/hint";
@@ -36,10 +35,15 @@ export async function POST(req: NextRequest) {
         throw new NotFoundError("Hint not found for this level");
       }
 
-      const cost = HINT_PRICING[level];
-      if (typeof cost !== "number") {
-        throw new AppError("Invalid hint pricing", 500, "INTERNAL_ERROR");
+      const shopItem = await tx.shopItem.findFirst({
+        where: { category: "hint", hintLevel: level },
+      });
+
+      if (!shopItem || typeof shopItem.price !== "number") {
+        throw new AppError("Invalid hint pricing in DB", 500, "INTERNAL_ERROR");
       }
+      
+      const cost = shopItem.price;
 
       if (mentee.point < cost) {
         throw new AppError("Not enough points", 400, "INSUFFICIENT_POINTS");
