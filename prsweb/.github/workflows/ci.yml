@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: ["master", "main"]
+  pull_request:
+    branches: ["master", "main"]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Run Linter
+        run: npm run lint
+
+      - name: Build Next.js
+        run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
+          JWT_SECRET: "dummy_secret_for_ci_build"
+          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/dummy_db?schema=public"
+
+  docker-build-check:
+    runs-on: ubuntu-latest
+    needs: build-and-test # Only run if the standard build passes
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Test Docker Build
+        run: docker build -t prsweb-test .
