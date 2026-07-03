@@ -33,28 +33,22 @@ export default function GiftModal({
       setError(
         parsedAmount > currentPoints
           ? "แต้มไม่พอสำหรับโอนจำนวนนี้"
-          : "กรอกข้อมูลให้ครบและถูกต้อง"
+          : "กรอกข้อมูลให้ครบและถูกต้อง",
       );
       return;
     }
 
     setError(null);
     setSending(true);
+    onClose();
+
+    await new Promise((resolve) => setTimeout(resolve, 50));
 
     try {
-      const ok = await onSend({
+      await onSend({
         recipientCode: recipientCode.trim(),
         amount: parsedAmount,
       });
-
-      if (ok) {
-        setSuccess(true);
-        setTimeout(onClose, 1200);
-      } else {
-        setError("โอนไม่สำเร็จ ลองใหม่อีกครั้ง");
-      }
-    } catch {
-      setError("เกิดข้อผิดพลาด ลองใหม่อีกครั้ง");
     } finally {
       setSending(false);
     }
@@ -62,8 +56,10 @@ export default function GiftModal({
 
   return (
     <div
+      id="gift-modal"
       onClick={onClose}
-      className="fixed inset-0 z-1200 flex items-center justify-center bg-[rgba(4,8,5,0.75)] p-4"
+      className="fixed inset-0 flex items-center justify-center bg-[rgba(4,8,5,0.75)] p-4"
+      style={{ zIndex: 1000 }}
     >
       <div
         onClick={(e) => e.stopPropagation()}
@@ -114,16 +110,10 @@ export default function GiftModal({
           />
         </div>
 
-        {error && (
-          <p className="mb-3 text-xs text-[#ff8a8a]">
-            {error}
-          </p>
-        )}
+        {error && <p className="mb-3 text-xs text-[#ff8a8a]">{error}</p>}
 
         {success && (
-          <p className="mb-3 text-sm text-[#8cffb0]">
-            โอนแต้มสำเร็จ 🎉
-          </p>
+          <p className="mb-3 text-sm text-[#8cffb0]">โอนแต้มสำเร็จ 🎉</p>
         )}
 
         <div className="mt-5 flex gap-3">
