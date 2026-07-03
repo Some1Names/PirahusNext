@@ -1,4 +1,8 @@
-import { hintService, cosmeticService } from "@/src/infra/container";
+import {
+  hintService,
+  cosmeticService,
+  giftService,
+} from "@/src/infra/container";
 import Swal from "sweetalert2";
 import type { ShopItem, GiftTransfer } from "@/src/lib/shop/Types";
 import type { CurrentUser } from "@/src/core/domain/auth";
@@ -7,7 +11,7 @@ export function useShopActions(
   user: CurrentUser | null,
   setUser: (user: CurrentUser) => void,
   getUser: () => void,
-  isMentor: boolean
+  isMentor: boolean,
 ) {
   const handleBuy = async (item: ShopItem, hintLevel?: number) => {
     if (item.category === "hint" && isMentor) {
@@ -147,9 +151,36 @@ export function useShopActions(
   };
 
   const handleSendGift = async (transfer: GiftTransfer): Promise<boolean> => {
-    // TODO: เรียก API จริงสำหรับโอนแต้มให้เพื่อน แล้ว getUser() ใหม่หลังโอนสำเร็จ
-    console.log("send gift", transfer);
-    return true;
+    try {
+      Swal.fire({
+        title: "กำลังดำเนินการ...",
+        text: "โปรดรอสักครู่",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
+      await giftService.transferGift(transfer);
+      getUser();
+
+      Swal.fire({
+        title: "สำเร็จ!",
+        text: "โอนแต้มให้เพื่อนเรียบร้อยแล้ว",
+        icon: "success",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+      return true;
+    } catch (error) {
+      Swal.fire({
+        title: "ผิดพลาด!",
+        text: "เกิดข้อผิดพลาดในการโอนแต้ม",
+        icon: "error",
+        confirmButtonText: "ตกลง",
+      });
+      return false;
+    }
   };
 
   return { handleBuy, handleEquip, handleSendGift };
