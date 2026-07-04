@@ -2,14 +2,7 @@ import { prisma } from "@/src/lib/prisma";
 import { Role } from "@/src/core/domain/auth";
 import { IUnlockCosmeticResult, IEquipCosmeticResult } from "@/src/core/domain/cosmetic";
 import { ShopItemEntity } from "@/src/core/domain/shop-item";
-
-function mapToShopItemEntity(item: any): ShopItemEntity {
-  return {
-    ...item,
-    category: item.category === "spin" || item.category === "cosmetic" || item.category === "hint" ? item.category : "cosmetic",
-    effectKey: item.effectKey === "click-spark" || item.effectKey === "ribbons" || item.effectKey === "splash-cursor" ? item.effectKey : null,
-  };
-}
+import { mapToShopItemEntity } from "@/src/factories/shop-item.factory";
 
 export class CosmeticRepository {
   async findShopItem(id: string): Promise<ShopItemEntity | null> {

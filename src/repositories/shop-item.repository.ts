@@ -1,18 +1,10 @@
 import { prisma } from "@/src/lib/prisma";
-import { ShopItem } from "@/prisma/generated/client";
 import {
   CreateShopItemInput,
   ShopItemEntity,
   UpdateShopItemInput,
 } from "@/src/core/domain/shop-item";
-
-function mapToShopItemEntity(item: ShopItem): ShopItemEntity {
-  return {
-    ...item,
-    category: item.category === "spin" || item.category === "cosmetic" || item.category === "hint" ? item.category : "cosmetic",
-    effectKey: item.effectKey === "click-spark" || item.effectKey === "ribbons" || item.effectKey === "splash-cursor" ? item.effectKey : null,
-  };
-}
+import { mapToShopItemEntity } from "@/src/factories/shop-item.factory";
 
 export class ShopItemRepository {
   async findAll(): Promise<ShopItemEntity[]> {
