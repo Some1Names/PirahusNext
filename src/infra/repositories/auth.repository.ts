@@ -4,7 +4,7 @@ import {
   CurrentUser,
   Login,
   LoginResponse,
-  SetupPasswordResponse,
+  SetupProfileResponse,
 } from "../../core/domain/auth";
 import httpClient from "@/src/lib/http";
 
@@ -30,17 +30,18 @@ export class AuthRepository implements IAuthRepository {
       throw error;
     }
   }
-  async setupPassword(
+  async setupProfile(
     password: string,
-  ): Promise<ApiResponse<SetupPasswordResponse>> {
+    nickname: string
+  ): Promise<ApiResponse<SetupProfileResponse>> {
     try {
-      const response = await httpClient.post<SetupPasswordResponse>(
-        "/api/auth/password",
-        { password },
+      const response = await httpClient.post<SetupProfileResponse>(
+        "/api/auth/setupprofile",
+        { password, nickname },
       );
       return response;
     } catch (error) {
-      console.error("Setup password error:", error);
+      console.error("Setup profile error:", error);
       throw error;
     }
   }

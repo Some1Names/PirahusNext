@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import GradientText from "@/src/components/reactbits/background/GradientText";
@@ -9,16 +9,18 @@ import {
   FaLock,
   FaEye,
   FaEyeSlash,
-  FaArrowRight,
   FaArrowLeft,
+  FaArrowRight,
   FaCheckCircle,
+  FaUser,
 } from "react-icons/fa";
 import { Pixelify_Sans } from "next/font/google";
 import { authService } from "@/src/infra/container";
+import { useUserStore } from "@/src/store/auth";
 
 const pixelifySans = Pixelify_Sans({ subsets: ["latin"] });
 
-export default function PasswordSetupPage() {
+export default function ProfileSetupPage() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -26,6 +28,11 @@ export default function PasswordSetupPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const { user, getUser } = useUserStore();
+
+  useEffect(() => {
+    getUser();
+  }, [getUser]);
 
   const {
     register,
@@ -36,16 +43,17 @@ export default function PasswordSetupPage() {
     defaultValues: {
       password: "",
       confirmPassword: "",
+      nickname: "",
     },
   });
 
   const passwordVal = watch("password");
 
-  const onSubmit = async (data: { password?: string }) => {
+  const onSubmit = async (data: { password?: string; nickname?: string }) => {
     setErrorMsg("");
     setLoading(true);
     try {
-      await authService.setupPassword(data.password || "");
+      await authService.setupProfile(data.password || "", data.nickname || "");
       setSuccess(true);
       setTimeout(() => {
         router.push("/");
@@ -122,7 +130,7 @@ export default function PasswordSetupPage() {
               showBorder={false}
               className={pixelifySans.className}
             >
-              setup_pass
+              setup_profile
             </GradientText>
           </h1>
           <p
@@ -165,6 +173,78 @@ export default function PasswordSetupPage() {
             onSubmit={handleSubmit(onSubmit)}
             style={{ display: "flex", flexDirection: "column" }}
           >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                marginBottom: "16px",
+              }}
+            >
+              <label
+                style={{
+                  fontSize: "12px",
+                  fontWeight: 500,
+                  marginBottom: "6px",
+                  color: "#6b7280",
+                }}
+              >
+                {user?.role === "mentee"
+                  ? "ใส่เฉพาะชื่อเล่น"
+                  : "ใส่ชื่อเล่นที่ไม่บ่งบอกว่าเป็นใคร"}
+              </label>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  height: "40px",
+                  padding: "0 12px",
+                  gap: "8px",
+                  borderRadius: "6px",
+                  border: "1px solid #27272a",
+                  backgroundColor: "#09090b",
+                }}
+              >
+                <FaUser style={{ color: "#6b7280", flexShrink: 0 }} size={14} />
+                {user?.role === "mentee" && (
+                  <span
+                    style={{
+                      color: "#6b7280",
+                      fontSize: "14px",
+                      marginRight: "4px",
+                    }}
+                  >
+                    {user?.studentId?.slice(-3)}
+                  </span>
+                )}
+                <input
+                  type="text"
+                  placeholder="ชื่อเล่น"
+                  {...register("nickname", {
+                    required: "กรุณากรอกชื่อเล่น",
+                  })}
+                  style={{
+                    flex: 1,
+                    background: "transparent",
+                    fontSize: "14px",
+                    outline: "none",
+                    border: "none",
+                    color: "#fff",
+                  }}
+                />
+              </div>
+              {errors.nickname && (
+                <span
+                  style={{
+                    color: "#ef4444",
+                    fontSize: "12px",
+                    marginTop: "4px",
+                  }}
+                >
+                  {errors.nickname.message as string}
+                </span>
+              )}
+            </div>
+
             <div
               style={{
                 display: "flex",
@@ -351,27 +431,28 @@ export default function PasswordSetupPage() {
                 opacity: loading ? 0.7 : 1,
               }}
             >
-              {loading ? "SAVING..." : "SET PASSWORD"} <FaArrowRight size={14} />
+              {loading ? "SAVING..." : "SET PASSWORD"}{" "}
+              <FaArrowRight size={14} />
             </button>
           </form>
         )}
       </div>
 
-        <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
-          <SideRays
-            speed={2.5}
-            rayColor1="#ea08c9"
-            rayColor2="#9727d7"
-            intensity={0.8}      // was 2
-            spread={1.5}         // was 2
-            origin="top-right"
-            tilt={0}
-            saturation={0.8}     // was 1.5
-            blend={0.75}
-            falloff={2.5}        // was 1.6 — higher = rays die out faster
-            opacity={0.6}        // was 1
-          />
-        </div>
+      <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
+        <SideRays
+          speed={2.5}
+          rayColor1="#ea08c9"
+          rayColor2="#9727d7"
+          intensity={0.8} // was 2
+          spread={1.5} // was 2
+          origin="top-right"
+          tilt={0}
+          saturation={0.8} // was 1.5
+          blend={0.75}
+          falloff={2.5} // was 1.6 — higher = rays die out faster
+          opacity={0.6} // was 1
+        />
       </div>
+    </div>
   );
 }

@@ -9,7 +9,7 @@ export interface LoginResponse {
   hasPassword?: boolean;
 }
 
-export interface SetupPasswordResponse {
+export interface SetupProfileResponse {
   message: string;
 }
 
@@ -18,7 +18,7 @@ export type CurrentUser = MentorUser | MenteeUser;
 interface BaseUser {
   id: string;
   studentId: string;
-  name: string | null;
+  nickname: string | null;
   point: number;
   unlockedCosmetics: string[];
   equippedEffect?: string | null;
@@ -29,7 +29,7 @@ export interface MentorUser extends BaseUser {
   mentee: {
     id: string;
     studentId: string;
-    name: string | null;
+    nickname: string | null;
   } | null;
 }
 

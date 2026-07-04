@@ -5,6 +5,7 @@ export const loginSchema = z.object({
   password: z.string().optional().nullable(),
 });
 
-export const setupPasswordSchema = z.object({
-  password: z.string().min(4, "Password must be at least 4 characters long"),
+export const setupProfileSchema = z.object({
+  password: z.string().min(4, "รหัสผ่านต้องมีความยาวอย่างน้อย 4 ตัวอักษร"),
+  nickname: z.string().min(1, "กรุณากรอกชื่อเล่น"),
 });

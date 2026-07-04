@@ -3,7 +3,7 @@ import { IMentor } from "./mentor";
 export interface IMentee {
   id: string;
   studentId: string;
-  name?: string | null;
+  nickname?: string | null;
   point: number;
   unlockedHintLevels: number[];
 
@@ -17,5 +17,5 @@ export interface IMentee {
 export interface ICreateMentee {
   studentId: string;
   mentorId: string;
-  name?: string | null;
+  nickname?: string | null;
 }

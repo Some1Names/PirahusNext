@@ -4,13 +4,13 @@ import { getCurrentUser } from "@/src/lib/get-current-user";
 import { successResponse } from "@/src/lib/api-response";
 import { handleError } from "@/src/lib/handle-error";
 import bcrypt from "bcryptjs";
-import { setupPasswordSchema } from "@/src/core/schema/auth";
+import { setupProfileSchema } from "@/src/core/schema/auth";
 
 export async function POST(req: NextRequest) {
   try {
     const userSession = await getCurrentUser();
     const body = await req.json();
-    const { password } = setupPasswordSchema.parse(body);
+    const { password, nickname } = setupProfileSchema.parse(body);
 
     const hashedPassword = bcrypt.hashSync(password, 10);
 
@@ -21,15 +21,21 @@ export async function POST(req: NextRequest) {
         },
         data: {
           password: hashedPassword,
+          nickname: nickname,
         },
       });
     } else if (userSession.role === "mentee") {
+      const studentIdStr = userSession.studentId;
+      const lastThreeDigits = studentIdStr.slice(-3);
+      const formattedNickname = `${lastThreeDigits} ${nickname}`;
+      
       await prisma.mentee.update({
         where: {
           studentId: userSession.studentId,
         },
         data: {
           password: hashedPassword,
+          nickname: formattedNickname,
         },
       });
     }

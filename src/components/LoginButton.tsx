@@ -4,10 +4,13 @@ import { useEffect } from "react";
 import { FaUser, FaSignOutAlt, FaCog } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/src/store/auth";
+import ProfileModal from "./profile/ProfileModal";
+import { useState } from "react";
 
 const LoginButton = ({ role }: { role: string | null }) => {
   const router = useRouter();
   const { user, getUser, logout, loading } = useUserStore();
+  const [showProfile, setShowProfile] = useState(false);
 
   useEffect(() => {
     getUser();
@@ -73,6 +76,17 @@ const LoginButton = ({ role }: { role: string | null }) => {
       )}
 
       <button
+        onClick={() => setShowProfile(true)}
+        className="flex items-center gap-3 px-5 bg-[#0d0d0d] hover:bg-[#6812D2] transition-all duration-500 ease-in-out group focus:outline-none shadow-lg h-14 cursor-pointer"
+      >
+        <FaUser size={18} className="text-[#F1F1F1]" />
+        <div className="w-px h-5 bg-[#F1F1F1] opacity-30" />
+        <span className="text-[#F1F1F1] text-sm font-medium tracking-widest uppercase">
+          Profile
+        </span>
+      </button>
+
+      <button
         onClick={handleLogout}
         className="flex items-center gap-3 px-5 bg-[#0d0d0d] hover:bg-[#8a3020] transition-all duration-500 ease-in-out group focus:outline-none shadow-lg h-14 cursor-pointer"
       >
@@ -82,6 +96,8 @@ const LoginButton = ({ role }: { role: string | null }) => {
           Logout
         </span>
       </button>
+
+      {showProfile && <ProfileModal onClose={() => setShowProfile(false)} />}
     </div>
   );
 };

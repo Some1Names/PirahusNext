@@ -24,7 +24,7 @@ export async function GET() {
         select: {
           id: true,
           studentId: true,
-          name: true,
+          nickname: true,
           point: true,
           unlockedCosmetics: true,
           equippedEffect: true,
@@ -33,7 +33,7 @@ export async function GET() {
             select: {
               id: true,
               studentId: true,
-              name: true,
+              nickname: true,
             },
           },
         },
@@ -79,7 +79,7 @@ export async function GET() {
         select: {
           id: true,
           studentId: true,
-          name: true,
+          nickname: true,
           point: true,
           unlockedHintLevels: true,
           unlockedCosmetics: true,
