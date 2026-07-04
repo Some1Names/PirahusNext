@@ -1,5 +1,4 @@
 import { prisma } from "@/src/lib/prisma";
-import { Role } from "@/src/core/domain/auth";
 import { ILeaderboardResponse } from "@/src/core/domain/leaderboard";
 
 export class LeaderboardRepository {

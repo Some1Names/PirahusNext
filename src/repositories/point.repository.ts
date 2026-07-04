@@ -1,5 +1,5 @@
 import { prisma } from "@/src/lib/prisma";
-import { NotFoundError, ForbiddenError } from "@/src/core/error/error";
+import { NotFoundError } from "@/src/core/error/error";
 
 export class PointRepository {
   async getMentorPoint(id: string) {

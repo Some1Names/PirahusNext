@@ -64,7 +64,8 @@ export class AuthService {
         await authRepo.setTokenCookie(studentId, currentRole, mentor.point);
       }
 
-      const { isAdmin, ...userData } = mentor;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { isAdmin: _isAdmin, ...userData } = mentor;
       return { ...userData, mentee: mentor.mentee || null, role: currentRole };
     }
 

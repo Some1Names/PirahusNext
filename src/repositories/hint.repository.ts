@@ -1,10 +1,17 @@
 import { prisma } from "@/src/lib/prisma";
-import { IAddHints, IUpdateHints, IHint } from "@/src/core/domain/hint";
+import { IUpdateHints, IHint } from "@/src/core/domain/hint";
 
 export class HintRepository {
-  async addHints(mentorId: string, hints: { content: string; level: number }[]) {
+  async addHints(
+    mentorId: string,
+    hints: { content: string; level: number }[],
+  ) {
     return prisma.hint.createMany({
-      data: hints.map((h) => ({ content: h.content, level: h.level, mentorId })),
+      data: hints.map((h) => ({
+        content: h.content,
+        level: h.level,
+        mentorId,
+      })),
     });
   }
 

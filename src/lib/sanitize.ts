@@ -10,13 +10,15 @@ export function sanitizeMentor<T extends Mentor & { mentee?: Mentee | null }>(
   mentor: T | null
 ): SanitizedMentor<T> | null {
   if (!mentor) return mentor as null;
-  const { password, mentee, ...rest } = mentor;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { password: _password, mentee, ...rest } = mentor;
   
   const result: Record<string, unknown> = { ...rest };
 
   if (mentee !== undefined) {
     if (mentee) {
-      const { password: menteePassword, ...menteeRest } = mentee;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password: _menteePassword, ...menteeRest } = mentee;
       result.mentee = menteeRest;
     } else {
       result.mentee = mentee;
@@ -30,13 +32,15 @@ export function sanitizeMentee<T extends Mentee & { mentor?: Mentor | null }>(
   mentee: T | null
 ): SanitizedMentee<T> | null {
   if (!mentee) return mentee as null;
-  const { password, mentor, ...rest } = mentee;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { password: _password, mentor, ...rest } = mentee;
   
   const result: Record<string, unknown> = { ...rest };
 
   if (mentor !== undefined) {
     if (mentor) {
-      const { password: mentorPassword, ...mentorRest } = mentor;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password: _mentorPassword, ...mentorRest } = mentor;
       result.mentor = mentorRest;
     } else {
       result.mentor = mentor;

@@ -1,8 +1,8 @@
 import { prisma } from "@/src/lib/prisma";
-import { signToken, verifyToken } from "@/src/lib/jwt";
+import { signToken } from "@/src/lib/jwt";
 import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
-import { UnauthorizedError, NotFoundError } from "@/src/core/error/error";
+
 import { Mentor, Mentee, AdmissionYear, Prisma } from "@/prisma/generated/client";
 import { Role } from "@/src/core/domain/auth";
 

@@ -1,6 +1,6 @@
 import { prisma } from "@/src/lib/prisma";
 import { Mentor, Prisma } from "@/prisma/generated/client";
-import { sanitizeMentor } from "@/src/lib/sanitize";
+
 import { ICreateMentor } from "@/src/core/domain/mentor";
 
 export type MentorWithRelations = Prisma.MentorGetPayload<{
