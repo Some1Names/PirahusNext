@@ -2,8 +2,10 @@ import { NextRequest } from "next/server";
 import { successResponse } from "@/src/lib/api-response";
 import { handleError } from "@/src/lib/handle-error";
 import { requireAuth } from "@/src/lib/get-current-user";
-import { createMentorSchema, updateMentorSchema } from "@/src/core/schema/mentor";
-import { z } from "zod";
+import {
+  createMentorSchema,
+  updateMentorSchema,
+} from "@/src/core/schema/mentor";
 import { MentorService } from "@/src/services/mentor.service";
 
 const mentorService = new MentorService();
@@ -35,7 +37,9 @@ export async function PUT(req: NextRequest) {
     await requireAuth(["admin"]);
     const body = await req.json();
     const validatedData = updateMentorSchema.parse(body);
-    const mentor = await mentorService.update(validatedData.id, { studentId: validatedData.studentId });
+    const mentor = await mentorService.update(validatedData.id, {
+      studentId: validatedData.studentId,
+    });
     return successResponse(mentor);
   } catch (error) {
     return handleError(error);

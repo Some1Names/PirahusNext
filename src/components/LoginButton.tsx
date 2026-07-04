@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { FaUser, FaSignOutAlt, FaCog } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/src/store/auth";
-import ProfileModal from "./profile/ProfileModal";
 import { useState } from "react";
 import { Code } from "lucide-react";
 import ElectricBorder from "./reactbits/effect/ElectricBorder";
@@ -12,7 +11,6 @@ import ElectricBorder from "./reactbits/effect/ElectricBorder";
 const LoginButton = ({ role }: { role: string | null }) => {
   const router = useRouter();
   const { user, getUser, logout, loading } = useUserStore();
-  const [showProfile, setShowProfile] = useState(false);
 
   useEffect(() => {
     getUser();
@@ -58,11 +56,7 @@ const LoginButton = ({ role }: { role: string | null }) => {
       )}
 
       {role === "admin" && (
-        <ElectricBorder
-          color="#fff67d"
-          speed={0.5}
-          chaos={0.06}
-        >
+        <ElectricBorder color="#fff67d" speed={0.5} chaos={0.06}>
           <button
             onClick={() => router.push("/backrooms")}
             className="flex items-center gap-3 px-5 bg-[#0d0d0d] hover:bg-[#a8c060] hover:text-[#0a0e08] transition-all duration-500 ease-in-out group focus:outline-none shadow-lg h-14 cursor-pointer"
@@ -85,7 +79,6 @@ const LoginButton = ({ role }: { role: string | null }) => {
           Logout
         </span>
       </button>
-
     </div>
   );
 };

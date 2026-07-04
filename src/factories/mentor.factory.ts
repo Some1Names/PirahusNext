@@ -29,7 +29,7 @@ export function mapToDomainMentor(mentor: MentorWithRelations): IMentor {
       createdAt: mentor.mentee.createdAt,
       updatedAt: mentor.mentee.updatedAt,
       mentorId: mentor.id,
-      mentor: mappedMentor,
+      mentor: null,
     };
     mappedMentor.mentee = mappedMentee;
   }

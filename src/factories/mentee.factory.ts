@@ -35,7 +35,6 @@ export function mapToDomainMentee(mentee: MenteeWithRelations): IMentee {
     mentor: mappedMentor,
   };
 
-  mappedMentor.mentee = mappedMentee;
-  
+
   return mappedMentee;
 }
