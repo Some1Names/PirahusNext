@@ -18,39 +18,91 @@ import { useUserStore } from "@/src/store/auth";
 import Swal from "sweetalert2";
 import { IMentor } from "@/src/core/domain/mentor";
 
-function SeniorId({ id }: { id: string }) {
+function SeniorBadge({ id, nickname }: { id: string; nickname?: string | null }) {
   const firstTwo = id.length >= 2 ? id.slice(0, 2) : "";
   const rest = id.length >= 2 ? id.slice(2) : id;
   return (
-    <span
-      style={{
-        fontFamily: "monospace",
-        fontSize: "17px",
-        fontWeight: 700,
-        letterSpacing: "0.04em",
-      }}
-    >
-      {firstTwo && <span style={{ color: "#d45c2a" }}>{firstTwo}</span>}
-      <span style={{ color: "#c8d4a8" }}>{rest}</span>
-    </span>
+    <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", margin: "4px 0" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "baseline",
+          gap: "6px",
+          padding: "6px 12px",
+          border: "1px solid rgba(212, 92, 42, 0.3)",
+          backgroundColor: "rgba(212, 92, 42, 0.08)",
+          borderRadius: "4px",
+        }}
+      >
+        <span style={{ fontSize: "10px", color: "#d45c2a", fontWeight: 700, letterSpacing: "1px", lineHeight: 1 }}>ID</span>
+        <span style={{ fontFamily: "monospace", fontSize: "14px", fontWeight: 700, lineHeight: 1 }}>
+          {firstTwo && <span style={{ color: "#d45c2a" }}>{firstTwo}</span>}
+          <span style={{ color: "#c8d4a8" }}>{rest}</span>
+        </span>
+      </div>
+      {nickname && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            gap: "6px",
+            padding: "6px 12px",
+            border: "1px solid rgba(168, 192, 96, 0.3)",
+            backgroundColor: "rgba(168, 192, 96, 0.08)",
+            borderRadius: "4px",
+          }}
+        >
+          <span style={{ fontSize: "10px", color: "#a8c060", fontWeight: 700, letterSpacing: "1px", lineHeight: 1 }}>NAME</span>
+          <span style={{ fontSize: "14px", fontFamily: "'Share Tech Mono', monospace", color: "#d8e8b8", fontWeight: 600, lineHeight: 1 }}>
+            {nickname}
+          </span>
+        </div>
+      )}
+    </div>
   );
 }
 
-function JuniorId({ id }: { id: string }) {
+function JuniorBadge({ id, nickname }: { id: string; nickname?: string | null }) {
   const firstTwo = id.length >= 2 ? id.slice(0, 2) : "";
   const rest = id.length >= 2 ? id.slice(2) : id;
   return (
-    <span
-      style={{
-        fontFamily: "monospace",
-        fontSize: "14px",
-        fontWeight: 600,
-        letterSpacing: "0.04em",
-      }}
-    >
-      {firstTwo && <span style={{ color: "#4a9eff" }}>{firstTwo}</span>}
-      <span style={{ color: "#8aaccc" }}>{rest}</span>
-    </span>
+    <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "baseline",
+          gap: "6px",
+          padding: "6px 12px",
+          border: "1px solid rgba(74, 158, 255, 0.25)",
+          backgroundColor: "rgba(74, 158, 255, 0.08)",
+          borderRadius: "4px",
+        }}
+      >
+        <span style={{ fontSize: "10px", color: "#4a9eff", fontWeight: 700, letterSpacing: "1px", lineHeight: 1 }}>ID</span>
+        <span style={{ fontFamily: "monospace", fontSize: "14px", fontWeight: 700, lineHeight: 1 }}>
+          {firstTwo && <span style={{ color: "#4a9eff" }}>{firstTwo}</span>}
+          <span style={{ color: "#8aaccc" }}>{rest}</span>
+        </span>
+      </div>
+      {nickname && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            gap: "6px",
+            padding: "6px 12px",
+            border: "1px solid rgba(122, 184, 232, 0.25)",
+            backgroundColor: "rgba(122, 184, 232, 0.08)",
+            borderRadius: "4px",
+          }}
+        >
+          <span style={{ fontSize: "10px", color: "#7ab8e8", fontWeight: 700, letterSpacing: "1px", lineHeight: 1 }}>NAME</span>
+          <span style={{ fontSize: "14px", fontWeight: 600, color: "#aadcff", fontFamily: "'Share Tech Mono', monospace", lineHeight: 1 }}>
+            {nickname}
+          </span>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -72,10 +124,10 @@ function SeniorRow({
   const toggleAdmin = async (e: React.MouseEvent) => {
     e.stopPropagation();
     const next = !senior.isAdmin;
-    const label = next ? "แอดมิน" : "Senior";
+    const label = next ? "แอดมิน" : "Mentor";
     const result = await Swal.fire({
       title: `เปลี่ยน role เป็น ${label}?`,
-      text: `${senior.name || senior.studentId} จะถูกเปลี่ยนเป็น ${label}`,
+      text: `${senior.nickname || senior.studentId} จะถูกเปลี่ยนเป็น ${label}`,
       icon: "question",
       showCancelButton: true,
       confirmButtonText: "ยืนยัน",
@@ -262,19 +314,7 @@ function SeniorRow({
             gap: "10px",
           }}
         >
-          <SeniorId id={senior.studentId} />
-          {senior.name && (
-            <span
-              style={{
-                fontSize: "14px",
-                fontWeight: 600,
-                color: "#d8e8b8",
-                fontFamily: "monospace",
-              }}
-            >
-              {senior.name}
-            </span>
-          )}
+          <SeniorBadge id={senior.studentId} nickname={senior.nickname} />
         </div>
 
         {senior.hints.length > 0 && (
@@ -299,7 +339,7 @@ function SeniorRow({
             disabled={togglingAdmin}
             title={
               senior.isAdmin
-                ? "คลิกเพื่อลด role เป็น Senior"
+                ? "คลิกเพื่อลด role เป็น Mentor"
                 : "คลิกเพื่อเพิ่มเป็น Admin"
             }
             style={{
@@ -320,7 +360,7 @@ function SeniorRow({
               color: senior.isAdmin ? "#a8c060" : "#708840",
             }}
           >
-            {senior.isAdmin ? "ADMIN" : "SENIOR"}
+            {senior.isAdmin ? "ADMIN" : "MENTOR"}
           </button>
         </div>
 
@@ -366,19 +406,7 @@ function SeniorRow({
                 <div
                   style={{ display: "flex", alignItems: "center", gap: "10px" }}
                 >
-                  <JuniorId id={senior.mentee.studentId} />
-                  {senior.mentee.name && (
-                    <span
-                      style={{
-                        fontSize: "14px",
-                        fontWeight: 600,
-                        color: "#7ab8e8",
-                        fontFamily: "'Share Tech Mono', monospace",
-                      }}
-                    >
-                      {senior.mentee.name}
-                    </span>
-                  )}
+                  <JuniorBadge id={senior.mentee.studentId} nickname={senior.mentee.nickname} />
                 </div>
                 <span
                   style={{
@@ -878,8 +906,8 @@ export default function AdminBackroomClient() {
 
         <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
           {[
-            { color: "#d45c2a", label: "senior (พี่รหัส)" },
-            { color: "#4a9eff", label: "junior (น้องรหัส)" },
+            { color: "#d45c2a", label: "mentor (พี่รหัส)" },
+            { color: "#4a9eff", label: "mentee (น้องรหัส)" },
           ].map(({ color, label }) => (
             <div
               key={label}

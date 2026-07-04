@@ -133,32 +133,81 @@ function JuniorCard({ junior }: { junior: IMentee | null }) {
         <div
           style={{
             display: "flex",
-            alignItems: "center",
+            flexWrap: "wrap",
             gap: "10px",
-            marginTop: "3px",
+            marginTop: "12px",
           }}
         >
-          <span
+          <div
             style={{
-              fontFamily: "monospace",
-              fontSize: "15px",
-              fontWeight: 700,
+              display: "flex",
+              alignItems: "baseline",
+              gap: "6px",
+              padding: "6px 12px",
+              border: "1px solid rgba(74, 158, 255, 0.25)",
+              backgroundColor: "rgba(74, 158, 255, 0.08)",
+              borderRadius: "4px",
             }}
           >
-            {firstTwo && <span style={{ color: "#4a9eff" }}>{firstTwo}</span>}
-            <span style={{ color: "#8aaccc" }}>{rest}</span>
-          </span>
-          {junior.name && (
             <span
               style={{
-                fontSize: "15px",
-                fontWeight: 600,
-                color: "#7ab8e8",
-                fontFamily: "'Share Tech Mono', monospace",
+                fontSize: "10px",
+                color: "#4a9eff",
+                fontWeight: 700,
+                letterSpacing: "1px",
+                lineHeight: 1,
               }}
             >
-              {junior.name}
+              ID
             </span>
+            <span
+              style={{
+                fontFamily: "monospace",
+                fontSize: "14px",
+                fontWeight: 700,
+                lineHeight: 1,
+              }}
+            >
+              {firstTwo && <span style={{ color: "#4a9eff" }}>{firstTwo}</span>}
+              <span style={{ color: "#8aaccc" }}>{rest}</span>
+            </span>
+          </div>
+
+          {junior.nickname && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "baseline",
+                gap: "6px",
+                padding: "6px 12px",
+                border: "1px solid rgba(122, 184, 232, 0.25)",
+                backgroundColor: "rgba(122, 184, 232, 0.08)",
+                borderRadius: "4px",
+              }}
+            >
+              <span
+                style={{
+                  fontSize: "10px",
+                  color: "#7ab8e8",
+                  fontWeight: 700,
+                  letterSpacing: "1px",
+                  lineHeight: 1,
+                }}
+              >
+                NAME
+              </span>
+              <span
+                style={{
+                  fontSize: "14px",
+                  fontWeight: 600,
+                  color: "#aadcff",
+                  fontFamily: "'Share Tech Mono', monospace",
+                  lineHeight: 1,
+                }}
+              >
+                {junior.nickname}
+              </span>
+            </div>
           )}
         </div>
       </div>
@@ -591,7 +640,7 @@ export default function SeniorBackroomClient() {
           >
             ฝากคำใบ้ให้น้องรหัส
           </h1>
-          <p
+          <div
             style={{
               fontSize: "12px",
               color: "#8faa55",
@@ -599,13 +648,85 @@ export default function SeniorBackroomClient() {
               fontFamily: "monospace",
             }}
           >
-            Logged in as{" "}
-            {firstTwo && <span style={{ color: "#d45c2a" }}>{firstTwo}</span>}
-            <span style={{ color: "#c8d4a8" }}>{rest}</span>
-            {mentor.name && (
-              <span style={{ color: "#d8e8b8" }}> {mentor.name}</span>
-            )}
-          </p>
+            <div style={{ marginBottom: "8px" }}>Logged in as</div>
+            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+              {/* Mentor ID Badge */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "baseline",
+                  gap: "6px",
+                  padding: "6px 12px",
+                  border: "1px solid rgba(212, 92, 42, 0.3)",
+                  backgroundColor: "rgba(212, 92, 42, 0.08)",
+                  borderRadius: "4px",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "10px",
+                    color: "#d45c2a",
+                    fontWeight: 700,
+                    letterSpacing: "1px",
+                    lineHeight: 1,
+                  }}
+                >
+                  ID
+                </span>
+                <span
+                  style={{
+                    fontSize: "14px",
+                    fontFamily: "monospace",
+                    fontWeight: 700,
+                    lineHeight: 1,
+                  }}
+                >
+                  {firstTwo && (
+                    <span style={{ color: "#d45c2a" }}>{firstTwo}</span>
+                  )}
+                  <span style={{ color: "#c8d4a8" }}>{rest}</span>
+                </span>
+              </div>
+
+              {/* Mentor NAME Badge */}
+              {mentor.nickname && (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "baseline",
+                    gap: "6px",
+                    padding: "6px 12px",
+                    border: "1px solid rgba(168, 192, 96, 0.3)",
+                    backgroundColor: "rgba(168, 192, 96, 0.08)",
+                    borderRadius: "4px",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: "10px",
+                      color: "#a8c060",
+                      fontWeight: 700,
+                      letterSpacing: "1px",
+                      lineHeight: 1,
+                    }}
+                  >
+                    NAME
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "14px",
+                      fontFamily: "'Share Tech Mono', monospace",
+                      color: "#d8e8b8",
+                      fontWeight: 600,
+                      lineHeight: 1,
+                    }}
+                  >
+                    {mentor.nickname}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
         <div
@@ -640,8 +761,10 @@ export default function SeniorBackroomClient() {
           {hints.length < 5 && (
             <button
               onClick={() => {
-                const usedLevels = hints.map(h => h.level);
-                const availableLevels = [1, 2, 3, 4, 5].filter(l => !usedLevels.includes(l));
+                const usedLevels = hints.map((h) => h.level);
+                const availableLevels = [1, 2, 3, 4, 5].filter(
+                  (l) => !usedLevels.includes(l),
+                );
                 if (availableLevels.length > 0) {
                   setNewLevel(availableLevels[0]);
                 }
@@ -727,9 +850,17 @@ export default function SeniorBackroomClient() {
               }}
             >
               {[1, 2, 3, 4, 5].map((l) => {
-                const isUsed = hints.some(h => h.level === l);
+                const isUsed = hints.some((h) => h.level === l);
                 return (
-                  <option key={l} value={l} disabled={isUsed} style={{ background: "#0a0e08", color: isUsed ? "#4a5a3a" : "#d8e8b8" }}>
+                  <option
+                    key={l}
+                    value={l}
+                    disabled={isUsed}
+                    style={{
+                      background: "#0a0e08",
+                      color: isUsed ? "#4a5a3a" : "#d8e8b8",
+                    }}
+                  >
                     Level {l} {isUsed ? "(เลือกแล้ว)" : ""}
                   </option>
                 );

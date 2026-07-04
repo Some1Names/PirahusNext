@@ -18,7 +18,7 @@ model Mentor {
   id         String @id @default(cuid())
   studentId  String @unique
   password   String?
-  name       String?
+  nickname   String?
   isAdmin    Boolean @default(false)
   point      Int     @default(0)
   unlockedCosmetics String[] @default([])
@@ -35,7 +35,7 @@ model Mentee {
   id         String @id @default(cuid())
   studentId  String @unique
   password   String?
-  name       String?
+  nickname   String?
   point               Int     @default(0)
   unlockedHintLevels  Int[]   @default([])
   unlockedCosmetics   String[] @default([])

@@ -4,7 +4,7 @@ import { IHint } from "./hint";
 export interface IMentor {
   id: string;
   studentId: string;
-  name?: string | null;
+  nickname?: string | null;
   isAdmin: boolean;
   point: number;
 
@@ -18,6 +18,6 @@ export interface IMentor {
 
 export interface ICreateMentor {
   studentId: string;
-  name?: string | null;
+  nickname?: string | null;
   isAdmin?: boolean;
 }

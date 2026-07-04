@@ -57,7 +57,7 @@ export default function Page() {
         });
 
         if (res.firstLogin) {
-          router.push("/auth/password");
+          router.push("/auth/setupprofile");
         } else if (res.hasPassword) {
           setShowPasswordInput(true);
         }
@@ -360,7 +360,6 @@ export default function Page() {
           </span>
         </p>
       </div>
-
 
       <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
         <SideRays
