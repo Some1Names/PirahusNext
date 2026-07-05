@@ -2,45 +2,19 @@
 
 import { useState, useEffect } from "react";
 import { FaArrowLeft } from "react-icons/fa";
-import { useRouter } from "next/navigation";
 import { hintService } from "@/src/clients/container";
 import { useUserStore } from "@/src/store/auth";
-import Swal from "sweetalert2";
 import { IHint } from "@/src/core/domain/hint";
-import HintBoard from "@/src/components/archive/senior/Hintboard";
-import MentorPanel from "@/src/components/archive/senior/Mentorpanel";
+import HintBoard from "@/src/components/archive/junior/Hintboard";
+import JuniorPanel from "@/src/components/archive/junior/Juniorpanel";
 import Link from "next/dist/client/link";
 import Grainient from "@/src/components/reactbits/background/Grainient";
 
-// Shared violet/lavender theme for SweetAlert2 dialogs, matching the
-// backroom's Grainient palette (#604599 / #17112f / #222b57).
-const swalTheme = {
-  background: "#17112f",
-  color: "#e9e0ff",
-  customClass: { popup: "backroom-swal-popup" },
-} as const;
-
-const swalConfirm = "#8b5cf6"; // violet — affirmative / neutral actions
-const swalDanger = "#db2777"; // rose — destructive actions (delete)
-const swalCancel = "#4b3a6b"; // muted violet — cancel / secondary
-
-export default function SeniorBackroomClient() {
+export default function JuniorBackroomClient() {
   const { user, loading: authLoading, getUser } = useUserStore();
-  const [mentor, setMentor] = useState<any>(null);
+  const [junior, setJunior] = useState<any>(null);
   const [hints, setHints] = useState<IHint[]>([]);
-  const [newHint, setNewHint] = useState("");
-  const [newLevel, setNewLevel] = useState<number>(1);
-  const [adding, setAdding] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  const refreshHints = async (mentorId: string) => {
-    try {
-      const hintList = await hintService.getHintsByMentorId(mentorId);
-      setHints(hintList);
-    } catch (err) {
-      console.error("Failed to refresh hints:", err);
-    }
-  };
 
   useEffect(() => {
     getUser();
@@ -49,142 +23,21 @@ export default function SeniorBackroomClient() {
   useEffect(() => {
     if (authLoading || !user) return;
 
-    setMentor(user);
+    setJunior(user);
+
+    const mentorId = (user as any)?.mentor?.id;
+
+    if (!mentorId) {
+      setLoading(false);
+      return;
+    }
+
     hintService
-      .getHintsByMentorId(user.id)
+      .getHintsByMentorId(mentorId)
       .then(setHints)
       .catch((err) => console.error("Failed to load hints:", err))
       .finally(() => setLoading(false));
   }, [user, authLoading]);
-
-  const addHint = async () => {
-    if (!newHint.trim() || !mentor) return;
-    try {
-      Swal.fire({
-        title: "กำลังบันทึกคำใบ้...",
-        allowOutsideClick: false,
-        ...swalTheme,
-        didOpen: () => {
-          Swal.showLoading();
-        },
-      });
-
-      await hintService.addHints({
-        mentorId: mentor.id,
-        hints: [{ content: newHint.trim(), level: newLevel }],
-      });
-      setNewHint("");
-      setNewLevel(1);
-      setAdding(false);
-      await refreshHints(mentor.id);
-
-      Swal.fire({
-        title: "บันทึกสำเร็จ",
-        text: "บันทึกคำใบ้เรียบร้อยแล้ว",
-        icon: "success",
-        confirmButtonColor: swalConfirm,
-        iconColor: swalConfirm,
-        ...swalTheme,
-      });
-    } catch (err) {
-      console.error("Failed to add hint:", err);
-      Swal.fire({
-        title: "เกิดข้อผิดพลาด",
-        text: "ไม่สามารถเพิ่มคำใบ้ได้ กรุณาลองใหม่อีกครั้ง",
-        icon: "error",
-        confirmButtonColor: swalDanger,
-        iconColor: swalDanger,
-        ...swalTheme,
-      });
-    }
-  };
-
-  const deleteHint = async (id: string) => {
-    if (!mentor) return;
-    const result = await Swal.fire({
-      title: "ยืนยันการลบ?",
-      text: "คุณต้องการลบคำใบ้นี้หรือไม่?",
-      icon: "warning",
-      iconColor: swalDanger,
-      showCancelButton: true,
-      confirmButtonText: "ลบ",
-      cancelButtonText: "ยกเลิก",
-      confirmButtonColor: swalDanger,
-      cancelButtonColor: swalCancel,
-      ...swalTheme,
-    });
-
-    if (result.isConfirmed) {
-      try {
-        Swal.fire({
-          title: "กำลังลบคำใบ้...",
-          allowOutsideClick: false,
-          ...swalTheme,
-          didOpen: () => {
-            Swal.showLoading();
-          },
-        });
-
-        await hintService.deleteHint(id);
-        await refreshHints(mentor.id);
-
-        Swal.fire({
-          title: "ลบสำเร็จ",
-          text: "ลบคำใบ้เรียบร้อยแล้ว",
-          icon: "success",
-          confirmButtonColor: swalConfirm,
-          iconColor: swalConfirm,
-          ...swalTheme,
-        });
-      } catch (err) {
-        console.error("Failed to delete hint:", err);
-        Swal.fire({
-          title: "เกิดข้อผิดพลาด",
-          text: "ไม่สามารถลบคำใบ้ได้ กรุณาลองใหม่อีกครั้ง",
-          icon: "error",
-          confirmButtonColor: swalDanger,
-          iconColor: swalDanger,
-          ...swalTheme,
-        });
-      }
-    }
-  };
-
-  const editHint = async (id: string, content: string) => {
-    if (!mentor) return;
-    try {
-      Swal.fire({
-        title: "กำลังแก้ไขคำใบ้...",
-        allowOutsideClick: false,
-        ...swalTheme,
-        didOpen: () => {
-          Swal.showLoading();
-        },
-      });
-
-      await hintService.updateHints(id, { content });
-      await refreshHints(mentor.id);
-
-      Swal.fire({
-        title: "แก้ไขสำเร็จ",
-        text: "แก้ไขคำใบ้เรียบร้อยแล้ว",
-        icon: "success",
-        confirmButtonColor: swalConfirm,
-        iconColor: swalConfirm,
-        ...swalTheme,
-      });
-    } catch (err) {
-      console.error("Failed to edit hint:", err);
-      Swal.fire({
-        title: "เกิดข้อผิดพลาด",
-        text: "ไม่สามารถแก้ไขคำใบ้ได้ กรุณาลองใหม่อีกครั้ง",
-        icon: "error",
-        confirmButtonColor: swalDanger,
-        iconColor: swalDanger,
-        ...swalTheme,
-      });
-    }
-  };
 
   if (loading) {
     return (
@@ -362,23 +215,6 @@ export default function SeniorBackroomClient() {
           width: 100%;
         }
       }
-
-      .swal2-popup.backroom-swal-popup {
-        border: 1px solid rgba(167, 139, 250, 0.3) !important;
-        border-radius: 8px !important;
-        box-shadow: 0 0 40px rgba(139, 92, 246, 0.15) !important;
-        font-family: monospace !important;
-      }
-      .swal2-popup.backroom-swal-popup .swal2-title {
-        color: #c4b5fd !important;
-      }
-      .swal2-popup.backroom-swal-popup .swal2-html-container {
-        color: #a996d9 !important;
-      }
-      .swal2-popup.backroom-swal-popup .swal2-actions button {
-        font-family: monospace !important;
-        letter-spacing: 0.05em;
-      }
     `}</style>
 
       <div
@@ -411,7 +247,7 @@ export default function SeniorBackroomClient() {
               boxShadow: "0 0 8px #a78bfa",
             }}
           />
-          Senior Archive — Mentor Access Terminal
+          Junior Archive — Mentee Access Terminal
           <div
             style={{
               flex: 1,
@@ -455,20 +291,8 @@ export default function SeniorBackroomClient() {
           )}
 
           <div className="backroom-columns">
-            <MentorPanel mentor={mentor} />
-
-            <HintBoard
-              hints={hints}
-              adding={adding}
-              newHint={newHint}
-              newLevel={newLevel}
-              setAdding={setAdding}
-              setNewHint={setNewHint}
-              setNewLevel={setNewLevel}
-              addHint={addHint}
-              deleteHint={deleteHint}
-              editHint={editHint}
-            />
+            <JuniorPanel junior={junior} />
+            <HintBoard hints={hints} />
           </div>
         </div>
       </div>

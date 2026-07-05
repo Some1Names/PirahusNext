@@ -4,11 +4,12 @@ import { useState } from "react";
 import { FaUser, FaPencilAlt, FaSignOutAlt } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/src/store/auth";
-import { IMentee } from "@/src/core/domain/mentee";
+// Adjust this import path if your mentor domain type lives elsewhere.
+import { IMentor } from "@/src/core/domain/mentor";
 import ProfileModal from "@/src/components/profile/ProfileModal";
 
-function JuniorCard({ junior }: { junior: IMentee | null }) {
-    if (!junior) {
+function MentorCard({ senior }: { senior: IMentor | null }) {
+    if (!senior) {
         return (
             <div
                 style={{
@@ -57,7 +58,7 @@ function JuniorCard({ junior }: { junior: IMentee | null }) {
                             fontFamily: "monospace",
                         }}
                     >
-                        น้องรหัสของคุณ
+                        พี่รหัสของคุณ
                     </p>
                 </div>
                 <span
@@ -70,16 +71,16 @@ function JuniorCard({ junior }: { junior: IMentee | null }) {
                         marginLeft: "14px",
                     }}
                 >
-                    ยังไม่ได้รับการจับคู่กับน้องรหัส
+                    ยังไม่ได้รับการจับคู่กับพี่รหัส
                 </span>
             </div>
         );
     }
 
     const firstTwo =
-        junior.studentId.length >= 2 ? junior.studentId.slice(0, 2) : "";
+        senior.studentId.length >= 2 ? senior.studentId.slice(0, 2) : "";
     const rest =
-        junior.studentId.length >= 2 ? junior.studentId.slice(2) : junior.studentId;
+        senior.studentId.length >= 2 ? senior.studentId.slice(2) : senior.studentId;
 
     return (
         <div
@@ -130,7 +131,7 @@ function JuniorCard({ junior }: { junior: IMentee | null }) {
                         fontFamily: "monospace",
                     }}
                 >
-                    น้องรหัสของคุณ
+                    พี่รหัสของคุณ
                 </p>
             </div>
 
@@ -177,7 +178,7 @@ function JuniorCard({ junior }: { junior: IMentee | null }) {
                     </span>
                 </div>
 
-                {junior.nickname && (
+                {senior.nickname && (
                     <div
                         style={{
                             display: "flex",
@@ -209,7 +210,7 @@ function JuniorCard({ junior }: { junior: IMentee | null }) {
                                 lineHeight: 1,
                             }}
                         >
-                            {junior.nickname}
+                            {senior.nickname}
                         </span>
                     </div>
                 )}
@@ -218,15 +219,15 @@ function JuniorCard({ junior }: { junior: IMentee | null }) {
     );
 }
 
-export interface MentorPanelProps {
-    mentor: {
+export interface JuniorPanelProps {
+    junior: {
         studentId: string;
         nickname?: string | null;
-        mentee: IMentee | null;
+        mentor: IMentor | null;
     };
 }
 
-export default function MentorPanel({ mentor }: MentorPanelProps) {
+export default function JuniorPanel({ junior }: JuniorPanelProps) {
     const router = useRouter();
     const { logout } = useUserStore();
     const [profileOpen, setProfileOpen] = useState(false);
@@ -237,11 +238,11 @@ export default function MentorPanel({ mentor }: MentorPanelProps) {
     };
 
     const firstTwo =
-        mentor.studentId.length >= 2 ? mentor.studentId.slice(0, 2) : "";
+        junior.studentId.length >= 2 ? junior.studentId.slice(0, 2) : "";
     const rest =
-        mentor.studentId.length >= 2
-            ? mentor.studentId.slice(2)
-            : mentor.studentId;
+        junior.studentId.length >= 2
+            ? junior.studentId.slice(2)
+            : junior.studentId;
 
     return (
         <div
@@ -269,7 +270,7 @@ export default function MentorPanel({ mentor }: MentorPanelProps) {
                     fontFamily: "monospace",
                 }}
             >
-                ■ MENTOR PANEL
+                ■ JUNIOR PANEL
             </p>
 
             {/* Avatar + name + ID */}
@@ -323,7 +324,7 @@ export default function MentorPanel({ mentor }: MentorPanelProps) {
                             whiteSpace: "nowrap",
                         }}
                     >
-                        {mentor.nickname || "ไม่ระบุชื่อ"}
+                        {junior.nickname || "ไม่ระบุชื่อ"}
                     </h1>
 
                     <div
@@ -440,9 +441,9 @@ export default function MentorPanel({ mentor }: MentorPanelProps) {
                     margin: "0 0 12px",
                 }}
             >
-                [ MENTEE STATUS ]
+                [ MENTOR STATUS ]
             </p>
-            <JuniorCard junior={mentor.mentee} />
+            <MentorCard senior={junior.mentor} />
 
             {profileOpen && (
                 <ProfileModal onClose={() => setProfileOpen(false)} />

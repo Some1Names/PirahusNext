@@ -30,8 +30,8 @@ function HintItem({
         alignItems: "center",
         gap: "10px",
         padding: "10px 14px",
-        backgroundColor: "rgba(10, 14, 8, 0.5)",
-        border: "1px solid rgba(140, 170, 80, 0.1)",
+        backgroundColor: "rgba(23, 17, 47, 0.55)",
+        border: "1px solid rgba(167, 139, 250, 0.14)",
         borderRadius: "2px",
         marginBottom: "6px",
       }}
@@ -40,9 +40,9 @@ function HintItem({
         style={{
           fontSize: "11px",
           fontWeight: 700,
-          color: "#a8c060",
-          backgroundColor: "rgba(168, 192, 96, 0.12)",
-          border: "1px solid rgba(168, 192, 96, 0.3)",
+          color: "#c4b5fd",
+          backgroundColor: "rgba(196, 181, 253, 0.12)",
+          border: "1px solid rgba(196, 181, 253, 0.3)",
           borderRadius: "2px",
           padding: "3px 6px",
           fontFamily: "monospace",
@@ -68,10 +68,10 @@ function HintItem({
             }}
             style={{
               flex: 1,
-              background: "rgba(140,170,80,0.08)",
-              border: "1px solid rgba(140,170,80,0.35)",
+              background: "rgba(139,92,246,0.1)",
+              border: "1px solid rgba(139,92,246,0.4)",
               borderRadius: "2px",
-              color: "#d8e8b8",
+              color: "#e9e0ff",
               fontSize: "14px",
               padding: "5px 10px",
               fontFamily: "monospace",
@@ -84,7 +84,7 @@ function HintItem({
               background: "none",
               border: "none",
               cursor: "pointer",
-              color: "#70b840",
+              color: "#7dd3a0",
               padding: "4px",
             }}
           >
@@ -99,7 +99,7 @@ function HintItem({
               background: "none",
               border: "none",
               cursor: "pointer",
-              color: "#b84030",
+              color: "#f0abc8",
               padding: "4px",
             }}
           >
@@ -112,7 +112,7 @@ function HintItem({
             style={{
               flex: 1,
               fontSize: "14px",
-              color: "#98b868",
+              color: "#cabdf0",
               fontFamily: "monospace",
             }}
           >
@@ -125,7 +125,7 @@ function HintItem({
               background: "none",
               border: "none",
               cursor: "pointer",
-              color: "#4a6030",
+              color: "#8b7bb8",
               padding: "4px",
             }}
           >
@@ -137,7 +137,7 @@ function HintItem({
               background: "none",
               border: "none",
               cursor: "pointer",
-              color: "#8a3020",
+              color: "#d1548a",
               padding: "4px",
             }}
           >
@@ -182,7 +182,7 @@ export default function HintBoard({
           fontWeight: 700,
           letterSpacing: "0.2em",
           textTransform: "uppercase",
-          color: "#8faa55",
+          color: "#a996d9",
           marginBottom: "4px",
           fontFamily: "monospace",
         }}
@@ -193,7 +193,7 @@ export default function HintBoard({
         style={{
           fontSize: "24px",
           fontWeight: 700,
-          color: "#a8c060",
+          color: "#c4b5fd",
           margin: "0 0 4px",
           fontFamily: "'Share Tech Mono', monospace",
           letterSpacing: "0.04em",
@@ -204,7 +204,7 @@ export default function HintBoard({
 
       <div
         style={{
-          borderTop: "1px solid rgba(140,170,80,0.2)",
+          borderTop: "1px solid rgba(167,139,250,0.25)",
           margin: "16px 0 20px",
         }}
       />
@@ -223,7 +223,7 @@ export default function HintBoard({
             fontWeight: 700,
             letterSpacing: "0.15em",
             textTransform: "uppercase",
-            color: "#708840",
+            color: "#8b7bb8",
             fontFamily: "monospace",
           }}
         >
@@ -246,10 +246,10 @@ export default function HintBoard({
               display: "flex",
               alignItems: "center",
               gap: "5px",
-              background: "rgba(112, 136, 64, 0.12)",
-              border: "1px solid rgba(112,136,64,0.35)",
+              background: "rgba(139, 92, 246, 0.14)",
+              border: "1px solid rgba(139,92,246,0.4)",
               borderRadius: "2px",
-              color: "#a8c060",
+              color: "#c4b5fd",
               fontSize: "11px",
               fontFamily: "monospace",
               padding: "4px 10px",
@@ -265,7 +265,7 @@ export default function HintBoard({
         <p
           style={{
             fontSize: "13px",
-            color: "#3a4a20",
+            color: "#6b5b95",
             fontFamily: "monospace",
             margin: "16px 0",
           }}
@@ -283,15 +283,15 @@ export default function HintBoard({
           style={{
             marginTop: "10px",
             padding: "14px",
-            backgroundColor: "rgba(10,14,8,0.6)",
-            border: "1px solid rgba(140,170,80,0.2)",
+            backgroundColor: "rgba(23,17,47,0.6)",
+            border: "1px solid rgba(167,139,250,0.25)",
             borderRadius: "3px",
           }}
         >
           <p
             style={{
               fontSize: "11px",
-              color: "#708840",
+              color: "#8b7bb8",
               fontFamily: "monospace",
               margin: "0 0 8px",
               letterSpacing: "0.08em",
@@ -304,10 +304,10 @@ export default function HintBoard({
             onChange={(e) => setNewLevel(Number(e.target.value))}
             style={{
               width: "100%",
-              background: "rgba(140,170,80,0.06)",
-              border: "1px solid rgba(140,170,80,0.25)",
+              background: "rgba(139,92,246,0.08)",
+              border: "1px solid rgba(139,92,246,0.3)",
               borderRadius: "2px",
-              color: "#d8e8b8",
+              color: "#e9e0ff",
               fontSize: "14px",
               padding: "8px 12px",
               fontFamily: "monospace",
@@ -323,8 +323,8 @@ export default function HintBoard({
                   value={l}
                   disabled={isUsed}
                   style={{
-                    background: "#0a0e08",
-                    color: isUsed ? "#4a5a3a" : "#d8e8b8",
+                    background: "#17112f",
+                    color: isUsed ? "#4a3f6b" : "#e9e0ff",
                   }}
                 >
                   Level {l} {isUsed ? "(เลือกแล้ว)" : ""}
@@ -341,10 +341,10 @@ export default function HintBoard({
             style={{
               width: "100%",
               boxSizing: "border-box",
-              background: "rgba(140,170,80,0.06)",
-              border: "1px solid rgba(140,170,80,0.25)",
+              background: "rgba(139,92,246,0.08)",
+              border: "1px solid rgba(139,92,246,0.3)",
               borderRadius: "2px",
-              color: "#d8e8b8",
+              color: "#e9e0ff",
               fontSize: "14px",
               padding: "8px 12px",
               fontFamily: "monospace",
@@ -361,9 +361,9 @@ export default function HintBoard({
               }}
               style={{
                 background: "none",
-                border: "1px solid rgba(140,60,40,0.4)",
+                border: "1px solid rgba(219,39,119,0.4)",
                 borderRadius: "2px",
-                color: "#b85040",
+                color: "#f0abc8",
                 fontSize: "11px",
                 fontFamily: "monospace",
                 padding: "5px 12px",
@@ -377,11 +377,11 @@ export default function HintBoard({
               disabled={!newHint.trim()}
               style={{
                 background: newHint.trim()
-                  ? "rgba(112,136,64,0.2)"
-                  : "rgba(112,136,64,0.05)",
-                border: `1px solid ${newHint.trim() ? "rgba(112,136,64,0.5)" : "rgba(112,136,64,0.15)"}`,
+                  ? "rgba(139,92,246,0.22)"
+                  : "rgba(139,92,246,0.06)",
+                border: `1px solid ${newHint.trim() ? "rgba(139,92,246,0.55)" : "rgba(139,92,246,0.18)"}`,
                 borderRadius: "2px",
-                color: newHint.trim() ? "#a8c060" : "#4a6028",
+                color: newHint.trim() ? "#c4b5fd" : "#5a4d80",
                 fontSize: "11px",
                 fontFamily: "monospace",
                 padding: "5px 14px",
