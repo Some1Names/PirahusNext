@@ -233,7 +233,7 @@ export default function MentorPanel({ mentor }: MentorPanelProps) {
 
     const handleLogout = async () => {
         await logout();
-        router.push("/");
+        router.push("/auth/login");
     };
 
     const firstTwo =

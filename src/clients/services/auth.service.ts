@@ -1,7 +1,12 @@
 import { IAuthClientRepository } from "@/src/core/ports/client/auth.repository.port";
 import { parseSchema } from "@/src/lib/validation";
 import { loginSchema } from "@/src/core/schema/auth";
-import { Login, LoginResponse, CurrentUser, SetupProfileResponse } from "@/src/core/domain/auth";
+import {
+  Login,
+  LoginResponse,
+  CurrentUser,
+  SetupProfileResponse,
+} from "@/src/core/domain/auth";
 
 export class AuthService {
   constructor(private readonly authRepository: IAuthClientRepository) {}
@@ -16,18 +21,24 @@ export class AuthService {
     }
   }
 
-  async me(): Promise<CurrentUser> {
+  async me(): Promise<CurrentUser | null> {
     try {
       const response = await this.authRepository.me();
       return response.data;
     } catch (error) {
-      throw error;
+      return null;
     }
   }
 
-  async setupProfile(password: string, nickname: string): Promise<SetupProfileResponse> {
+  async setupProfile(
+    password: string,
+    nickname: string,
+  ): Promise<SetupProfileResponse> {
     try {
-      const response = await this.authRepository.setupProfile(password, nickname);
+      const response = await this.authRepository.setupProfile(
+        password,
+        nickname,
+      );
       return response.data;
     } catch (error) {
       throw error;

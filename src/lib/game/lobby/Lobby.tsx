@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { BarChart3, Gift } from 'lucide-react'
+import { BarChart3, Gift, ArrowLeft } from 'lucide-react'
 import Menu from "@/src/components/menu";
 import MenuToggle from "@/src/components/menutoggle";
 import PixelBlast from "@/src/components/reactbits/background/PixelBlast";
@@ -25,6 +25,23 @@ export default function Lobby() {
 
   return (
     <div style={{ position: "relative" }}>
+      <div
+        className="fixed top-8 left-8 flex items-center gap-4"
+        style={{ zIndex: 2000 }}
+      >
+        {/* Back Button */}
+        <button
+          onClick={() => router.push('/')}
+          className="flex items-center justify-center w-14 h-14 bg-[#0d0d0d] hover:bg-[#6812D2] transition-all duration-500 ease-in-out group focus:outline-none shadow-lg"
+          aria-label="Go Back"
+        >
+          <ArrowLeft size={28} strokeWidth={1.5} className="text-[#F1F1F1] transition-all duration-500" />
+        </button>
+        
+        {/* Points Badge */}
+        <PtsBadge pts={points} isLoading={loading} />
+      </div>
+
       <div
         className="fixed top-8 right-8 flex items-center gap-4"
         style={{ zIndex: 2000 }}
@@ -134,17 +151,6 @@ export default function Lobby() {
             </div>
           </div>
         </FadeContent>
-      </div>
-
-      <div
-        style={{
-          position: "fixed",
-          top: "2.5rem",
-          left: "2rem",
-          zIndex: 1000,
-        }}
-      >
-        <PtsBadge pts={points} isLoading={loading} />
       </div>
 
       {/* Menu overlay */}

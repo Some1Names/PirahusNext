@@ -1,8 +1,9 @@
-"use client"
+"use client";
 
 import React, { useState } from "react";
 import SlidingTextReveal from "./SlidingTextRevealProps";
 import SplitText from "./SplitText";
+import { useUserStore } from "../store/auth";
 
 interface MenuProps {
   onNavigate?: () => void; // call this to close the menu before route change
@@ -10,17 +11,23 @@ interface MenuProps {
 
 function Menu({ onNavigate }: MenuProps) {
   const [hovered, setHovered] = useState<number | null>(null);
+  const { user } = useUserStore();
+  const usertype = user?.role;
+
+  const getArchiveHref = () => {
+    if (usertype === "admin" || usertype === "mentor") return "/archive/senior";
+    if (usertype === "mentee") return "/archive/junior";
+    return "/auth/login";
+  };
 
   const links = [
     { name: "HOME", href: "/" },
     { name: "MINIGAMES", href: "/minigames" },
-    { name: "ARCHIVE", href: "/archive/senior" },
+    { name: "ARCHIVE", href: getArchiveHref() },
   ];
 
   return (
-
     <nav className="flex flex-col items-center justify-center min-h-screen gap-15 ptsans text-[#F1F1F1] tracking-wide">
-
       <ul className="flex flex-col items-center gap-0 text-lg md:text-7xl font-bold uppercase">
         {links.map((link, i) => (
           <li key={link.name}>
@@ -33,8 +40,9 @@ function Menu({ onNavigate }: MenuProps) {
             >
               {/* Base layer */}
               <span
-                className={`block transition-opacity duration-200 ${hovered === i ? "opacity-0" : "opacity-100"
-                  }`}
+                className={`block transition-opacity duration-200 ${
+                  hovered === i ? "opacity-0" : "opacity-100"
+                }`}
               >
                 <SlidingTextReveal
                   as="span"

@@ -2,7 +2,8 @@ export interface IHint {
   id: string;
   content: string;
   level: number;
-  createdAt: Date;
+  cost: number;
+  isUnlocked: boolean;
 }
 
 export interface IAddHints {
@@ -16,10 +17,10 @@ export interface IUpdateHints {
 
 export interface IMenteeHint {
   id: string;
+  content: string | null;
   level: number;
   cost: number;
   isUnlocked: boolean;
-  content: string | null;
 }
 
 export interface IUnlockHintResult {

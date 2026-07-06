@@ -1,21 +1,27 @@
 import { AuthRepository } from "@/src/repositories/auth.repository";
 import { NotFoundError, UnauthorizedError } from "@/src/core/error/error";
 import { Mentor } from "@/prisma/generated/client";
-import { Role, LoginResponse, SetupProfileResponse, CurrentUser } from "@/src/core/domain/auth";
+import {
+  Role,
+  LoginResponse,
+  SetupProfileResponse,
+  CurrentUser,
+} from "@/src/core/domain/auth";
 import { IAuthRepository } from "@/src/core/ports/server/auth.repository.port";
-
-
 
 export class AuthService {
   constructor(
-    private readonly authRepo: IAuthRepository = new AuthRepository()
+    private readonly authRepo: IAuthRepository = new AuthRepository(),
   ) {}
 
   async login(studentId: string, password?: string): Promise<LoginResponse> {
     const config = await this.authRepo.findAdmissionYear();
     if (!config) throw new Error("Admission year setting not configured");
 
-    let user: Mentor | Awaited<ReturnType<typeof this.authRepo.findMenteeByStudentId>> | null = null;
+    let user:
+      | Mentor
+      | Awaited<ReturnType<typeof this.authRepo.findMenteeByStudentId>>
+      | null = null;
     let userType: "mentor" | "mentee" = "mentor";
 
     if (studentId.startsWith(config.mentorYear)) {
@@ -35,7 +41,9 @@ export class AuthService {
     if (isFirstLogin) {
       const role: Role =
         userType === "mentor"
-          ? (user as Mentor).isAdmin ? "admin" : "mentor"
+          ? (user as Mentor).isAdmin
+            ? "admin"
+            : "mentor"
           : "mentee";
       await this.authRepo.setTokenCookie(studentId, role, user.point);
       return { studentId, firstLogin: true };
@@ -50,13 +58,18 @@ export class AuthService {
 
     const role: Role =
       userType === "mentor"
-        ? (user as Mentor).isAdmin ? "admin" : "mentor"
+        ? (user as Mentor).isAdmin
+          ? "admin"
+          : "mentor"
         : "mentee";
     await this.authRepo.setTokenCookie(studentId, role, user.point);
     return { studentId, firstLogin: false };
   }
 
-  async me(tokenPayload: { studentId: string; role: Role }): Promise<CurrentUser> {
+  async me(tokenPayload: {
+    studentId: string;
+    role: Role;
+  }): Promise<CurrentUser> {
     const { studentId, role } = tokenPayload;
 
     if (role === "admin" || role === "mentor") {
@@ -66,11 +79,16 @@ export class AuthService {
       const currentRole = mentor.isAdmin ? "admin" : "mentor";
 
       if (role !== currentRole) {
-        await this.authRepo.setTokenCookie(studentId, currentRole, mentor.point);
+        await this.authRepo.setTokenCookie(
+          studentId,
+          currentRole,
+          mentor.point,
+        );
       }
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { isAdmin: _isAdmin, ...userData } = mentor;
+      console.log(userData);
       return { ...userData, mentee: mentor.mentee || null, role: currentRole };
     }
 
@@ -85,7 +103,12 @@ export class AuthService {
     return { ...mentee, role: currentRole };
   }
 
-  async setupProfile(studentId: string, role: Role, password: string, nickname: string): Promise<SetupProfileResponse> {
+  async setupProfile(
+    studentId: string,
+    role: Role,
+    password: string,
+    nickname: string,
+  ): Promise<SetupProfileResponse> {
     const hashed = this.authRepo.hashPassword(password);
 
     if (role === "admin" || role === "mentor") {
@@ -93,7 +116,11 @@ export class AuthService {
     } else {
       const lastThree = studentId.slice(-3);
       const formattedNickname = `${lastThree} ${nickname}`;
-      await this.authRepo.updateMenteePassword(studentId, hashed, formattedNickname);
+      await this.authRepo.updateMenteePassword(
+        studentId,
+        hashed,
+        formattedNickname,
+      );
     }
 
     return { message: "Password setup successfully" };

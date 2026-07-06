@@ -1,8 +1,8 @@
 "use client";
 
-import { IHint } from "@/src/core/domain/hint";
+import { IMenteeHint } from "@/src/core/domain/hint";
 
-function JuniorHintItem({ hint }: { hint: IHint }) {
+function JuniorHintItem({ hint }: { hint: IMenteeHint }) {
   return (
     <div
       style={{
@@ -33,22 +33,37 @@ function JuniorHintItem({ hint }: { hint: IHint }) {
         Level {hint.level}
       </span>
 
-      <span
-        style={{
-          flex: 1,
-          fontSize: "14px",
-          color: "#cabdf0",
-          fontFamily: "monospace",
-        }}
-      >
-        {hint.content}
-      </span>
+      {hint.content && (
+        <span
+          style={{
+            flex: 1,
+            fontSize: "14px",
+            color: "#cabdf0",
+            fontFamily: "monospace",
+          }}
+        >
+          {hint.content}
+        </span>
+      )}
+
+      {!hint.content && (
+        <span
+          style={{
+            flex: 1,
+            fontSize: "14px",
+            color: "red",
+            fontFamily: "monospace",
+          }}
+        >
+          คำใบ้ถูกซ่อนอยู่
+        </span>
+      )}
     </div>
   );
 }
 
 export interface JuniorHintBoardProps {
-  hints: IHint[];
+  hints: IMenteeHint[];
 }
 
 export default function JuniorHintBoard({ hints }: JuniorHintBoardProps) {

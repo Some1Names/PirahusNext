@@ -28,6 +28,7 @@ export type MenteeForMe = Prisma.MenteeGetPayload<{
     unlockedHintLevels: true;
     unlockedCosmetics: true;
     equippedEffect: true;
+    mentor: { select: { studentId: true; nickname: true } };
   };
 }>;
 
@@ -73,6 +74,7 @@ export class AuthRepository implements IAuthRepository {
         unlockedHintLevels: true,
         unlockedCosmetics: true,
         equippedEffect: true,
+        mentor: { select: { studentId: true, nickname: true } },
       },
     });
   }
