@@ -1,5 +1,9 @@
-import { useEffect, useState } from "react";
-import type { SpeedrunEntry, Difficulty, GameKey } from "@/src/lib/leaderboard/types";
+import { useState, useEffect } from "react";
+import { minigameService } from "@/src/clients/container";
+import { IMinigameRecordResponse } from "@/src/core/domain/minigame";
+import { SpeedrunEntry } from "@/src/lib/leaderboard/types";
+
+import type { Difficulty, GameKey } from "@/src/lib/leaderboard/types";
 
 export function useSpeedrunLeaderboard(
   endpoint: string,
@@ -13,33 +17,40 @@ export function useSpeedrunLeaderboard(
 
   useEffect(() => {
     let cancelled = false;
-    Promise.resolve().then(() => {
-      setLoading(true);
-      setError(null);
-    });
+    
+    const fullGameName = difficulty ? `${game}-${difficulty}` : game;
+    
+    if (!fullGameName) {
+      setEntries([]);
+      setLoading(false);
+      return;
+    }
+    
+    setLoading(true);
+    setError(null);
 
-    const params = new URLSearchParams({ game, limit: String(limit) });
-    if (difficulty) params.set("difficulty", difficulty);
-
-    fetch(`${endpoint}?${params.toString()}`)
-      .then((res) => {
-        if (!res.ok) throw new Error(`Request failed (${res.status})`);
-        return res.json();
-      })
-      .then((data: SpeedrunEntry[]) => {
-        if (!cancelled) setEntries(data);
-      })
-      .catch((err) => {
-        if (!cancelled) setError(err instanceof Error ? err.message : "Failed to load");
-      })
-      .finally(() => {
+    const fetchData = async () => {
+      try {
+        const result = await minigameService.getLeaderboard(fullGameName, limit);
+        if (cancelled) return;
+        setEntries(result.map((r: IMinigameRecordResponse) => ({
+          ...r,
+          timeMs: r.timeTaken * 1000
+        })));
+      } catch (err) {
+        if (cancelled) return;
+        setError(err instanceof Error ? err.message : "Failed to load speedruns");
+      } finally {
         if (!cancelled) setLoading(false);
-      });
+      }
+    };
+
+    fetchData();
 
     return () => {
       cancelled = true;
     };
-  }, [endpoint, game, limit, difficulty]);
+  }, [game, difficulty, limit]);
 
   return { entries, loading, error };
 }

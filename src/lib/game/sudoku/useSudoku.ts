@@ -55,7 +55,7 @@ export function useSudoku() {
       Promise.resolve().then(() => setWin(true));
       if (timerRef.current) clearInterval(timerRef.current);
       const pts = calculateSudokuPts(diff, mistakes);
-      awardPoints(pts, { diff, mistakes, timer });
+      awardPoints(pts, { diff, mistakes, timeTaken: timer });
     }
   }, [board, solution, gameOver, win, diff, mistakes, timer, awardPoints]);
 

@@ -2,6 +2,7 @@ import { useState, useCallback, useRef } from "react";
 import {
   mentorService,
   menteeService,
+  minigameService,
 } from "@/src/clients/container";
 import { useUserStore } from "@/src/store/auth";
 
@@ -13,8 +14,7 @@ interface AwardResult {
   error?: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function useGamePoints(_game: GameName) {
+export function useGamePoints(game: GameName) {
   const [submitting, setSubmitting] = useState(false);
   const getUser = useUserStore((s) => s.getUser);
   const [error, setError] = useState<string | null>(null);
@@ -26,8 +26,7 @@ export function useGamePoints(_game: GameName) {
   const awardPoints = useCallback(
     async (
       points: number,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      _meta?: Record<string, unknown>,
+      meta?: Record<string, unknown>,
     ): Promise<AwardResult> => {
       if (points <= 0) return { success: false, error: "No points to award" };
       if (isSubmittingRef.current)
@@ -53,6 +52,14 @@ export function useGamePoints(_game: GameName) {
           totalPoints = await menteeService.addMenteePoint(user.id, points);
         }
 
+        if (meta && typeof meta.timeTaken === "number") {
+          let fullGameName = game.toString();
+          if (meta.diff) {
+            fullGameName += `-${meta.diff}`;
+          }
+          await minigameService.submitRecord(fullGameName, meta.timeTaken);
+        }
+
         setPopupPoints(points);
         setShowPopup(true);
 
@@ -68,7 +75,7 @@ export function useGamePoints(_game: GameName) {
         isSubmittingRef.current = false;
       }
     },
-    [getUser],
+    [getUser, game],
   );
 
   const closePopup = useCallback(() => setShowPopup(false), []);

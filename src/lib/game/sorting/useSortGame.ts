@@ -51,9 +51,9 @@ export function useSortGame() {
         setTimerActive(false);
       });
       const pts = calculateSortPts(diff, swaps, par);
-      awardPoints(pts, { diff, swaps, par });
+      awardPoints(pts, { diff, swaps, par, timeTaken: timer });
     }
-  }, [bars, diff, par, swaps, won, awardPoints]);
+  }, [bars, diff, par, swaps, won, awardPoints, timer]);
 
   const handleBarClick = useCallback((idx: number) => {
     if (won) return;

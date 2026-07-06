@@ -18,6 +18,8 @@ import { ProfileClientRepository } from "./repositories/profile.repository";
 import { ProfileService } from "./services/profile.service";
 import { LeaderboardClientRepository } from "./repositories/leaderboard.repository";
 import { LeaderboardService } from "./services/leaderboard.service";
+import { MinigameClientRepository } from "./repositories/minigame.repository";
+import { MinigameClientService } from "./services/minigame.service";
 
 const admissionYearRepository = new AdmissionYearClientRepository();
 const authRepository = new AuthClientRepository();
@@ -28,7 +30,6 @@ const cosmeticRepository = new CosmeticClientRepository();
 const shopItemRepository = new ShopItemClientRepository();
 const giftRepository = new GiftClientRepository();
 const profileRepository = new ProfileClientRepository();
-const leaderboardRepository = new LeaderboardClientRepository();
 
 export const admissionYearService = new AdmissionYearService(
   admissionYearRepository,
@@ -41,4 +42,10 @@ export const cosmeticService = new CosmeticService(cosmeticRepository);
 export const shopItemService = new ShopItemService(shopItemRepository);
 export const giftService = new GiftService(giftRepository);
 export const profileService = new ProfileService(profileRepository);
-export const leaderboardService = new LeaderboardService(leaderboardRepository);
+export const leaderboardService = new LeaderboardService(
+  new LeaderboardClientRepository(),
+);
+
+export const minigameService = new MinigameClientService(
+  new MinigameClientRepository(),
+);

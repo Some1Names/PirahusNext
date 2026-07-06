@@ -26,6 +26,7 @@ model Mentor {
   hints      Hint[]
 
   mentee     Mentee?
+  minigameRecords MinigameRecord[]
 
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -43,6 +44,7 @@ model Mentee {
 
   mentorId   String @unique
   mentor     Mentor @relation(fields: [mentorId], references: [id])
+  minigameRecords MinigameRecord[]
 
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -74,4 +76,22 @@ model ShopItem {
   
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model MinigameRecord {
+  id        String   @id @default(cuid())
+  gameName  String
+  timeTaken Int
+  
+  menteeId  String?
+  mentee    Mentee?  @relation(fields: [menteeId], references: [id], onDelete: Cascade)
+  
+  mentorId  String?
+  mentor    Mentor?  @relation(fields: [mentorId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([gameName, menteeId])
+  @@unique([gameName, mentorId])
 }

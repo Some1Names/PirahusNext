@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { PointsEntry } from "@/src/lib/leaderboard/types";
 import { leaderboardService } from "@/src/clients/container";
+import { ILeaderboardEntry } from "@/src/core/domain/leaderboard";
 
 export function usePointsLeaderboard(endpoint: string, limit: number) {
   const [entries, setEntries] = useState<PointsEntry[]>([]);
@@ -18,16 +19,20 @@ export function usePointsLeaderboard(endpoint: string, limit: number) {
         if (cancelled) return;
 
         const combined = [
-          ...data.mentors.map((m) => ({
-            userId: m.id,
-            username: `[Mentor] ${m.nickname || m.studentId}`,
-            points: m.point,
-          })),
-          ...data.mentees.map((m) => ({
-            userId: m.id,
-            username: `[Mentee] ${m.nickname || m.studentId}`,
-            points: m.point,
-          })),
+          ...data.mentors.map(
+            (m: ILeaderboardEntry) => ({
+              userId: m.id,
+              username: `[Mentor] ${m.nickname || m.studentId}`,
+              points: m.point,
+            }),
+          ),
+          ...data.mentees.map(
+            (m: ILeaderboardEntry) => ({
+              userId: m.id,
+              username: `[Mentee] ${m.nickname || m.studentId}`,
+              points: m.point,
+            }),
+          ),
         ];
 
         combined.sort((a, b) => b.points - a.points);
