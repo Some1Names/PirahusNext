@@ -2,40 +2,45 @@ import { MentorRepository } from "@/src/repositories/mentor.repository";
 import { ICreateMentor, IMentor } from "@/src/core/domain/mentor";
 import { NotFoundError, ForbiddenError } from "@/src/core/error/error";
 import { IMentorRepository } from "@/src/core/ports/server/mentor.repository.port";
+import { stripMentorPassword } from "@/src/lib/user-utils";
+
+type SafeMentor = Omit<IMentor, "password">;
 
 export class MentorService {
   constructor(
     private readonly mentorRepo: IMentorRepository = new MentorRepository()
   ) {}
 
-  async createMentor(data: ICreateMentor): Promise<IMentor> {
-    return this.mentorRepo.createMentor(data);
+  async createMentor(data: ICreateMentor): Promise<SafeMentor> {
+    return stripMentorPassword(await this.mentorRepo.createMentor(data));
   }
 
-  async createMany(data: ICreateMentor[]): Promise<IMentor[]> {
-    return this.mentorRepo.createMany(data);
+  async createMany(data: ICreateMentor[]): Promise<SafeMentor[]> {
+    const mentors = await this.mentorRepo.createMany(data);
+    return mentors.map(stripMentorPassword);
   }
 
-  async findAll(): Promise<IMentor[]> {
-    return this.mentorRepo.findAll();
+  async findAll(): Promise<SafeMentor[]> {
+    const mentors = await this.mentorRepo.findAll();
+    return mentors.map(stripMentorPassword);
   }
 
-  async findById(id: string): Promise<IMentor> {
+  async findById(id: string): Promise<SafeMentor> {
     const mentor = await this.mentorRepo.findById(id);
     if (!mentor) throw new NotFoundError("Mentor not found");
-    return mentor;
+    return stripMentorPassword(mentor);
   }
 
-  async update(id: string, data: { studentId?: string }): Promise<IMentor> {
-    return this.mentorRepo.update(id, data);
+  async update(id: string, data: { studentId?: string }): Promise<SafeMentor> {
+    return stripMentorPassword(await this.mentorRepo.update(id, data));
   }
 
-  async setAdminRole(id: string, isAdmin: boolean): Promise<IMentor> {
-    return this.mentorRepo.setAdminRole(id, isAdmin);
+  async setAdminRole(id: string, isAdmin: boolean): Promise<SafeMentor> {
+    return stripMentorPassword(await this.mentorRepo.setAdminRole(id, isAdmin));
   }
 
-  async delete(id: string): Promise<IMentor> {
-    return this.mentorRepo.delete(id);
+  async delete(id: string): Promise<SafeMentor> {
+    return stripMentorPassword(await this.mentorRepo.delete(id));
   }
 
   async getPoint(id: string): Promise<number> {
