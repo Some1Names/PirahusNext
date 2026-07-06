@@ -1,5 +1,5 @@
 import { prisma } from "@/src/lib/prisma";
-import { Role } from "@/src/core/domain/auth";
+import { Role } from "@/src/core/domain/user";
 
 import { IGiftRepository } from "@/src/core/ports/server/gift.repository.port";
 

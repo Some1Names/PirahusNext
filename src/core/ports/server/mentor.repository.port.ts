@@ -1,16 +1,14 @@
-import { Mentor } from "@/prisma/generated/client";
-import { ICreateMentor } from "@/src/core/domain/mentor";
-import { MentorWithRelations } from "@/src/repositories/mentor.repository";
+import { ICreateMentor, IMentor } from "@/src/core/domain/mentor";
 
 export interface IMentorRepository {
-  createMentor(data: ICreateMentor): Promise<MentorWithRelations>;
-  createMany(data: ICreateMentor[]): Promise<MentorWithRelations[]>;
-  findAll(): Promise<MentorWithRelations[]>;
-  findById(id: string): Promise<MentorWithRelations | null>;
-  findByStudentId(studentId: string): Promise<Mentor | null>;
-  update(id: string, data: Partial<Mentor>): Promise<MentorWithRelations>;
-  setAdminRole(id: string, isAdmin: boolean): Promise<MentorWithRelations>;
-  delete(id: string): Promise<MentorWithRelations>;
-  getPoint(id: string): Promise<Mentor | null>;
-  addPoint(id: string, point: number): Promise<Mentor>;
+  createMentor(data: ICreateMentor): Promise<IMentor>;
+  createMany(data: ICreateMentor[]): Promise<IMentor[]>;
+  findAll(): Promise<IMentor[]>;
+  findById(id: string): Promise<IMentor | null>;
+  findByStudentId(studentId: string): Promise<IMentor | null>;
+  update(id: string, data: Partial<IMentor>): Promise<IMentor>;
+  setAdminRole(id: string, isAdmin: boolean): Promise<IMentor>;
+  delete(id: string): Promise<IMentor>;
+  getPoint(id: string): Promise<IMentor | null>;
+  addPoint(id: string, point: number): Promise<IMentor>;
 }

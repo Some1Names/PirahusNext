@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { Role } from "@/src/core/domain/auth";
+import { Role } from "@/src/core/domain/user";
 
 const SECRET = process.env.JWT_SECRET!;
 

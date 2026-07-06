@@ -1,12 +1,12 @@
 import { AuthRepository } from "@/src/repositories/auth.repository";
 import { NotFoundError, UnauthorizedError } from "@/src/core/error/error";
-import { Mentor } from "@/prisma/generated/client";
 import {
-  Role,
   LoginResponse,
   SetupProfileResponse,
-  CurrentUser,
 } from "@/src/core/domain/auth";
+import { Role, CurrentUser } from "@/src/core/domain/user";
+import { IMentor } from "@/src/core/domain/mentor";
+import { IMentee } from "@/src/core/domain/mentee";
 import { IAuthRepository } from "@/src/core/ports/server/auth.repository.port";
 
 export class AuthService {
@@ -18,10 +18,7 @@ export class AuthService {
     const config = await this.authRepo.findAdmissionYear();
     if (!config) throw new Error("Admission year setting not configured");
 
-    let user:
-      | Mentor
-      | Awaited<ReturnType<typeof this.authRepo.findMenteeByStudentId>>
-      | null = null;
+    let user: IMentor | IMentee | null = null;
     let userType: "mentor" | "mentee" = "mentor";
 
     if (studentId.startsWith(config.mentorYear)) {
@@ -41,7 +38,7 @@ export class AuthService {
     if (isFirstLogin) {
       const role: Role =
         userType === "mentor"
-          ? (user as Mentor).isAdmin
+          ? (user as IMentor).isAdmin
             ? "admin"
             : "mentor"
           : "mentee";
@@ -58,7 +55,7 @@ export class AuthService {
 
     const role: Role =
       userType === "mentor"
-        ? (user as Mentor).isAdmin
+        ? (user as IMentor).isAdmin
           ? "admin"
           : "mentor"
         : "mentee";
@@ -76,7 +73,7 @@ export class AuthService {
       const mentor = await this.authRepo.findMentorForMe(studentId);
       if (!mentor) throw new NotFoundError("Mentor not found");
 
-      const currentRole = mentor.isAdmin ? "admin" : "mentor";
+      const currentRole = mentor.role;
 
       if (role !== currentRole) {
         await this.authRepo.setTokenCookie(
@@ -87,8 +84,7 @@ export class AuthService {
       }
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { isAdmin: _isAdmin, ...userData } = mentor;
-      console.log(userData);
+      const { ...userData } = mentor;
       return { ...userData, mentee: mentor.mentee || null, role: currentRole };
     }
 

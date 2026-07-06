@@ -5,7 +5,7 @@ import {
 } from "@/src/clients/container";
 import Swal from "sweetalert2";
 import type { ShopItem, GiftTransfer } from "@/src/lib/shop/Types";
-import type { CurrentUser } from "@/src/core/domain/auth";
+import type { CurrentUser } from "@/src/core/domain/user";
 
 export function useShopActions(
   user: CurrentUser | null,

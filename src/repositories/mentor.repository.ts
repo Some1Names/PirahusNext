@@ -1,79 +1,103 @@
 import { prisma } from "@/src/lib/prisma";
-import { Mentor, Prisma } from "@/prisma/generated/client";
+import { Prisma } from "@/prisma/generated/client";
 
-import { ICreateMentor } from "@/src/core/domain/mentor";
+import { ICreateMentor, IMentor } from "@/src/core/domain/mentor";
 
 export type MentorWithRelations = Prisma.MentorGetPayload<{
   include: { hints: true; mentee: true };
 }>;
 
 import { IMentorRepository } from "@/src/core/ports/server/mentor.repository.port";
+import { mapToDomainMentor } from "@/src/factories/mentor.factory";
 
 export class MentorRepository implements IMentorRepository {
-  async createMentor(data: ICreateMentor): Promise<MentorWithRelations> {
-    return prisma.mentor.create({
+  async createMentor(data: ICreateMentor): Promise<IMentor> {
+    const mentor = await prisma.mentor.create({
       data: { studentId: data.studentId },
       include: { hints: true, mentee: true },
     });
+    return mapToDomainMentor(mentor);
   }
 
-  async createMany(data: ICreateMentor[]): Promise<MentorWithRelations[]> {
+  async createMany(data: ICreateMentor[]): Promise<IMentor[]> {
     await prisma.mentor.createMany({ data, skipDuplicates: true });
     const mentors = await prisma.mentor.findMany({
       include: { hints: true, mentee: true },
     });
-    return mentors;
+    return mentors.map(mapToDomainMentor);
   }
 
-  async findAll(): Promise<MentorWithRelations[]> {
-    return prisma.mentor.findMany({
+  async findAll(): Promise<IMentor[]> {
+    const mentors = await prisma.mentor.findMany({
       include: { hints: true, mentee: true },
       orderBy: { studentId: "asc" },
     });
+    return mentors.map(mapToDomainMentor);
   }
 
-  async findById(id: string): Promise<MentorWithRelations | null> {
-    return prisma.mentor.findUnique({
+  async findById(id: string): Promise<IMentor | null> {
+    const mentor = await prisma.mentor.findUnique({
       where: { id },
       include: { hints: true, mentee: true },
     });
+    return mentor ? mapToDomainMentor(mentor) : null;
   }
 
-  async findByStudentId(studentId: string): Promise<Mentor | null> {
-    return prisma.mentor.findUnique({ where: { studentId } });
-  }
-
-  async update(id: string, data: Partial<Mentor>): Promise<MentorWithRelations> {
-    return prisma.mentor.update({
-      where: { id },
-      data,
+  async findByStudentId(studentId: string): Promise<IMentor | null> {
+    const mentor = await prisma.mentor.findUnique({
+      where: { studentId },
       include: { hints: true, mentee: true },
     });
+    return mentor ? mapToDomainMentor(mentor) : null;
   }
 
-  async setAdminRole(id: string, isAdmin: boolean): Promise<MentorWithRelations> {
-    return prisma.mentor.update({
+  async update(id: string, data: Partial<IMentor>): Promise<IMentor> {
+    const mentor = await prisma.mentor.update({
+      where: { id },
+      data: {
+        studentId: data.studentId,
+        nickname: data.nickname,
+        isAdmin: data.isAdmin,
+        point: data.point,
+        unlockedCosmetics: data.unlockedCosmetics,
+        equippedEffect: data.equippedEffect,
+      },
+      include: { hints: true, mentee: true },
+    });
+    return mapToDomainMentor(mentor);
+  }
+
+  async setAdminRole(id: string, isAdmin: boolean): Promise<IMentor> {
+    const mentor = await prisma.mentor.update({
       where: { id },
       data: { isAdmin },
       include: { hints: true, mentee: true },
     });
+    return mapToDomainMentor(mentor);
   }
 
-  async delete(id: string): Promise<MentorWithRelations> {
-    return prisma.mentor.delete({
+  async delete(id: string): Promise<IMentor> {
+    const mentor = await prisma.mentor.delete({
       where: { id },
       include: { hints: true, mentee: true },
     });
+    return mapToDomainMentor(mentor);
   }
 
-  async getPoint(id: string): Promise<Mentor | null> {
-    return prisma.mentor.findUnique({ where: { id } });
+  async getPoint(id: string): Promise<IMentor | null> {
+    const mentor = await prisma.mentor.findUnique({
+      where: { id },
+      include: { hints: true, mentee: true },
+    });
+    return mentor ? mapToDomainMentor(mentor) : null;
   }
 
-  async addPoint(id: string, point: number): Promise<Mentor> {
-    return prisma.mentor.update({
+  async addPoint(id: string, point: number): Promise<IMentor> {
+    const mentor = await prisma.mentor.update({
       where: { id },
       data: { point: { increment: point } },
+      include: { hints: true, mentee: true },
     });
+    return mapToDomainMentor(mentor);
   }
 }

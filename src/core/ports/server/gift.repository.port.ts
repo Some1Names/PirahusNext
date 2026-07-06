@@ -1,4 +1,4 @@
-import { Role } from "@/src/core/domain/auth";
+import { Role } from "@/src/core/domain/user";
 
 export interface IGiftRepository {
   executeTransferTransaction(

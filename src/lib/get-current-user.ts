@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { verifyToken, TokenPayload } from "./jwt";
 import { UnauthorizedError, ForbiddenError } from "../core/error/error";
-import { Role } from "@/src/core/domain/auth";
+import { Role } from "@/src/core/domain/user";
 
 export async function getCurrentUser(): Promise<TokenPayload> {
   const token = (await cookies()).get("access_token")?.value;

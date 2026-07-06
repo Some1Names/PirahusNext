@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { verifyToken } from "@/src/lib/jwt";
-import JuniorBackroomClient from "./JuniorBackroomClient";
+import MenteeBackroomClient from "./MenteeBackroomClient";
 
 export default async function Page() {
   const cookieStore = await cookies();
@@ -17,9 +17,9 @@ export default async function Page() {
       redirect("/");
     }
   } catch (error) {
-    console.error("Authentication check failed in Junior Backrooms:", error);
+    console.error("Authentication check failed in Mentee Backrooms:", error);
     redirect("/auth/login");
   }
 
-  return <JuniorBackroomClient />;
+  return <MenteeBackroomClient />;
 }

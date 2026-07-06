@@ -6,6 +6,7 @@ export function mapToDomainMentor(mentor: MentorWithRelations): IMentor {
   const mappedMentor: IMentor = {
     id: mentor.id,
     studentId: mentor.studentId,
+    password: mentor.password,
     nickname: mentor.nickname,
     point: mentor.point,
     isAdmin: mentor.isAdmin,
@@ -21,6 +22,7 @@ export function mapToDomainMentor(mentor: MentorWithRelations): IMentor {
     const mappedMentee: IMentee = {
       id: mentor.mentee.id,
       studentId: mentor.mentee.studentId,
+      password: mentor.mentee.password,
       nickname: mentor.mentee.nickname,
       point: mentor.mentee.point,
       unlockedHintLevels: mentor.mentee.unlockedHintLevels,

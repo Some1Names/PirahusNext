@@ -1,7 +1,6 @@
 import { MenteeRepository } from "@/src/repositories/mentee.repository";
 import { ICreateMentee, IMentee } from "@/src/core/domain/mentee";
 import { NotFoundError, ForbiddenError } from "@/src/core/error/error";
-import { mapToDomainMentee } from "@/src/factories/mentee.factory";
 import { IMenteeRepository } from "@/src/core/ports/server/mentee.repository.port";
 
 
@@ -12,29 +11,29 @@ export class MenteeService {
   ) {}
 
   async createMentee(data: ICreateMentee): Promise<IMentee> {
-    const mentee = await this.menteeRepo.createMentee(data);
-    return mapToDomainMentee(mentee);
+    return this.menteeRepo.createMentee(data);
   }
 
   async createMany(data: ICreateMentee[]): Promise<IMentee[]> {
-    const mentees = await this.menteeRepo.createMany(data);
-    return mentees.map(mapToDomainMentee);
+    return this.menteeRepo.createMany(data);
   }
 
   async findAll(): Promise<IMentee[]> {
-    const mentees = await this.menteeRepo.findAll();
-    return mentees.map(mapToDomainMentee);
+    return this.menteeRepo.findAll();
+  }
+
+  async update(id: string, data: { studentId?: string }): Promise<IMentee> {
+    return this.menteeRepo.update(id, data);
   }
 
   async findById(id: string): Promise<IMentee> {
     const mentee = await this.menteeRepo.findById(id);
     if (!mentee) throw new NotFoundError("Mentee not found");
-    return mapToDomainMentee(mentee);
+    return mentee;
   }
 
   async delete(id: string): Promise<IMentee> {
-    const mentee = await this.menteeRepo.delete(id);
-    return mapToDomainMentee(mentee);
+    return this.menteeRepo.delete(id);
   }
 
   async getPoint(id: string): Promise<number> {

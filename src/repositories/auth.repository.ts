@@ -3,52 +3,38 @@ import { signToken } from "@/src/lib/jwt";
 import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 
-import { Mentor, Mentee, AdmissionYear, Prisma } from "@/prisma/generated/client";
-import { Role } from "@/src/core/domain/auth";
-
-export type MentorForMe = Prisma.MentorGetPayload<{
-  select: {
-    id: true;
-    studentId: true;
-    nickname: true;
-    point: true;
-    unlockedCosmetics: true;
-    equippedEffect: true;
-    isAdmin: true;
-    mentee: { select: { id: true; studentId: true; nickname: true } };
-  };
-}>;
-
-export type MenteeForMe = Prisma.MenteeGetPayload<{
-  select: {
-    id: true;
-    studentId: true;
-    nickname: true;
-    point: true;
-    unlockedHintLevels: true;
-    unlockedCosmetics: true;
-    equippedEffect: true;
-    mentor: { select: { studentId: true; nickname: true } };
-  };
-}>;
+import { IMentor } from "@/src/core/domain/mentor";
+import { IMentee } from "@/src/core/domain/mentee";
+import { IAdmissionYear } from "@/src/core/domain/admission-year";
+import { MentorUser, MenteeUser, Role } from "@/src/core/domain/user";
+import { mapToDomainMentor } from "@/src/factories/mentor.factory";
+import { mapToDomainMentee } from "@/src/factories/mentee.factory";
 
 import { IAuthRepository } from "@/src/core/ports/server/auth.repository.port";
 
 export class AuthRepository implements IAuthRepository {
-  async findAdmissionYear(): Promise<AdmissionYear | null> {
+  async findAdmissionYear(): Promise<IAdmissionYear | null> {
     return prisma.admissionYear.findFirst();
   }
 
-  async findMentorByStudentId(studentId: string): Promise<Mentor | null> {
-    return prisma.mentor.findUnique({ where: { studentId } });
+  async findMentorByStudentId(studentId: string): Promise<IMentor | null> {
+    const mentor = await prisma.mentor.findUnique({
+      where: { studentId },
+      include: { hints: true, mentee: true },
+    });
+    return mentor ? mapToDomainMentor(mentor) : null;
   }
 
-  async findMenteeByStudentId(studentId: string): Promise<Mentee | null> {
-    return prisma.mentee.findUnique({ where: { studentId } });
+  async findMenteeByStudentId(studentId: string): Promise<IMentee | null> {
+    const mentee = await prisma.mentee.findUnique({
+      where: { studentId },
+      include: { mentor: { include: { hints: true } } },
+    });
+    return mentee ? mapToDomainMentee(mentee) : null;
   }
 
-  async findMentorForMe(studentId: string): Promise<MentorForMe | null> {
-    return prisma.mentor.findUnique({
+  async findMentorForMe(studentId: string): Promise<MentorUser | null> {
+    const mentor = await prisma.mentor.findUnique({
       where: { studentId },
       select: {
         id: true,
@@ -61,10 +47,21 @@ export class AuthRepository implements IAuthRepository {
         mentee: { select: { id: true, studentId: true, nickname: true } },
       },
     });
+    if (!mentor) return null;
+    return {
+      id: mentor.id,
+      studentId: mentor.studentId,
+      nickname: mentor.nickname,
+      point: mentor.point,
+      unlockedCosmetics: mentor.unlockedCosmetics,
+      equippedEffect: mentor.equippedEffect,
+      role: mentor.isAdmin ? "admin" : "mentor",
+      mentee: mentor.mentee,
+    };
   }
 
-  async findMenteeForMe(studentId: string): Promise<MenteeForMe | null> {
-    return prisma.mentee.findUnique({
+  async findMenteeForMe(studentId: string): Promise<MenteeUser | null> {
+    const mentee = await prisma.mentee.findUnique({
       where: { studentId },
       select: {
         id: true,
@@ -77,26 +74,50 @@ export class AuthRepository implements IAuthRepository {
         mentor: { select: { studentId: true, nickname: true } },
       },
     });
+    if (!mentee) return null;
+    return {
+      id: mentee.id,
+      studentId: mentee.studentId,
+      nickname: mentee.nickname,
+      point: mentee.point,
+      unlockedHintLevels: mentee.unlockedHintLevels,
+      unlockedCosmetics: mentee.unlockedCosmetics,
+      equippedEffect: mentee.equippedEffect,
+      role: "mentee",
+      mentor: mentee.mentor,
+    };
   }
 
-  async updateMentorPassword(studentId: string, hashedPassword: string, nickname: string): Promise<Mentor> {
-    return prisma.mentor.update({
+  async updateMentorPassword(
+    studentId: string,
+    hashedPassword: string,
+    nickname: string,
+  ): Promise<IMentor> {
+    const mentor = await prisma.mentor.update({
       where: { studentId },
       data: { password: hashedPassword, nickname },
+      include: { hints: true, mentee: true },
     });
+    return mapToDomainMentor(mentor);
   }
 
-  async updateMenteePassword(studentId: string, hashedPassword: string, nickname: string): Promise<Mentee> {
-    return prisma.mentee.update({
+  async updateMenteePassword(
+    studentId: string,
+    hashedPassword: string,
+    nickname: string,
+  ): Promise<IMentee> {
+    const mentee = await prisma.mentee.update({
       where: { studentId },
       data: { password: hashedPassword, nickname },
+      include: { mentor: { include: { hints: true } } },
     });
+    return mapToDomainMentee(mentee);
   }
 
   async setTokenCookie(
     studentId: string,
     role: Role,
-    point: number
+    point: number,
   ): Promise<string> {
     const token = signToken({ studentId, role, point });
     const cookieStore = await cookies();

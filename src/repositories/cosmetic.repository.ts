@@ -1,5 +1,5 @@
 import { prisma } from "@/src/lib/prisma";
-import { Role } from "@/src/core/domain/auth";
+import { Role } from "@/src/core/domain/user";
 import { IUnlockCosmeticResult, IEquipCosmeticResult } from "@/src/core/domain/cosmetic";
 import { ShopItemEntity } from "@/src/core/domain/shop-item";
 import { mapToShopItemEntity } from "@/src/factories/shop-item.factory";

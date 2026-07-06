@@ -1,23 +1,24 @@
-import { Mentor, Mentee, AdmissionYear } from "@/prisma/generated/client";
-import { Role } from "@/src/core/domain/auth";
-import { MentorForMe, MenteeForMe } from "@/src/repositories/auth.repository";
+import { IMentor } from "@/src/core/domain/mentor";
+import { IMentee } from "@/src/core/domain/mentee";
+import { IAdmissionYear } from "@/src/core/domain/admission-year";
+import { MentorUser, MenteeUser, Role } from "@/src/core/domain/user";
 
 export interface IAuthRepository {
-  findAdmissionYear(): Promise<AdmissionYear | null>;
-  findMentorByStudentId(studentId: string): Promise<Mentor | null>;
-  findMenteeByStudentId(studentId: string): Promise<Mentee | null>;
-  findMentorForMe(studentId: string): Promise<MentorForMe | null>;
-  findMenteeForMe(studentId: string): Promise<MenteeForMe | null>;
+  findAdmissionYear(): Promise<IAdmissionYear | null>;
+  findMentorByStudentId(studentId: string): Promise<IMentor | null>;
+  findMenteeByStudentId(studentId: string): Promise<IMentee | null>;
+  findMentorForMe(studentId: string): Promise<MentorUser | null>;
+  findMenteeForMe(studentId: string): Promise<MenteeUser | null>;
   updateMentorPassword(
     studentId: string,
     hashedPassword: string,
     nickname: string,
-  ): Promise<Mentor>;
+  ): Promise<IMentor>;
   updateMenteePassword(
     studentId: string,
     hashedPassword: string,
     nickname: string,
-  ): Promise<Mentee>;
+  ): Promise<IMentee>;
   setTokenCookie(studentId: string, role: Role, point: number): Promise<string>;
   comparePassword(plain: string, hashed: string): boolean;
   hashPassword(plain: string): string;

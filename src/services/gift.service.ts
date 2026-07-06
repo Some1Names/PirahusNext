@@ -1,7 +1,7 @@
 import { GiftRepository } from "@/src/repositories/gift.repository";
 import { MenteeRepository } from "@/src/repositories/mentee.repository";
 import { MentorRepository } from "@/src/repositories/mentor.repository";
-import { Role } from "@/src/core/domain/auth";
+import { Role } from "@/src/core/domain/user";
 import { BadRequestError, NotFoundError } from "@/src/core/error/error";
 import { IGiftRepository } from "@/src/core/ports/server/gift.repository.port";
 import { IMenteeRepository } from "@/src/core/ports/server/mentee.repository.port";

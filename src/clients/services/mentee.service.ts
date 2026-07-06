@@ -7,61 +7,33 @@ export class MenteeService {
   constructor(private readonly menteeRepository: IMenteeClientRepository) {}
 
   async createMentee(data: ICreateMentee): Promise<IMentee> {
-    try {
-      const parsedData = parseSchema(createMenteeSchema, data);
-      const mentee = await this.menteeRepository.createMentee(parsedData);
-      return mentee.data;
-    } catch (error) {
-      throw error;
-    }
+    const parsedData = parseSchema(createMenteeSchema, data);
+    const mentee = await this.menteeRepository.createMentee(parsedData);
+    return mentee.data;
   }
   async createManyMentees(data: ICreateMentee[]): Promise<IMentee[]> {
-    try {
-      const parsedData = data.map((d) => parseSchema(createMenteeSchema, d));
-      const mentees = await this.menteeRepository.createManyMentees(parsedData);
-      return mentees.data;
-    } catch (error) {
-      throw error;
-    }
+    const parsedData = data.map((d) => parseSchema(createMenteeSchema, d));
+    const mentees = await this.menteeRepository.createManyMentees(parsedData);
+    return mentees.data;
   }
   async deleteMentee(id: string): Promise<IMentee> {
-    try {
-      const mentee = await this.menteeRepository.deleteMentee(id);
-      return mentee.data;
-    } catch (error) {
-      throw error;
-    }
+    const mentee = await this.menteeRepository.deleteMentee(id);
+    return mentee.data;
   }
   async getMenteeById(id: string): Promise<IMentee> {
-    try {
-      const mentee = await this.menteeRepository.getMenteeById(id);
-      return mentee.data;
-    } catch (error) {
-      throw error;
-    }
+    const mentee = await this.menteeRepository.getMenteeById(id);
+    return mentee.data;
   }
   async getAllMentees(): Promise<IMentee[]> {
-    try {
-      const mentees = await this.menteeRepository.getAllMentees();
-      return mentees.data;
-    } catch (error) {
-      throw error;
-    }
+    const mentees = await this.menteeRepository.getAllMentees();
+    return mentees.data;
   }
   async getMenteePoint(menteeId: string): Promise<number> {
-    try {
-      const res = await this.menteeRepository.getMenteePoint(menteeId);
-      return res.data;
-    } catch (error) {
-      throw error;
-    }
+    const res = await this.menteeRepository.getMenteePoint(menteeId);
+    return res.data;
   }
   async addMenteePoint(menteeId: string, point: number): Promise<number> {
-    try {
-      const res = await this.menteeRepository.addMenteePoint(menteeId, point);
-      return res.data;
-    } catch (error) {
-      throw error;
-    }
+    const res = await this.menteeRepository.addMenteePoint(menteeId, point);
+    return res.data;
   }
 }

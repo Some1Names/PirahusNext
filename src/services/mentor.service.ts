@@ -1,10 +1,7 @@
 import { MentorRepository } from "@/src/repositories/mentor.repository";
 import { ICreateMentor, IMentor } from "@/src/core/domain/mentor";
 import { NotFoundError, ForbiddenError } from "@/src/core/error/error";
-import { mapToDomainMentor } from "@/src/factories/mentor.factory";
 import { IMentorRepository } from "@/src/core/ports/server/mentor.repository.port";
-
-
 
 export class MentorService {
   constructor(
@@ -12,39 +9,33 @@ export class MentorService {
   ) {}
 
   async createMentor(data: ICreateMentor): Promise<IMentor> {
-    const mentor = await this.mentorRepo.createMentor(data);
-    return mapToDomainMentor(mentor);
+    return this.mentorRepo.createMentor(data);
   }
 
   async createMany(data: ICreateMentor[]): Promise<IMentor[]> {
-    const mentors = await this.mentorRepo.createMany(data);
-    return mentors.map(mapToDomainMentor);
+    return this.mentorRepo.createMany(data);
   }
 
   async findAll(): Promise<IMentor[]> {
-    const mentors = await this.mentorRepo.findAll();
-    return mentors.map(mapToDomainMentor);
+    return this.mentorRepo.findAll();
   }
 
   async findById(id: string): Promise<IMentor> {
     const mentor = await this.mentorRepo.findById(id);
     if (!mentor) throw new NotFoundError("Mentor not found");
-    return mapToDomainMentor(mentor);
+    return mentor;
   }
 
   async update(id: string, data: { studentId?: string }): Promise<IMentor> {
-    const mentor = await this.mentorRepo.update(id, data);
-    return mapToDomainMentor(mentor);
+    return this.mentorRepo.update(id, data);
   }
 
   async setAdminRole(id: string, isAdmin: boolean): Promise<IMentor> {
-    const mentor = await this.mentorRepo.setAdminRole(id, isAdmin);
-    return mapToDomainMentor(mentor);
+    return this.mentorRepo.setAdminRole(id, isAdmin);
   }
 
   async delete(id: string): Promise<IMentor> {
-    const mentor = await this.mentorRepo.delete(id);
-    return mapToDomainMentor(mentor);
+    return this.mentorRepo.delete(id);
   }
 
   async getPoint(id: string): Promise<number> {

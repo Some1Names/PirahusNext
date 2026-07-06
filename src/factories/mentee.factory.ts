@@ -10,6 +10,7 @@ export function mapToDomainMentee(mentee: MenteeWithRelations): IMentee {
   const mappedMentor: IMentor = {
     id: mentee.mentor.id,
     studentId: mentee.mentor.studentId,
+    password: mentee.mentor.password,
     nickname: mentee.mentor.nickname,
     point: mentee.mentor.point,
     isAdmin: mentee.mentor.isAdmin,
@@ -24,6 +25,7 @@ export function mapToDomainMentee(mentee: MenteeWithRelations): IMentee {
   const mappedMentee: IMentee = {
     id: mentee.id,
     studentId: mentee.studentId,
+    password: mentee.password,
     nickname: mentee.nickname,
     point: mentee.point,
     unlockedHintLevels: mentee.unlockedHintLevels,

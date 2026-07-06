@@ -47,7 +47,7 @@ const LoginButton = ({ role }: { role: string | null }) => {
     <div className="flex items-center gap-3">
       {(role === "mentor" || role === "admin") && (
         <button
-          onClick={() => router.push("/archive/senior")}
+          onClick={() => router.push("/archive/mentor")}
           className="flex items-center gap-3 px-5 bg-[#0d0d0d] hover:bg-[#6812D2] transition-all duration-500 ease-in-out group focus:outline-none shadow-lg h-14 cursor-pointer"
         >
           <FaUser size={18} className="text-[#F1F1F1]" />
@@ -56,7 +56,7 @@ const LoginButton = ({ role }: { role: string | null }) => {
 
       {role === "mentee" && (
         <button
-          onClick={() => router.push("/archive/junior")}
+          onClick={() => router.push("/archive/mentee")}
           className="flex items-center gap-3 px-5 bg-[#0d0d0d] hover:bg-[#6812D2] transition-all duration-500 ease-in-out group focus:outline-none shadow-lg h-14 cursor-pointer"
         >
           <FaUser size={18} className="text-[#F1F1F1]" />

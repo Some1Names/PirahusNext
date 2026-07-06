@@ -18,7 +18,7 @@ import { useUserStore } from "@/src/store/auth";
 import Swal from "sweetalert2";
 import { IMentor } from "@/src/core/domain/mentor";
 
-function SeniorBadge({ id, nickname }: { id: string; nickname?: string | null }) {
+function MentorBadge({ id, nickname }: { id: string; nickname?: string | null }) {
   const firstTwo = id.length >= 2 ? id.slice(0, 2) : "";
   const rest = id.length >= 2 ? id.slice(2) : id;
   return (
@@ -62,7 +62,7 @@ function SeniorBadge({ id, nickname }: { id: string; nickname?: string | null })
   );
 }
 
-function JuniorBadge({ id, nickname }: { id: string; nickname?: string | null }) {
+function MenteeBadge({ id, nickname }: { id: string; nickname?: string | null }) {
   const firstTwo = id.length >= 2 ? id.slice(0, 2) : "";
   const rest = id.length >= 2 ? id.slice(2) : id;
   return (
@@ -106,11 +106,11 @@ function JuniorBadge({ id, nickname }: { id: string; nickname?: string | null })
   );
 }
 
-function SeniorRow({
-  senior,
+function MentorRow({
+  mentor,
   onRefresh,
 }: {
-  senior: IMentor;
+  mentor: IMentor;
   onRefresh: () => Promise<void>;
 }) {
   const [open, setOpen] = useState(false);
@@ -123,11 +123,11 @@ function SeniorRow({
 
   const toggleAdmin = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    const next = !senior.isAdmin;
+    const next = !mentor.isAdmin;
     const label = next ? "แอดมิน" : "Mentor";
     const result = await Swal.fire({
       title: `เปลี่ยน role เป็น ${label}?`,
-      text: `${senior.nickname || senior.studentId} จะถูกเปลี่ยนเป็น ${label}`,
+      text: `${mentor.nickname || mentor.studentId} จะถูกเปลี่ยนเป็น ${label}`,
       icon: "question",
       showCancelButton: true,
       confirmButtonText: "ยืนยัน",
@@ -140,7 +140,7 @@ function SeniorRow({
     if (!result.isConfirmed) return;
     try {
       setTogglingAdmin(true);
-      await mentorService.setAdminRole(senior.id, next);
+      await mentorService.setAdminRole(mentor.id, next);
       await onRefresh();
     } catch (err) {
       console.error("Failed to toggle admin:", err);
@@ -255,7 +255,7 @@ function SeniorRow({
         },
       });
       await hintService.addHints({
-        mentorId: senior.id,
+        mentorId: mentor.id,
         hints: [{ content: newHint.trim(), level: newLevel }],
       });
       setNewHint("");
@@ -314,10 +314,10 @@ function SeniorRow({
             gap: "10px",
           }}
         >
-          <SeniorBadge id={senior.studentId} nickname={senior.nickname} />
+          <MentorBadge id={mentor.studentId} nickname={mentor.nickname} />
         </div>
 
-        {senior.hints.length > 0 && (
+        {mentor.hints.length > 0 && (
           <span
             style={{
               fontSize: "11px",
@@ -329,7 +329,7 @@ function SeniorRow({
               padding: "2px 7px",
             }}
           >
-            {senior.hints.length} hint{senior.hints.length > 1 ? "s" : ""}
+            {mentor.hints.length} hint{mentor.hints.length > 1 ? "s" : ""}
           </span>
         )}
 
@@ -338,7 +338,7 @@ function SeniorRow({
             onClick={toggleAdmin}
             disabled={togglingAdmin}
             title={
-              senior.isAdmin
+              mentor.isAdmin
                 ? "คลิกเพื่อลด role เป็น Mentor"
                 : "คลิกเพื่อเพิ่มเป็น Admin"
             }
@@ -351,16 +351,16 @@ function SeniorRow({
               borderRadius: "2px",
               cursor: togglingAdmin ? "not-allowed" : "pointer",
               opacity: togglingAdmin ? 0.5 : 1,
-              border: senior.isAdmin
+              border: mentor.isAdmin
                 ? "1px solid rgba(168, 192, 96, 0.7)"
                 : "1px solid rgba(112, 136, 64, 0.3)",
-              backgroundColor: senior.isAdmin
+              backgroundColor: mentor.isAdmin
                 ? "rgba(168, 192, 96, 0.15)"
                 : "rgba(30, 40, 20, 0.4)",
-              color: senior.isAdmin ? "#a8c060" : "#708840",
+              color: mentor.isAdmin ? "#a8c060" : "#708840",
             }}
           >
-            {senior.isAdmin ? "ADMIN" : "MENTOR"}
+            {mentor.isAdmin ? "ADMIN" : "MENTOR"}
           </button>
         </div>
 
@@ -386,27 +386,27 @@ function SeniorRow({
               alignItems: "center",
               gap: "10px",
               padding: "8px 12px",
-              backgroundColor: senior.mentee
+              backgroundColor: mentor.mentee
                 ? "rgba(20, 40, 70, 0.55)"
                 : "rgba(100, 40, 30, 0.25)",
               borderRadius: "2px",
-              border: `1px solid ${senior.mentee ? "rgba(74, 158, 255, 0.2)" : "rgba(255, 100, 74, 0.25)"}`,
+              border: `1px solid ${mentor.mentee ? "rgba(74, 158, 255, 0.2)" : "rgba(255, 100, 74, 0.25)"}`,
               marginBottom: "16px",
             }}
           >
             <FaUser
               size={12}
               style={{
-                color: senior.mentee ? "#4a9eff" : "#ff644a",
+                color: mentor.mentee ? "#4a9eff" : "#ff644a",
                 flexShrink: 0,
               }}
             />
-            {senior.mentee ? (
+            {mentor.mentee ? (
               <>
                 <div
                   style={{ display: "flex", alignItems: "center", gap: "10px" }}
                 >
-                  <JuniorBadge id={senior.mentee.studentId} nickname={senior.mentee.nickname} />
+                  <MenteeBadge id={mentor.mentee.studentId} nickname={mentor.mentee.nickname} />
                 </div>
                 <span
                   style={{
@@ -455,10 +455,10 @@ function SeniorRow({
             >
               [ hints ]
             </span>
-            {senior.hints.length < 5 && (
+            {mentor.hints.length < 5 && (
               <button
                 onClick={() => {
-                  const usedLevels = senior.hints.map(h => h.level);
+                  const usedLevels = mentor.hints.map(h => h.level);
                   const availableLevels = [1, 2, 3, 4, 5].filter(l => !usedLevels.includes(l));
                   if (availableLevels.length > 0) {
                     setNewLevel(availableLevels[0]);
@@ -485,7 +485,7 @@ function SeniorRow({
             )}
           </div>
 
-          {senior.hints.length === 0 && !adding && (
+          {mentor.hints.length === 0 && !adding && (
             <p
               style={{
                 fontSize: "12px",
@@ -498,7 +498,7 @@ function SeniorRow({
             </p>
           )}
 
-          {senior.hints.map((h, i) => (
+          {mentor.hints.map((h, i) => (
             <div
               key={h.id}
               style={{
@@ -633,7 +633,7 @@ function SeniorRow({
                 }}
               >
                 {[1, 2, 3, 4, 5].map((l) => {
-                  const isUsed = senior.hints.some(h => h.level === l);
+                  const isUsed = mentor.hints.some(h => h.level === l);
                   return (
                     <option key={l} value={l} disabled={isUsed} style={{ background: "#0a0e08", color: isUsed ? "#4a5a3a" : "#d8e8b8" }}>
                       L{l} {isUsed ? "(เลือกแล้ว)" : ""}
@@ -937,7 +937,7 @@ export default function AdminBackroomClient() {
         </div>
 
         {filtered.map((s) => (
-          <SeniorRow key={s.id} senior={s} onRefresh={refreshData} />
+          <MentorRow key={s.id} mentor={s} onRefresh={refreshData} />
         ))}
 
         {filtered.length === 0 && (

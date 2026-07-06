@@ -8,7 +8,7 @@ import {
   AppError,
 } from "@/src/core/error/error";
 import { IHint, IMenteeHint, IUnlockHintResult } from "@/src/core/domain/hint";
-import { Role } from "@/src/core/domain/auth";
+import { Role } from "@/src/core/domain/user";
 import { IHintRepository } from "@/src/core/ports/server/hint.repository.port";
 import { IMentorRepository } from "@/src/core/ports/server/mentor.repository.port";
 import { IMenteeRepository } from "@/src/core/ports/server/mentee.repository.port";
@@ -45,7 +45,9 @@ export class HintService {
   ): Promise<IHint> {
     if (sessionRole === "mentor") {
       const hint = await this.hintRepo.findById(id);
-      if (!hint || hint.mentor.studentId !== sessionStudentId) {
+      if (!hint) throw new NotFoundError("Hint not found");
+      const dbMentor = await this.mentorRepo.findByStudentId(sessionStudentId);
+      if (!dbMentor || hint.mentorId !== dbMentor.id) {
         throw new ForbiddenError("You cannot update other mentors' hints");
       }
     }
@@ -59,7 +61,9 @@ export class HintService {
   ): Promise<IHint> {
     if (sessionRole === "mentor") {
       const hint = await this.hintRepo.findById(id);
-      if (!hint || hint.mentor.studentId !== sessionStudentId) {
+      if (!hint) throw new NotFoundError("Hint not found");
+      const dbMentor = await this.mentorRepo.findByStudentId(sessionStudentId);
+      if (!dbMentor || hint.mentorId !== dbMentor.id) {
         throw new ForbiddenError("You cannot delete other mentors' hints");
       }
     }
@@ -91,17 +95,18 @@ export class HintService {
 
     const hintShopItems = await this.shopItemRepo.findByCategory("hint");
 
-    const hints = mentee.mentor.hints.map((hint) => {
-      const isUnlocked = mentee.unlockedHintLevels.includes(hint.level);
-      const shopItem = hintShopItems.find((s) => s.hintLevel === hint.level);
-      return {
-        id: hint.id,
-        level: hint.level,
-        cost: shopItem?.price || 0,
-        isUnlocked,
-        content: isUnlocked ? hint.content : null,
-      };
-    });
+    const hints =
+      mentee.mentor?.hints.map((hint) => {
+        const isUnlocked = mentee.unlockedHintLevels.includes(hint.level);
+        const shopItem = hintShopItems.find((s) => s.hintLevel === hint.level);
+        return {
+          id: hint.id,
+          level: hint.level,
+          cost: shopItem?.price || 0,
+          isUnlocked,
+          content: isUnlocked ? hint.content : null,
+        };
+      }) || [];
 
     hints.sort((a, b) => a.level - b.level);
     return hints;

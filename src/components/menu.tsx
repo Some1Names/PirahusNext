@@ -15,8 +15,8 @@ function Menu({ onNavigate }: MenuProps) {
   const usertype = user?.role;
 
   const getArchiveHref = () => {
-    if (usertype === "admin" || usertype === "mentor") return "/archive/senior";
-    if (usertype === "mentee") return "/archive/junior";
+    if (usertype === "admin" || usertype === "mentor") return "/archive/mentor";
+    if (usertype === "mentee") return "/archive/mentee";
     return "/auth/login";
   };
 

@@ -1,4 +1,4 @@
-import { Role } from "./auth";
+import { Role } from "./user";
 
 export interface ILeaderboardEntry {
   id: string;

@@ -4,21 +4,17 @@ import { loginSchema } from "@/src/core/schema/auth";
 import {
   Login,
   LoginResponse,
-  CurrentUser,
   SetupProfileResponse,
 } from "@/src/core/domain/auth";
+import { CurrentUser } from "@/src/core/domain/user";
 
 export class AuthService {
   constructor(private readonly authRepository: IAuthClientRepository) {}
 
   async login(loginData: Login): Promise<LoginResponse> {
-    try {
-      const parsedData = parseSchema(loginSchema, loginData);
-      const response = await this.authRepository.login(parsedData);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const parsedData = parseSchema(loginSchema, loginData);
+    const response = await this.authRepository.login(parsedData);
+    return response.data;
   }
 
   async me(): Promise<CurrentUser | null> {
@@ -34,22 +30,11 @@ export class AuthService {
     password: string,
     nickname: string,
   ): Promise<SetupProfileResponse> {
-    try {
-      const response = await this.authRepository.setupProfile(
-        password,
-        nickname,
-      );
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await this.authRepository.setupProfile(password, nickname);
+    return response.data;
   }
 
   async logout(): Promise<void> {
-    try {
-      await this.authRepository.logout();
-    } catch (error) {
-      throw error;
-    }
+    await this.authRepository.logout();
   }
 }

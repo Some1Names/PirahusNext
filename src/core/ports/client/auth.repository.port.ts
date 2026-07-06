@@ -1,5 +1,6 @@
 import { ApiResponse } from "@/src/core/interface/response";
-import { Login, LoginResponse, CurrentUser, SetupProfileResponse } from "@/src/core/domain/auth";
+import { Login, LoginResponse, SetupProfileResponse } from "@/src/core/domain/auth";
+import { CurrentUser } from "@/src/core/domain/user";
 
 export interface IAuthClientRepository {
   login(loginData: Login): Promise<ApiResponse<LoginResponse>>;

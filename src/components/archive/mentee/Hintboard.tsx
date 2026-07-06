@@ -2,7 +2,7 @@
 
 import { IMenteeHint } from "@/src/core/domain/hint";
 
-function JuniorHintItem({ hint }: { hint: IMenteeHint }) {
+function MenteeHintItem({ hint }: { hint: IMenteeHint }) {
   return (
     <div
       style={{
@@ -62,11 +62,11 @@ function JuniorHintItem({ hint }: { hint: IMenteeHint }) {
   );
 }
 
-export interface JuniorHintBoardProps {
+export interface MenteeHintBoardProps {
   hints: IMenteeHint[];
 }
 
-export default function JuniorHintBoard({ hints }: JuniorHintBoardProps) {
+export default function MenteeHintBoard({ hints }: MenteeHintBoardProps) {
   const sortedHints = [...hints].sort((a, b) => a.level - b.level);
 
   return (
@@ -140,7 +140,7 @@ export default function JuniorHintBoard({ hints }: JuniorHintBoardProps) {
       )}
 
       {sortedHints.map((h) => (
-        <JuniorHintItem key={h.id} hint={h} />
+        <MenteeHintItem key={h.id} hint={h} />
       ))}
     </div>
   );

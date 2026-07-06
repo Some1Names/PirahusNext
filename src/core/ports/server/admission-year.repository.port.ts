@@ -1,7 +1,7 @@
-import { AdmissionYear } from "@/prisma/generated/client";
+import { IAdmissionYear } from "@/src/core/domain/admission-year";
 
 export interface IAdmissionYearRepository {
-  findFirst(): Promise<AdmissionYear | null>;
-  create(mentorYear: string, menteeYear: string): Promise<AdmissionYear>;
-  update(id: string, data: { mentorYear?: string; menteeYear?: string }): Promise<AdmissionYear>;
+  findFirst(): Promise<IAdmissionYear | null>;
+  create(mentorYear: string, menteeYear: string): Promise<IAdmissionYear>;
+  update(id: string, data: { mentorYear?: string; menteeYear?: string }): Promise<IAdmissionYear>;
 }

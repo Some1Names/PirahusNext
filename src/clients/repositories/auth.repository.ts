@@ -1,10 +1,10 @@
 import { ApiResponse } from "@/src/core/interface/response";
 import {
-  CurrentUser,
   Login,
   LoginResponse,
   SetupProfileResponse,
 } from "@/src/core/domain/auth";
+import { CurrentUser } from "@/src/core/domain/user";
 import httpClient from "@/src/lib/http";
 
 import { IAuthClientRepository } from "@/src/core/ports/client/auth.repository.port";
@@ -15,7 +15,7 @@ export class AuthClientRepository implements IAuthClientRepository {
   }
 
   async me(): Promise<ApiResponse<CurrentUser>> {
-    return httpClient.get<CurrentUser>(`/api/auth/me?_t=${Date.now()}`);
+    return httpClient.get<CurrentUser>("/api/auth/me");
   }
 
   async setupProfile(

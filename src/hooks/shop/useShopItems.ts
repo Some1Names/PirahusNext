@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { shopItemService } from "@/src/clients/container";
 import type { ShopItem } from "@/src/lib/shop/Types";
-import type { CurrentUser } from "@/src/core/domain/auth";
+import type { CurrentUser } from "@/src/core/domain/user";
 
 export function useShopItems(user: CurrentUser | null) {
   const [spinItems, setSpinItems] = useState<ShopItem[]>([]);

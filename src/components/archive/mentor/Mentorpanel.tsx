@@ -4,11 +4,15 @@ import { useState } from "react";
 import { FaUser, FaPencilAlt, FaSignOutAlt } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/src/store/auth";
-import { IMentee } from "@/src/core/domain/mentee";
+import { MentorUser } from "@/src/core/domain/user";
 import ProfileModal from "@/src/components/profile/ProfileModal";
 
-function JuniorCard({ junior }: { junior: IMentee | null }) {
-    if (!junior) {
+function MenteeCard({
+  mentee,
+}: {
+  mentee: { studentId: string; nickname: string | null } | null;
+}) {
+    if (!mentee) {
         return (
             <div
                 style={{
@@ -77,9 +81,9 @@ function JuniorCard({ junior }: { junior: IMentee | null }) {
     }
 
     const firstTwo =
-        junior.studentId.length >= 2 ? junior.studentId.slice(0, 2) : "";
+        mentee.studentId.length >= 2 ? mentee.studentId.slice(0, 2) : "";
     const rest =
-        junior.studentId.length >= 2 ? junior.studentId.slice(2) : junior.studentId;
+        mentee.studentId.length >= 2 ? mentee.studentId.slice(2) : mentee.studentId;
 
     return (
         <div
@@ -177,7 +181,7 @@ function JuniorCard({ junior }: { junior: IMentee | null }) {
                     </span>
                 </div>
 
-                {junior.nickname && (
+                {mentee.nickname && (
                     <div
                         style={{
                             display: "flex",
@@ -209,7 +213,7 @@ function JuniorCard({ junior }: { junior: IMentee | null }) {
                                 lineHeight: 1,
                             }}
                         >
-                            {junior.nickname}
+                            {mentee.nickname}
                         </span>
                     </div>
                 )}
@@ -219,11 +223,7 @@ function JuniorCard({ junior }: { junior: IMentee | null }) {
 }
 
 export interface MentorPanelProps {
-    mentor: {
-        studentId: string;
-        nickname?: string | null;
-        mentee: IMentee | null;
-    };
+    mentor: MentorUser;
 }
 
 export default function MentorPanel({ mentor }: MentorPanelProps) {
@@ -442,7 +442,7 @@ export default function MentorPanel({ mentor }: MentorPanelProps) {
             >
                 [ MENTEE STATUS ]
             </p>
-            <JuniorCard junior={mentor.mentee} />
+            <MenteeCard mentee={mentor.mentee} />
 
             {profileOpen && (
                 <ProfileModal onClose={() => setProfileOpen(false)} />

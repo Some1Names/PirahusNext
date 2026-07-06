@@ -1,7 +1,7 @@
 import { CosmeticRepository } from "@/src/repositories/cosmetic.repository";
 import { MenteeRepository } from "@/src/repositories/mentee.repository";
 import { MentorRepository } from "@/src/repositories/mentor.repository";
-import { Role } from "@/src/core/domain/auth";
+import { Role } from "@/src/core/domain/user";
 import { AppError, NotFoundError } from "@/src/core/error/error";
 import {
   IUnlockCosmeticResult,

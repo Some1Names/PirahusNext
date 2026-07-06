@@ -1,5 +1,5 @@
 import { ProfileRepository } from "@/src/repositories/profile.repository";
-import { Role } from "@/src/core/domain/auth";
+import { Role } from "@/src/core/domain/user";
 import { IProfileRepository } from "@/src/core/ports/server/profile.repository.port";
 
 

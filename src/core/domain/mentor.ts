@@ -1,9 +1,10 @@
-import { IMentee } from "./mentee";
 import { IHint } from "./hint";
+import { IMentee } from "./mentee";
 
 export interface IMentor {
   id: string;
   studentId: string;
+  password?: string | null;
   nickname?: string | null;
   isAdmin: boolean;
   point: number;
@@ -12,7 +13,7 @@ export interface IMentor {
 
   hints: IHint[];
 
-  mentee: IMentee | null;
+  mentee?: IMentee | null;
 
   createdAt: Date;
   updatedAt: Date;

@@ -3,6 +3,7 @@ import { IMentor } from "./mentor";
 export interface IMentee {
   id: string;
   studentId: string;
+  password?: string | null;
   nickname?: string | null;
   point: number;
   unlockedHintLevels: number[];

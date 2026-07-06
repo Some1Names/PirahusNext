@@ -1,5 +1,9 @@
 import { IShopItemClientRepository } from "@/src/core/ports/client/shop-item.repository.port";
-import { ShopItemEntity, CreateShopItemInput, UpdateShopItemInput } from "@/src/core/domain/shop-item";
+import {
+  ShopItemEntity,
+  CreateShopItemInput,
+  UpdateShopItemInput,
+} from "@/src/core/domain/shop-item";
 
 export class ShopItemService {
   constructor(private readonly shopItemRepository: IShopItemClientRepository) {}
@@ -24,7 +28,10 @@ export class ShopItemService {
     return response.data;
   }
 
-  async updateShopItem(id: string, data: UpdateShopItemInput): Promise<ShopItemEntity> {
+  async updateShopItem(
+    id: string,
+    data: UpdateShopItemInput,
+  ): Promise<ShopItemEntity> {
     const response = await this.shopItemRepository.update(id, data);
     return response.data;
   }

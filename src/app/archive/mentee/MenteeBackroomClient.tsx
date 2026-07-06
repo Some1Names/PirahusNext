@@ -5,13 +5,13 @@ import { FaArrowLeft } from "react-icons/fa";
 import { hintService } from "@/src/clients/container";
 import { useUserStore } from "@/src/store/auth";
 import { IMenteeHint } from "@/src/core/domain/hint";
-import HintBoard from "@/src/components/archive/junior/Hintboard";
-import JuniorPanel from "@/src/components/archive/junior/Juniorpanel";
+import HintBoard from "@/src/components/archive/mentee/Hintboard";
+import MenteePanel from "@/src/components/archive/mentee/MenteePanel";
 import Link from "next/dist/client/link";
 import Grainient from "@/src/components/reactbits/background/Grainient";
-import { MenteeUser } from "@/src/core/domain/auth";
+import { MenteeUser } from "@/src/core/domain/user";
 
-export default function JuniorBackroomClient() {
+export default function MenteeBackroomClient() {
   const { user, loading: authLoading, getUser } = useUserStore();
   const [hints, setHints] = useState<IMenteeHint[]>([]);
   const [loading, setLoading] = useState(true);
@@ -246,7 +246,7 @@ export default function JuniorBackroomClient() {
               boxShadow: "0 0 8px #a78bfa",
             }}
           />
-          Junior Archive — Mentee Access Terminal
+          Mentee Archive — Access Terminal
           <div
             style={{
               flex: 1,
@@ -293,7 +293,7 @@ export default function JuniorBackroomClient() {
           })}
 
           <div className="backroom-columns">
-            <JuniorPanel junior={user as MenteeUser} />
+            <MenteePanel mentee={user as MenteeUser} />
             <HintBoard hints={hints} />
           </div>
         </div>

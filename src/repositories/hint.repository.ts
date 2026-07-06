@@ -17,8 +17,8 @@ export class HintRepository implements IHintRepository {
     });
   }
 
-  async findById(id: string) {
-    return prisma.hint.findUnique({ where: { id }, include: { mentor: true } });
+  async findById(id: string): Promise<IHint | null> {
+    return prisma.hint.findUnique({ where: { id } });
   }
 
   async findByMentorId(mentorId: string): Promise<IHint[]> {

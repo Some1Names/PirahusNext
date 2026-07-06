@@ -1,4 +1,4 @@
-import { Role } from "@/src/core/domain/auth";
+import { Role } from "@/src/core/domain/user";
 import { IUnlockCosmeticResult, IEquipCosmeticResult } from "@/src/core/domain/cosmetic";
 import { ShopItemEntity } from "@/src/core/domain/shop-item";
 

@@ -1,9 +1,9 @@
 export interface IHint {
   id: string;
+  mentorId: string;
   content: string;
   level: number;
-  cost: number;
-  isUnlocked: boolean;
+  createdAt: Date;
 }
 
 export interface IAddHints {

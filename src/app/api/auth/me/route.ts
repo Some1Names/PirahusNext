@@ -5,6 +5,8 @@ import { AuthService } from "@/src/services/auth.service";
 
 const authService = new AuthService();
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     const tokenPayload = await getCurrentUser();

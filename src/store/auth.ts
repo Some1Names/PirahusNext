@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { authService } from "@/src/clients/container";
-import { CurrentUser } from "../core/domain/auth";
+import { CurrentUser } from "../core/domain/user";
 
 interface UserStore {
   user: CurrentUser | null;

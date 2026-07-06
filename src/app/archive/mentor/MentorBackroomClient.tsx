@@ -7,8 +7,8 @@ import { hintService } from "@/src/clients/container";
 import { useUserStore } from "@/src/store/auth";
 import Swal from "sweetalert2";
 import { IHint } from "@/src/core/domain/hint";
-import HintBoard from "@/src/components/archive/senior/Hintboard";
-import MentorPanel from "@/src/components/archive/senior/Mentorpanel";
+import HintBoard from "@/src/components/archive/mentor/Hintboard";
+import MentorPanel from "@/src/components/archive/mentor/Mentorpanel";
 import Link from "next/dist/client/link";
 import Grainient from "@/src/components/reactbits/background/Grainient";
 
@@ -24,7 +24,7 @@ const swalConfirm = "#8b5cf6"; // violet — affirmative / neutral actions
 const swalDanger = "#db2777"; // rose — destructive actions (delete)
 const swalCancel = "#4b3a6b"; // muted violet — cancel / secondary
 
-export default function SeniorBackroomClient() {
+export default function MentorBackroomClient() {
   const { user, loading: authLoading, getUser } = useUserStore();
   const [mentor, setMentor] = useState<any>(null);
   const [hints, setHints] = useState<IHint[]>([]);
@@ -411,7 +411,7 @@ export default function SeniorBackroomClient() {
               boxShadow: "0 0 8px #a78bfa",
             }}
           />
-          Senior Archive — Mentor Access Terminal
+          Mentor Archive — Access Terminal
           <div
             style={{
               flex: 1,

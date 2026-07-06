@@ -40,7 +40,7 @@ export function useGamePoints(game: GameName) {
       setError(null);
 
       try {
-        const user = await authService.me();
+        const user = useUserStore.getState().user;
 
         if (!user) throw new Error("Not logged in");
 

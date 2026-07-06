@@ -8,11 +8,7 @@ export class GiftService {
 
   async transferGift(data: IGiftTransfer) {
     const parsedData = parseSchema(giftTransferSchema, data);
-    try {
-      const res = await this.giftRepository.transferGift(parsedData);
-      return res.data;
-    } catch (error) {
-      throw error;
-    }
+    const res = await this.giftRepository.transferGift(parsedData);
+    return res.data;
   }
 }
