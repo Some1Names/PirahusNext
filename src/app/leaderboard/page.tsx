@@ -132,7 +132,7 @@ export default function Leaderboard({
             onMouseEnter={(e) => (e.currentTarget.style.color = "#d1d5db")}
             onMouseLeave={(e) => (e.currentTarget.style.color = "#6b7280")}
           >
-            ← Back
+            ← BACK
           </Link>
         </div>
 

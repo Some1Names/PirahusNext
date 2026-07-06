@@ -61,7 +61,7 @@ export default function Lobby() {
           onMouseEnter={(e) => (e.currentTarget.style.color = "#e9e0ff")}
           onMouseLeave={(e) => (e.currentTarget.style.color = "#c4b5fd")}
         >
-          ← Back
+          ← BACK
         </Link>
       </div>
 

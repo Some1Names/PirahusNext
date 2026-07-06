@@ -177,7 +177,7 @@ export default function Shop() {
           onMouseEnter={(e) => (e.currentTarget.style.color = "#8cffb0")}
           onMouseLeave={(e) => (e.currentTarget.style.color = "#7c9985")}
         >
-          ← Back
+          ← BACK
         </Link>
       </div>
 

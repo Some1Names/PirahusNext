@@ -1,25 +1,21 @@
 "use client";
 
-import { useReducer, useEffect, useCallback, memo, useState } from "react";
+import { useReducer, useEffect, useCallback, memo, useState, useRef } from "react";
 import Link from "next/link";
 import { Info } from "lucide-react";
 import { generateGame } from "@/src/lib/game/dungeon/mapGen";
 import { gameReducer } from "@/src/lib/game/dungeon/gameReducer";
-
 import MapDisplay from "../../../components/minigame/MapDisplay";
 import GameTerminal from "../../../components/minigame/GameTerminal";
 import FaultyTerminal from "../../../components/reactbits/background/FaultyTerminal";
 import PointsPopup from "../../../components/minigame/PointsPopup";
-import { Pixelify_Sans } from "next/font/google";
+import { Pixelify_Sans, Share_Tech_Mono } from "next/font/google";
 import { useGamePoints } from "@/src/hooks/useGamePoints";
 import { calculateDungeonPts } from "@/src/lib/game/scoring";
-import { useRef } from "react";
 import InfoPopup from "@/src/components/InfoPopup";
 
-const pixelifySans = Pixelify_Sans({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-});
+const pixelifySans = Pixelify_Sans({ subsets: ["latin"], weight: ["400", "700"] });
+const shareTechMono = Share_Tech_Mono({ subsets: ["latin"], weight: "400" });
 
 const Background = memo(function Background() {
   return (
@@ -88,6 +84,12 @@ function InfoBtn({ onClick }: { onClick: () => void }) {
   );
 }
 
+function formatTime(seconds: number) {
+  const m = Math.floor(seconds / 60);
+  const s = (seconds % 60).toString().padStart(2, "0");
+  return `${m}:${s}`;
+}
+
 export default function Page() {
   const [state, dispatch] = useReducer(gameReducer, null, generateGame);
   const { awardPoints, popupPoints, showPopup, closePopup } =
@@ -95,11 +97,22 @@ export default function Page() {
   const hasAwardedRef = useRef(false);
   const [showInfo, setShowInfo] = useState(false);
 
+  const [timer, setTimer] = useState(0);
+
+  // Tick every second while active
+  const timerRunning =
+    state?.phase !== "dead" &&
+    state?.phase !== "escaped";
+
   useEffect(() => {
-    if (state?.phase === "playing" && state.logs.length === 1) {
-      hasAwardedRef.current = false;
-    }
-  }, [state?.phase, state?.logs.length]);
+    if (!timerRunning) return;
+
+    const id = setInterval(() => {
+      setTimer((t) => t + 1);
+    }, 1000);
+
+    return () => clearInterval(id);
+  }, [timerRunning]);
 
   useEffect(() => {
     if (state?.phase === "escaped" && !hasAwardedRef.current) {
@@ -108,9 +121,9 @@ export default function Page() {
         state.collectedParts.length,
         state.traps.length,
       );
-      awardPoints(pts, { fragments: state.collectedParts.length });
+      awardPoints(pts, { fragments: state.collectedParts.length, time: timer });
     }
-  }, [state?.phase, state?.collectedParts.length, state?.traps.length, awardPoints]);
+  }, [state?.phase, state?.collectedParts.length, state?.traps.length, awardPoints, timer]);
 
   const handleKey = useCallback(
     (e: KeyboardEvent) => {
@@ -133,6 +146,12 @@ export default function Page() {
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, [handleKey]);
+
+  const handleRestart = () => {
+    dispatch({ type: "RESTART" });
+    setTimer(0);
+    hasAwardedRef.current = false;
+  };
 
   return (
     <div
@@ -221,7 +240,7 @@ export default function Page() {
           </InfoPopup>
 
           <button
-            onClick={() => dispatch({ type: "RESTART" })}
+            onClick={handleRestart}
             style={buttonStyle}
             onMouseEnter={(e) => (e.currentTarget.style.color = "#d1d5db")}
             onMouseLeave={(e) => (e.currentTarget.style.color = "#6b7280")}
@@ -234,8 +253,22 @@ export default function Page() {
             onMouseEnter={(e) => (e.currentTarget.style.color = "#d1d5db")}
             onMouseLeave={(e) => (e.currentTarget.style.color = "#6b7280")}
           >
-            ← Back
+            ← BACK
           </Link>
+        </div>
+
+        {/* Top-right: timer only */}
+        <div style={{ position: "absolute", top: "1rem", right: "1rem" }}>
+          <span
+            style={{
+              color: "#d1d5db",
+              fontSize: "24px",           // was 1.5rem
+              letterSpacing: "0.1em",
+              fontFamily: shareTechMono.style.fontFamily,
+            }}
+          >
+            ⏱{formatTime(timer)}
+          </span>
         </div>
 
         {/* Centered map */}

@@ -350,7 +350,7 @@ export default function SortGame() {
               fontFamily: shareTechMono.style.fontFamily,
             }}
           >
-            {formatTime(timer)}
+            ⏱{formatTime(timer)}
           </span>
         </div>
 

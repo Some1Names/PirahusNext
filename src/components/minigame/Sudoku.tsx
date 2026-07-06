@@ -194,7 +194,7 @@ export default function Sudoku() {
         {/* Top-right: timer only */}
         <div style={{ position: "absolute", top: "1rem", right: "1rem" }}>
           <span style={{ color: "#d1d5db", fontSize: "1.5rem", letterSpacing: "0.1em", fontFamily: shareTechMono.style.fontFamily }}>
-            {formatTime(timer)}
+            ⏱{formatTime(timer)}
           </span>
         </div>
 

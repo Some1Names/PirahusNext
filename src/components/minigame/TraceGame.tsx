@@ -328,7 +328,7 @@ export default function TraceGame() {
                 textShadow: `0 0 10px ${timerColor}`,
               }}
             >
-              {formatTime(timeLeft)}
+              ⏱{formatTime(timeLeft)}
             </div>
             {bonusFlash !== null && (
               <div
@@ -662,7 +662,7 @@ export default function TraceGame() {
                       lineHeight: 1,
                     }}
                   >
-                    {formatTime(timeLeft)}
+                    ⏱{formatTime(timeLeft)}
                   </div>
                 </div>
               </div>
