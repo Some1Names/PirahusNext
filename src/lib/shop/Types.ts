@@ -1,6 +1,6 @@
 export type ShopCategory = "spin" | "cosmetic" | "hint";
 
-export type EffectKey = "click-spark" | "ribbons" | "splash-cursor";
+export type EffectKey = "click-spark" | "ribbons" | "splash-cursor" | "pixel-trail";
 
 export interface ShopItem {
   id: string;

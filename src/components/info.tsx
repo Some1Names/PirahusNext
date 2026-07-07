@@ -95,10 +95,10 @@ export default function Info() {
               โดยน้องสามารถหาคำใบ้ว่าพี่คือใครได้จากเว็บนี้
             </span>
           </div>
-          <img src="/images/image.jpg" alt="test" />
+          <img src="/images/dawg.jpg" alt="test" />
         </div>
         <div className="flex flex-col w-lg shrink-0 justify-between items-center">
-          <img src="/images/image.jpg" alt="test" />
+          <img src="/images/question.jpg" alt="test" />
           <div className="flex flex-col gap-9 justify-center items-start w-4xs text-2xl">
             <section>ส่วนจุดประสงค์ในการทำเว็บนี้คือพี่ว่าง...</section>
             <section>

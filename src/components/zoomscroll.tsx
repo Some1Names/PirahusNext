@@ -45,14 +45,27 @@ export default function ScrollHero() {
       >
         {/* Background image */}
         <Image
-          src="/images/pirahusnextimg.jpg"
+          src="/images/prsbg.jpg"
           alt="Hero background"
           fill
           priority
+          quality={100}
+          sizes="100vw"
           className="object-cover"
         />
 
-
+        {/* Logo overlay */}
+        <div className="absolute inset-0 flex items-center justify-center z-10">
+          <Image
+            src="/images/prslogo2.png"
+            alt="Logo"
+            width={1200}
+            height={1200}
+            priority
+            quality={100}
+            className="w-full max-w-5xl h-auto object-contain px-8"
+          />
+        </div>
       </div>
     </section>
   );

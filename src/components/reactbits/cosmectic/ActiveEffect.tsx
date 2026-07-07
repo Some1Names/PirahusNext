@@ -5,6 +5,7 @@ import type { EffectKey } from "@/src/lib/shop/Types";
 import ClickSpark from "./ClickSpark";
 import Ribbons from "./Ribbons";
 import SplashCursor from "./SplashCursor";
+import PixelTrail from './PixelTrail';
 
 interface ActiveEffectProps {
   effectKey: EffectKey | null | undefined;
@@ -66,6 +67,21 @@ export default function ActiveEffect({
             RAINBOW_MODE={false}
             COLOR="#6dff9e"
             TRANSPARENT
+          />
+        </>
+      );
+
+    case "pixel-trail":
+      return (
+        <>
+          {children}
+          <PixelTrail
+            gridSize={50}
+            trailSize={0.05}
+            maxAge={300}
+            interpolate={1.5}
+            color="#3aeda6"
+            gooeyFilter={{ id: "custom-goo-filter", strength: 2 }}
           />
         </>
       );
