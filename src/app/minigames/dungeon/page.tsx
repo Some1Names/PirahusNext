@@ -121,7 +121,7 @@ export default function Page() {
         state.collectedParts.length,
         state.traps.length,
       );
-      awardPoints(pts, { fragments: state.collectedParts.length, time: timer });
+      awardPoints(pts, { fragments: state.collectedParts.length, time: timer, timeTaken: timer });
     }
   }, [state?.phase, state?.collectedParts.length, state?.traps.length, awardPoints, timer]);
 
