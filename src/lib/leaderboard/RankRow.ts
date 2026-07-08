@@ -42,6 +42,7 @@ export function RankRow({
 
   const usernameStyle = {
     flex: 1,
+    minWidth: 0,
     fontSize: 13,
     color: isMe ? accentColor : "#e2e8f0",
     overflow: "hidden",
@@ -57,12 +58,16 @@ export function RankRow({
     border: `1px solid ${accentColor}44`,
     borderRadius: 3,
     opacity: 0.85,
+    whiteSpace: "nowrap",
+    flexShrink: 0,
   } as const;
 
   const youLabelStyle = {
     color: "#64748b",
     marginLeft: 6,
     fontSize: 10,
+    flexShrink: 0,
+    whiteSpace: "nowrap",
   } as const;
 
   const valueStyle = {
@@ -84,8 +89,8 @@ export function RankRow({
     createElement("div", { style: rankStyle }, isTop3 ? RANK_GLYPHS[rank - 1] : `#${rank}`),
     createElement(
       "div",
-      { style: usernameStyle },
-      username,
+      { style: { flex: 1, display: "flex", alignItems: "center", minWidth: 0 } },
+      createElement("div", { style: usernameStyle }, username),
       isMe && createElement("span", { style: youLabelStyle }, "(you)"),
       meta && createElement("span", { style: metaBadgeStyle }, meta)
     ),

@@ -4,7 +4,6 @@ import { useState } from "react";
 import { FaUser, FaPencilAlt, FaSignOutAlt } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/src/store/auth";
-// Adjust this import path if your mentor domain type lives elsewhere.
 import { MenteeUser } from "@/src/core/domain/user";
 import ProfileModal from "@/src/components/profile/ProfileModal";
 

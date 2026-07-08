@@ -50,11 +50,11 @@ export default function Leaderboard({
     fontFamily: "Pixelify Sans",
     background: "#040408",
     border: "1px solid #1e293b",
-    padding: "50px 80px",
+    padding: "50px 40px",
     position: "relative",
     overflow: "hidden",
     boxShadow: `0 0 24px ${accentColor}1a inset`,
-    maxWidth: 480,
+    maxWidth: 560,
     width: "90%",
     height: "85%",
     display: "flex",
@@ -354,10 +354,14 @@ export default function Leaderboard({
                         key={entry.userId}
                         rank={entry.rank}
                         username={entry.username}
-                        value={formatTime(entry.timeMs)}
+                        value={
+                          activeGame === "trace" && entry.score != null
+                            ? `${entry.score.toFixed(2)} pts`
+                            : formatTime(entry.timeMs)
+                        }
                         meta={
                           activeGame === "trace" && entry.correctAnswers != null
-                            ? `${entry.correctAnswers}${entry.totalAnswers != null ? `/${entry.totalAnswers}` : ""} correct`
+                            ? `${entry.correctAnswers}${entry.totalAnswers != null ? `/${entry.totalAnswers}` : ""} correct · ⏱ ${formatTime(entry.timeMs)}`
                             : undefined
                         }
                         isMe={entry.userId === currentUserId}

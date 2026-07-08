@@ -38,7 +38,7 @@ export default function MenteeBackroomClient() {
     fetchHints();
   }, [user, authLoading]);
 
-  if (loading) {
+  if (loading || !user) {
     return (
       <div
         style={{

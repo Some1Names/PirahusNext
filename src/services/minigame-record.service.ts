@@ -10,7 +10,10 @@ export class MinigameRecordService {
     studentId: string,
     role: "admin" | "mentor" | "mentee",
     gameName: string,
-    timeTaken: number,
+    timeTaken: number = 0,
+    score?: number,
+    correctAnswers?: number,
+    totalAnswers?: number
   ) {
     let menteeId = null;
     let mentorId = null;
@@ -23,23 +26,26 @@ export class MinigameRecordService {
       if (!mentorId) throw new Error("User not found");
     }
 
-    const existing = await this.recordRepo.findExistingRecord(
-      menteeId,
-      mentorId,
-      gameName,
-    );
+    const existing = await this.recordRepo.findExistingRecord(menteeId, mentorId, gameName);
+    const isTrace = gameName.startsWith("trace");
 
     if (existing) {
-      if (timeTaken < existing.timeTaken) {
-        await this.recordRepo.updateRecord(existing.id, timeTaken);
+      let shouldUpdate = false;
+      if (isTrace) {
+        if (score !== undefined && (existing.score === null || score > existing.score)) {
+          shouldUpdate = true;
+        }
+      } else {
+        if (timeTaken < existing.timeTaken) {
+          shouldUpdate = true;
+        }
+      }
+
+      if (shouldUpdate) {
+        await this.recordRepo.updateRecord(existing.id, timeTaken, score, correctAnswers, totalAnswers);
       }
     } else {
-      await this.recordRepo.createRecord(
-        menteeId,
-        mentorId,
-        gameName,
-        timeTaken,
-      );
+      await this.recordRepo.createRecord(menteeId, mentorId, gameName, timeTaken, score, correctAnswers, totalAnswers);
     }
 
     return { success: true };

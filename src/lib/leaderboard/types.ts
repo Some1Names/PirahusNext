@@ -13,6 +13,7 @@ export type SpeedrunEntry = {
   timeMs: number;
   rank: number;
   difficulty?: Difficulty; // sudoku, sort
+  score?: number; // trace
   correctAnswers?: number; // trace
   totalAnswers?: number; // trace
 };

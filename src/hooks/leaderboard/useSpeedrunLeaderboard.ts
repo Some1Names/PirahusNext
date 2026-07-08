@@ -35,7 +35,10 @@ export function useSpeedrunLeaderboard(
         if (cancelled) return;
         setEntries(result.map((r: IMinigameRecordResponse) => ({
           ...r,
-          timeMs: r.timeTaken * 1000
+          timeMs: r.timeTaken * 1000,
+          score: r.score ?? undefined,
+          correctAnswers: r.correctAnswers ?? undefined,
+          totalAnswers: r.totalAnswers ?? undefined
         })));
       } catch (err) {
         if (cancelled) return;

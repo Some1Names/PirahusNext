@@ -52,12 +52,18 @@ export function useGamePoints(game: GameName) {
           totalPoints = await menteeService.addMenteePoint(user.id, points);
         }
 
-        if (meta && typeof meta.timeTaken === "number") {
+        if (meta && (typeof meta.timeTaken === "number" || typeof meta.score === "number")) {
           let fullGameName = game.toString();
           if (meta.diff) {
             fullGameName += `-${meta.diff}`;
           }
-          await minigameService.submitRecord(fullGameName, meta.timeTaken);
+          await minigameService.submitRecord(
+            fullGameName, 
+            meta.timeTaken as number | undefined, 
+            meta.score as number | undefined, 
+            meta.correctAnswers as number | undefined, 
+            meta.totalAnswers as number | undefined
+          );
         }
 
         setPopupPoints(points);

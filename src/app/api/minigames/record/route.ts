@@ -11,13 +11,16 @@ export async function POST(req: NextRequest) {
   try {
     const session = await requireAuth(["admin", "mentor", "mentee"]);
     const body = await req.json();
-    const { gameName, timeTaken } = submitMinigameRecordSchema.parse(body);
+    const { gameName, timeTaken, score, correctAnswers, totalAnswers } = submitMinigameRecordSchema.parse(body);
 
     const record = await recordService.submitRecord(
       session.studentId,
       session.role,
       gameName,
       timeTaken,
+      score,
+      correctAnswers,
+      totalAnswers
     );
 
     return successResponse(record);

@@ -1,14 +1,16 @@
 import { ShopItemRepository } from "@/src/repositories/shop-item.repository";
 import { NotFoundError } from "@/src/core/error/error";
-import { ShopItemEntity, CreateShopItemInput, UpdateShopItemInput } from "@/src/core/domain/shop-item";
+import {
+  ShopItemEntity,
+  CreateShopItemInput,
+  UpdateShopItemInput,
+} from "@/src/core/domain/shop-item";
 import { ShopCategory } from "@/src/lib/shop/Types";
 import { IShopItemRepository } from "@/src/core/ports/server/shop-item.repository.port";
 
-
-
 export class ShopItemService {
   constructor(
-    private readonly shopItemRepo: IShopItemRepository = new ShopItemRepository()
+    private readonly shopItemRepo: IShopItemRepository = new ShopItemRepository(),
   ) {}
 
   async findAll(): Promise<ShopItemEntity[]> {

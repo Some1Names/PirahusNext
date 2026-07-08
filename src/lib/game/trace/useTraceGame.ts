@@ -62,7 +62,13 @@ export function useTraceGame() {
     if (phase === "result" && !hasAwardedRef.current) {
       hasAwardedRef.current = true;
       const pts = calculateTracePts(score, timeLeft);
-      awardPoints(pts, { score, timeLeft, timeTaken: INITIAL_TIME - timeLeft });
+      const calculatedScore = (score * 4.9) + ((timeLeft / 180) * 0.99);
+      awardPoints(pts, { 
+        score: calculatedScore, 
+        correctAnswers: score, 
+        totalAnswers: MAX_QUESTIONS,
+        timeTaken: timeLeft 
+      });
     }
   }, [phase, score, timeLeft, awardPoints]);
 

@@ -185,7 +185,7 @@ export default function MentorBackroomClient() {
     }
   };
 
-  if (loading) {
+  if (loading || !user) {
     return (
       <div
         style={{

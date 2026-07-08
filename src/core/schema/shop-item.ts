@@ -1,7 +1,12 @@
 import { z } from "zod";
 
 const categoryEnum = z.enum(["spin", "cosmetic", "hint"]);
-const effectKeyEnum = z.enum(["click-spark", "ribbons", "splash-cursor"]);
+const effectKeyEnum = z.enum([
+  "click-spark",
+  "ribbons",
+  "splash-cursor",
+  "pixel-trail",
+]);
 
 export const createShopItemSchema = z.object({
   category: categoryEnum,

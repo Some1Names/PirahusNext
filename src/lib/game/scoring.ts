@@ -53,5 +53,5 @@ export function calculateTracePts(score: number, timeLeft: number): number {
   const base = 40; // ค่าคงที่ เพราะ Trace มี progression ในตัวอยู่แล้ว
   const accuracy = score / 10;
   const timeFactor = timeLeft > 120 ? 1.5 : timeLeft > 60 ? 1.25 : 1.0;
-  return Math.floor(base * accuracy * timeFactor);
+  return Math.min(50, Math.floor(base * accuracy * timeFactor));
 }

@@ -8,11 +8,17 @@ import { IMinigameClientRepository } from "@/src/core/ports/client/minigame.repo
 export class MinigameClientRepository implements IMinigameClientRepository {
   async submitRecord(
     gameName: string,
-    timeTaken: number,
+    timeTaken?: number,
+    score?: number,
+    correctAnswers?: number,
+    totalAnswers?: number
   ): Promise<ApiResponse<void>> {
     const res = await httpClient.post<void>("/api/minigames/record", {
       gameName,
       timeTaken,
+      score,
+      correctAnswers,
+      totalAnswers
     });
     return res;
   }

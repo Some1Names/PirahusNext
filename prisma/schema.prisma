@@ -81,7 +81,10 @@ model ShopItem {
 model MinigameRecord {
   id        String   @id @default(cuid())
   gameName  String
-  timeTaken Int
+  timeTaken      Int
+  score          Float?
+  correctAnswers Int?
+  totalAnswers   Int?
   
   menteeId  String?
   mentee    Mentee?  @relation(fields: [menteeId], references: [id], onDelete: Cascade)
