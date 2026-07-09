@@ -44,9 +44,10 @@ export class MinigameRecordRepository implements IMinigameRecordRepository {
 
   async getLeaderboard(gameName: string, limit: number): Promise<IMinigameRecordResponse[]> {
     const isTrace = gameName.startsWith("trace");
+    const isSort = gameName.startsWith("sort");
     const records = await prisma.minigameRecord.findMany({
       where: { gameName },
-      orderBy: isTrace ? { score: "desc" } : { timeTaken: "asc" },
+      orderBy: isTrace || isSort ? [{ score: "desc" }, { timeTaken: "asc" }] : { timeTaken: "asc" },
       take: limit,
       include: {
         mentee: true,
