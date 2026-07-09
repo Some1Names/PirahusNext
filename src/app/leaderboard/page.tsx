@@ -357,11 +357,15 @@ export default function Leaderboard({
                         value={
                           activeGame === "trace" && entry.score != null
                             ? `${entry.score.toFixed(2)} pts`
+                            : activeGame === "sort" && entry.score != null
+                            ? `${entry.score} pts`
                             : formatTime(entry.timeMs)
                         }
                         meta={
                           activeGame === "trace" && entry.correctAnswers != null
                             ? `${entry.correctAnswers}${entry.totalAnswers != null ? `/${entry.totalAnswers}` : ""} correct · ⏱ ${formatTime(entry.timeMs)}`
+                            : activeGame === "sort" && entry.score != null
+                            ? `⏱ ${formatTime(entry.timeMs)}`
                             : undefined
                         }
                         isMe={entry.userId === currentUserId}

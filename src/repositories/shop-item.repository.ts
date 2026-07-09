@@ -10,14 +10,14 @@ import { IShopItemRepository } from "@/src/core/ports/server/shop-item.repositor
 
 export class ShopItemRepository implements IShopItemRepository {
   async findAll(): Promise<ShopItemEntity[]> {
-    const items = await prisma.shopItem.findMany({ orderBy: { createdAt: "asc" } });
+    const items = await prisma.shopItem.findMany({ orderBy: { price: "asc" } });
     return items.map(mapToShopItemEntity);
   }
 
   async findByCategory(category: string): Promise<ShopItemEntity[]> {
     const items = await prisma.shopItem.findMany({
       where: { category },
-      orderBy: { createdAt: "asc" },
+      orderBy: { price: "asc" },
     });
     return items.map(mapToShopItemEntity);
   }

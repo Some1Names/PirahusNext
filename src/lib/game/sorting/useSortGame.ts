@@ -51,7 +51,7 @@ export function useSortGame() {
         setTimerActive(false);
       });
       const pts = calculateSortPts(diff, swaps, par);
-      awardPoints(pts, { diff, swaps, par, timeTaken: timer });
+      awardPoints(pts, { diff, swaps, par, score: pts, timeTaken: timer });
     }
   }, [bars, diff, par, swaps, won, awardPoints, timer]);
 

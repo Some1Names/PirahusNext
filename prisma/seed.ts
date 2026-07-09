@@ -26,6 +26,7 @@ async function main() {
 
   console.log("Seeding Mentors...");
   for (const item of data.mentors || []) {
+    delete item.name;
     await prisma.mentor.upsert({
       where: { id: item.id },
       update: item,
@@ -35,6 +36,7 @@ async function main() {
 
   console.log("Seeding Mentees...");
   for (const item of data.mentees || []) {
+    delete item.name;
     await prisma.mentee.upsert({
       where: { id: item.id },
       update: item,

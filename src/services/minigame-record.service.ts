@@ -28,12 +28,19 @@ export class MinigameRecordService {
 
     const existing = await this.recordRepo.findExistingRecord(menteeId, mentorId, gameName);
     const isTrace = gameName.startsWith("trace");
+    const isSort = gameName.startsWith("sort");
 
     if (existing) {
       let shouldUpdate = false;
-      if (isTrace) {
-        if (score !== undefined && (existing.score === null || score > existing.score)) {
-          shouldUpdate = true;
+      if (isTrace || isSort) {
+        if (score !== undefined) {
+          if (
+            existing.score === null ||
+            score > existing.score ||
+            (score === existing.score && timeTaken < existing.timeTaken)
+          ) {
+            shouldUpdate = true;
+          }
         }
       } else {
         if (timeTaken < existing.timeTaken) {
