@@ -8,7 +8,6 @@ const leaderboardService = new LeaderboardService();
 
 export async function GET(req: NextRequest) {
   try {
-    await requireAuth(["admin", "mentor", "mentee"]);
     const searchParams = req.nextUrl.searchParams;
     const limitParam = searchParams.get("limit");
     const limit = limitParam ? parseInt(limitParam, 10) : 10;
