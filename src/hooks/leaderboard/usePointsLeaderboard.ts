@@ -33,7 +33,7 @@ export function usePointsLeaderboard(endpoint: string, limit: number) {
               points: m.point,
             }),
           ),
-        ];
+        ].filter((entry) => entry.points > 0);
 
         combined.sort((a, b) => b.points - a.points);
 

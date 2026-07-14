@@ -49,8 +49,8 @@ export default function Shop() {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    if (!user) getUser();
-  }, [user, getUser]);
+    getUser();
+  }, [getUser]);
 
   const { spinItems, hintItems, cosmeticItems, isLoadingItems } =
     useShopItems(user);
@@ -83,7 +83,6 @@ export default function Shop() {
 
       {/* Content — font-mono lives ONLY on this inner div, not on any ancestor of the menu overlay */}
       <div className="relative min-h-screen w-full overflow-x-hidden bg-[#0a0f0d] px-8 pt-24 pb-12 font-mono text-[#d8ffe4]">
-
         {/* WebGL background */}
         <div
           style={{
