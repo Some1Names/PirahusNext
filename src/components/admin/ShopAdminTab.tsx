@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { FaPlus, FaTrash, FaPencilAlt, FaTimes } from "react-icons/fa";
-import Swal from "sweetalert2";
+import { alertUtil } from "@/src/utils/alert.util";
+import { ALERT_MESSAGES } from "@/src/core/constants/messages";
 import { shopItemService } from "@/src/clients/container";
 import type { ShopItemEntity, CreateShopItemInput } from "@/src/core/domain/shop-item";
 import type { ShopCategory, EffectKey } from "@/src/lib/shop/Types";
@@ -31,7 +32,7 @@ export default function ShopAdminTab() {
       setItems(data);
     } catch (err) {
       console.error(err);
-      Swal.fire("Error", "ไม่สามารถดึงข้อมูลสินค้าได้", "error");
+      alertUtil.showError(ALERT_MESSAGES.ERROR.TITLE, ALERT_MESSAGES.ERROR.FETCH_ITEM);
     } finally {
       setLoading(false);
     }
@@ -92,39 +93,34 @@ export default function ShopAdminTab() {
     try {
       if (editingItem) {
         await shopItemService.updateShopItem(editingItem.id, payload);
-        Swal.fire("สำเร็จ", "อัปเดตสินค้าสำเร็จ", "success");
+        alertUtil.showSuccess(ALERT_MESSAGES.SUCCESS.TITLE, ALERT_MESSAGES.SUCCESS.UPDATE_ITEM);
       } else {
         await shopItemService.createShopItem(payload);
-        Swal.fire("สำเร็จ", "สร้างสินค้าใหม่สำเร็จ", "success");
+        alertUtil.showSuccess(ALERT_MESSAGES.SUCCESS.TITLE, ALERT_MESSAGES.SUCCESS.CREATE_ITEM);
       }
       closeModal();
       fetchItems();
     } catch (err) {
       console.error(err);
-      Swal.fire("Error", "เกิดข้อผิดพลาดในการบันทึก", "error");
+      alertUtil.showError(ALERT_MESSAGES.ERROR.TITLE, ALERT_MESSAGES.ERROR.SAVE_ITEM);
     }
   };
 
   const handleDelete = async (id: string, name: string) => {
-    const result = await Swal.fire({
-      title: "ยืนยันการลบ",
-      text: `คุณต้องการลบสินค้า ${name} ใช่หรือไม่?`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "ลบ",
-      cancelButtonText: "ยกเลิก",
-    });
+    const result = await alertUtil.showConfirm(
+      ALERT_MESSAGES.CONFIRM.DELETE_ITEM,
+      ALERT_MESSAGES.CONFIRM.DELETE_ITEM_DESC,
+      { isDanger: true, confirmButtonText: "ลบ" }
+    );
 
     if (result.isConfirmed) {
       try {
         await shopItemService.deleteShopItem(id);
-        Swal.fire("Deleted!", "ลบสินค้าสำเร็จ", "success");
+        alertUtil.showSuccess(ALERT_MESSAGES.SUCCESS.TITLE, ALERT_MESSAGES.SUCCESS.DELETE_ITEM);
         fetchItems();
       } catch (err) {
         console.error(err);
-        Swal.fire("Error", "ลบสินค้าไม่สำเร็จ", "error");
+        alertUtil.showError(ALERT_MESSAGES.ERROR.TITLE, ALERT_MESSAGES.ERROR.DELETE_ITEM);
       }
     }
   };
