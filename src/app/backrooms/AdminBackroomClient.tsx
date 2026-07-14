@@ -13,7 +13,7 @@ import {
   FaArrowLeft,
 } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { mentorService, hintService } from "@/src/clients/container";
+import { mentorService, hintService, menteeService } from "@/src/clients/container";
 import { useUserStore } from "@/src/store/auth";
 import Swal from "sweetalert2";
 import { IMentor } from "@/src/core/domain/mentor";
@@ -120,6 +120,61 @@ function MentorRow({
   const [newHint, setNewHint] = useState("");
   const [newLevel, setNewLevel] = useState(1);
   const [togglingAdmin, setTogglingAdmin] = useState(false);
+
+  const addPointsToUser = async (id: string, role: "mentor" | "mentee", studentId: string) => {
+    const { value: amount } = await Swal.fire({
+      title: `เพิ่มแต้มให้ ${studentId}`,
+      input: 'number',
+      inputLabel: 'จำนวนแต้มที่ต้องการเพิ่ม (ใส่ค่าติดลบเพื่อลดแต้มได้)',
+      inputPlaceholder: '0',
+      showCancelButton: true,
+      background: "#0a0e08",
+      color: "#d8e8b8",
+      confirmButtonColor: "#a8c060",
+      cancelButtonColor: "#4a5a30",
+    });
+
+    if (amount) {
+      const points = parseInt(amount, 10);
+      if (isNaN(points) || points === 0) return;
+
+      try {
+        Swal.fire({
+          title: "กำลังบันทึกแต้ม...",
+          allowOutsideClick: false,
+          background: "#0a0e08",
+          color: "#d8e8b8",
+          didOpen: () => Swal.showLoading(),
+        });
+        
+        if (role === "mentor") {
+          await mentorService.addMentorPoint(id, points);
+        } else {
+          await menteeService.addMenteePoint(id, points);
+        }
+        
+        await onRefresh();
+        Swal.fire({
+          title: "สำเร็จ",
+          text: `บันทึกแต้มสำเร็จแล้ว`,
+          icon: "success",
+          background: "#0a0e08",
+          color: "#d8e8b8",
+          confirmButtonColor: "#708840",
+        });
+      } catch (err) {
+        console.error("Failed to add points:", err);
+        Swal.fire({
+          title: "เกิดข้อผิดพลาด",
+          text: "ไม่สามารถบันทึกแต้มได้",
+          icon: "error",
+          background: "#0a0e08",
+          color: "#d8e8b8",
+          confirmButtonColor: "#708840",
+        });
+      }
+    }
+  };
 
   const toggleAdmin = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -335,6 +390,28 @@ function MentorRow({
 
         <div onClick={(e) => e.stopPropagation()}>
           <button
+            onClick={(e) => {
+              e.stopPropagation();
+              addPointsToUser(mentor.id, "mentor", mentor.studentId);
+            }}
+            title="เพิ่มแต้ม"
+            style={{
+              fontSize: "10px",
+              fontFamily: "monospace",
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              padding: "2px 8px",
+              borderRadius: "2px",
+              cursor: "pointer",
+              border: "1px solid rgba(220, 180, 50, 0.5)",
+              backgroundColor: "rgba(220, 180, 50, 0.15)",
+              color: "#e8c850",
+              marginRight: "6px",
+            }}
+          >
+            + PTS
+          </button>
+          <button
             onClick={toggleAdmin}
             disabled={togglingAdmin}
             title={
@@ -408,9 +485,31 @@ function MentorRow({
                 >
                   <MenteeBadge id={mentor.mentee.studentId} nickname={mentor.mentee.nickname} />
                 </div>
-                <span
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addPointsToUser(mentor.mentee!.id, "mentee", mentor.mentee!.studentId);
+                  }}
+                  title="เพิ่มแต้ม"
                   style={{
                     marginLeft: "auto",
+                    fontSize: "10px",
+                    fontFamily: "monospace",
+                    fontWeight: 700,
+                    letterSpacing: "0.08em",
+                    padding: "2px 8px",
+                    borderRadius: "2px",
+                    cursor: "pointer",
+                    border: "1px solid rgba(74, 158, 255, 0.5)",
+                    backgroundColor: "rgba(74, 158, 255, 0.15)",
+                    color: "#7ab8e8",
+                    marginRight: "10px",
+                  }}
+                >
+                  + PTS
+                </button>
+                <span
+                  style={{
                     fontSize: "10px",
                     color: "#2a5070",
                     letterSpacing: "0.08em",
