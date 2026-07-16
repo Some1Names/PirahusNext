@@ -4,25 +4,14 @@ import { useState, useEffect } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import { hintService } from "@/src/clients/container";
 import { useUserStore } from "@/src/store/auth";
-import Swal from "sweetalert2";
+import { alertUtil } from "@/src/utils/alert.util";
+import { ALERT_MESSAGES } from "@/src/core/constants/messages";
 import { IHint } from "@/src/core/domain/hint";
 import { MentorUser } from "@/src/core/domain/user";
 import HintBoard from "@/src/components/archive/mentor/Hintboard";
 import MentorPanel from "@/src/components/archive/mentor/Mentorpanel";
 import Link from "next/dist/client/link";
 import Grainient from "@/src/components/reactbits/background/Grainient";
-
-// Shared violet/lavender theme for SweetAlert2 dialogs, matching the
-// backroom's Grainient palette (#604599 / #17112f / #222b57).
-const swalTheme = {
-  background: "#17112f",
-  color: "#e9e0ff",
-  customClass: { popup: "backroom-swal-popup" },
-} as const;
-
-const swalConfirm = "#8b5cf6"; // violet — affirmative / neutral actions
-const swalDanger = "#db2777"; // rose — destructive actions (delete)
-const swalCancel = "#4b3a6b"; // muted violet — cancel / secondary
 
 export default function MentorBackroomClient() {
   const { user, loading: authLoading, getUser } = useUserStore();
@@ -59,14 +48,7 @@ export default function MentorBackroomClient() {
   const addHint = async () => {
     if (!newHint.trim() || !mentor) return;
     try {
-      Swal.fire({
-        title: "กำลังบันทึกคำใบ้...",
-        allowOutsideClick: false,
-        ...swalTheme,
-        didOpen: () => {
-          Swal.showLoading();
-        },
-      });
+      alertUtil.showLoading(ALERT_MESSAGES.LOADING.SAVE_HINT);
 
       await hintService.addHints({
         mentorId: mentor.id,
@@ -77,74 +59,32 @@ export default function MentorBackroomClient() {
       setAdding(false);
       await refreshHints(mentor.id);
 
-      Swal.fire({
-        title: "บันทึกสำเร็จ",
-        text: "บันทึกคำใบ้เรียบร้อยแล้ว",
-        icon: "success",
-        confirmButtonColor: swalConfirm,
-        iconColor: swalConfirm,
-        ...swalTheme,
-      });
+      alertUtil.showSuccess(ALERT_MESSAGES.SUCCESS.TITLE, ALERT_MESSAGES.SUCCESS.SAVE_HINT);
     } catch (err) {
       console.error("Failed to add hint:", err);
-      Swal.fire({
-        title: "เกิดข้อผิดพลาด",
-        text: "ไม่สามารถเพิ่มคำใบ้ได้ กรุณาลองใหม่อีกครั้ง",
-        icon: "error",
-        confirmButtonColor: swalDanger,
-        iconColor: swalDanger,
-        ...swalTheme,
-      });
+      alertUtil.showError(ALERT_MESSAGES.ERROR.TITLE, ALERT_MESSAGES.ERROR.SAVE_HINT);
     }
   };
 
   const deleteHint = async (id: string) => {
     if (!mentor) return;
-    const result = await Swal.fire({
-      title: "ยืนยันการลบ?",
-      text: "คุณต้องการลบคำใบ้นี้หรือไม่?",
-      icon: "warning",
-      iconColor: swalDanger,
-      showCancelButton: true,
-      confirmButtonText: "ลบ",
-      cancelButtonText: "ยกเลิก",
-      confirmButtonColor: swalDanger,
-      cancelButtonColor: swalCancel,
-      ...swalTheme,
-    });
+    const result = await alertUtil.showConfirm(
+      ALERT_MESSAGES.CONFIRM.DELETE_HINT,
+      ALERT_MESSAGES.CONFIRM.DELETE_HINT_DESC,
+      { isDanger: true, confirmButtonText: "ลบ" }
+    );
 
     if (result.isConfirmed) {
       try {
-        Swal.fire({
-          title: "กำลังลบคำใบ้...",
-          allowOutsideClick: false,
-          ...swalTheme,
-          didOpen: () => {
-            Swal.showLoading();
-          },
-        });
+        alertUtil.showLoading(ALERT_MESSAGES.LOADING.DELETE_HINT);
 
         await hintService.deleteHint(id);
         await refreshHints(mentor.id);
 
-        Swal.fire({
-          title: "ลบสำเร็จ",
-          text: "ลบคำใบ้เรียบร้อยแล้ว",
-          icon: "success",
-          confirmButtonColor: swalConfirm,
-          iconColor: swalConfirm,
-          ...swalTheme,
-        });
+        alertUtil.showSuccess(ALERT_MESSAGES.SUCCESS.TITLE, ALERT_MESSAGES.SUCCESS.DELETE_HINT);
       } catch (err) {
         console.error("Failed to delete hint:", err);
-        Swal.fire({
-          title: "เกิดข้อผิดพลาด",
-          text: "ไม่สามารถลบคำใบ้ได้ กรุณาลองใหม่อีกครั้ง",
-          icon: "error",
-          confirmButtonColor: swalDanger,
-          iconColor: swalDanger,
-          ...swalTheme,
-        });
+        alertUtil.showError(ALERT_MESSAGES.ERROR.TITLE, ALERT_MESSAGES.ERROR.DELETE_HINT);
       }
     }
   };
@@ -152,36 +92,15 @@ export default function MentorBackroomClient() {
   const editHint = async (id: string, content: string) => {
     if (!mentor) return;
     try {
-      Swal.fire({
-        title: "กำลังแก้ไขคำใบ้...",
-        allowOutsideClick: false,
-        ...swalTheme,
-        didOpen: () => {
-          Swal.showLoading();
-        },
-      });
+      alertUtil.showLoading(ALERT_MESSAGES.LOADING.EDIT_HINT);
 
       await hintService.updateHints(id, { content });
       await refreshHints(mentor.id);
 
-      Swal.fire({
-        title: "แก้ไขสำเร็จ",
-        text: "แก้ไขคำใบ้เรียบร้อยแล้ว",
-        icon: "success",
-        confirmButtonColor: swalConfirm,
-        iconColor: swalConfirm,
-        ...swalTheme,
-      });
+      alertUtil.showSuccess(ALERT_MESSAGES.SUCCESS.TITLE, ALERT_MESSAGES.SUCCESS.EDIT_HINT);
     } catch (err) {
       console.error("Failed to edit hint:", err);
-      Swal.fire({
-        title: "เกิดข้อผิดพลาด",
-        text: "ไม่สามารถแก้ไขคำใบ้ได้ กรุณาลองใหม่อีกครั้ง",
-        icon: "error",
-        confirmButtonColor: swalDanger,
-        iconColor: swalDanger,
-        ...swalTheme,
-      });
+      alertUtil.showError(ALERT_MESSAGES.ERROR.TITLE, ALERT_MESSAGES.ERROR.EDIT_HINT);
     }
   };
 

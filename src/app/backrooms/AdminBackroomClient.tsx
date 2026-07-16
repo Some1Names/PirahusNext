@@ -13,9 +13,10 @@ import {
   FaArrowLeft,
 } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { mentorService, hintService } from "@/src/clients/container";
+import { mentorService, hintService, menteeService } from "@/src/clients/container";
 import { useUserStore } from "@/src/store/auth";
-import Swal from "sweetalert2";
+import { alertUtil } from "@/src/utils/alert.util";
+import { ALERT_MESSAGES } from "@/src/core/constants/messages";
 import { IMentor } from "@/src/core/domain/mentor";
 
 function MentorBadge({ id, nickname }: { id: string; nickname?: string | null }) {
@@ -121,22 +122,42 @@ function MentorRow({
   const [newLevel, setNewLevel] = useState(1);
   const [togglingAdmin, setTogglingAdmin] = useState(false);
 
+  const addPointsToUser = async (id: string, role: "mentor" | "mentee", studentId: string) => {
+    const { value: amount } = await alertUtil.showPrompt(
+      ALERT_MESSAGES.PROMPT.ADD_POINTS(studentId),
+      ALERT_MESSAGES.PROMPT.ADD_POINTS_LABEL
+    );
+
+    if (amount) {
+      const points = parseInt(amount, 10);
+      if (isNaN(points) || points === 0) return;
+
+      try {
+        alertUtil.showLoading(ALERT_MESSAGES.LOADING.ADD_POINTS);
+        
+        if (role === "mentor") {
+          await mentorService.addMentorPoint(id, points);
+        } else {
+          await menteeService.addMenteePoint(id, points);
+        }
+        
+        await onRefresh();
+        alertUtil.showSuccess(ALERT_MESSAGES.SUCCESS.TITLE, ALERT_MESSAGES.SUCCESS.ADD_POINTS);
+      } catch (err) {
+        console.error("Failed to add points:", err);
+        alertUtil.showError(ALERT_MESSAGES.ERROR.TITLE, ALERT_MESSAGES.ERROR.ADD_POINTS);
+      }
+    }
+  };
+
   const toggleAdmin = async (e: React.MouseEvent) => {
     e.stopPropagation();
     const next = !mentor.isAdmin;
     const label = next ? "แอดมิน" : "Mentor";
-    const result = await Swal.fire({
-      title: `เปลี่ยน role เป็น ${label}?`,
-      text: `${mentor.nickname || mentor.studentId} จะถูกเปลี่ยนเป็น ${label}`,
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonText: "ยืนยัน",
-      cancelButtonText: "ยกเลิก",
-      confirmButtonColor: next ? "#a8c060" : "#4a6030",
-      cancelButtonColor: "#4a5a30",
-      background: "#0a0e08",
-      color: "#d8e8b8",
-    });
+    const result = await alertUtil.showConfirm(
+      ALERT_MESSAGES.CONFIRM.TOGGLE_ROLE(label),
+      ALERT_MESSAGES.CONFIRM.TOGGLE_ROLE_DESC(mentor.nickname || mentor.studentId, label)
+    );
     if (!result.isConfirmed) return;
     try {
       setTogglingAdmin(true);
@@ -144,14 +165,7 @@ function MentorRow({
       await onRefresh();
     } catch (err) {
       console.error("Failed to toggle admin:", err);
-      Swal.fire({
-        title: "เกิดข้อผิดพลาด",
-        text: "ไม่สามารถเปลี่ยน role ได้",
-        icon: "error",
-        confirmButtonColor: "#708840",
-        background: "#0a0e08",
-        color: "#d8e8b8",
-      });
+      alertUtil.showError(ALERT_MESSAGES.ERROR.TITLE, ALERT_MESSAGES.ERROR.TOGGLE_ROLE);
     } finally {
       setTogglingAdmin(false);
     }
@@ -160,84 +174,33 @@ function MentorRow({
   const saveEdit = async (hintId: string) => {
     if (!editVal.trim()) return;
     try {
-      Swal.fire({
-        title: "กำลังแก้ไขคำใบ้...",
-        allowOutsideClick: false,
-        background: "#0a0e08",
-        color: "#d8e8b8",
-        didOpen: () => {
-          Swal.showLoading();
-        },
-      });
+      alertUtil.showLoading(ALERT_MESSAGES.LOADING.EDIT_HINT);
       await hintService.updateHints(hintId, { content: editVal.trim() });
       setEditingIdx(null);
       await onRefresh();
-      Swal.fire({
-        title: "แก้ไขสำเร็จ",
-        text: "แก้ไขคำใบ้เรียบร้อยแล้ว",
-        icon: "success",
-        confirmButtonColor: "#708840",
-        background: "#0a0e08",
-        color: "#d8e8b8",
-      });
+      alertUtil.showSuccess(ALERT_MESSAGES.SUCCESS.TITLE, ALERT_MESSAGES.SUCCESS.EDIT_HINT);
     } catch (err) {
       console.error("Failed to edit hint:", err);
-      Swal.fire({
-        title: "เกิดข้อผิดพลาด",
-        text: "ไม่สามารถแก้ไขคำใบ้ได้ กรุณาลองใหม่อีกครั้ง",
-        icon: "error",
-        confirmButtonColor: "#708840",
-        background: "#0a0e08",
-        color: "#d8e8b8",
-      });
+      alertUtil.showError(ALERT_MESSAGES.ERROR.TITLE, ALERT_MESSAGES.ERROR.EDIT_HINT);
     }
   };
 
   const deleteHint = async (hintId: string) => {
-    const result = await Swal.fire({
-      title: "ยืนยันการลบ?",
-      text: "คุณต้องการลบคำใบ้นี้หรือไม่?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "ลบ",
-      cancelButtonText: "ยกเลิก",
-      confirmButtonColor: "#b85040",
-      cancelButtonColor: "#4a6030",
-      background: "#0a0e08",
-      color: "#d8e8b8",
-    });
+    const result = await alertUtil.showConfirm(
+      ALERT_MESSAGES.CONFIRM.DELETE_HINT,
+      ALERT_MESSAGES.CONFIRM.DELETE_HINT_DESC,
+      { isDanger: true, confirmButtonText: "ลบ" }
+    );
 
     if (result.isConfirmed) {
       try {
-        Swal.fire({
-          title: "กำลังลบคำใบ้...",
-          allowOutsideClick: false,
-          background: "#0a0e08",
-          color: "#d8e8b8",
-          didOpen: () => {
-            Swal.showLoading();
-          },
-        });
+        alertUtil.showLoading(ALERT_MESSAGES.LOADING.DELETE_HINT);
         await hintService.deleteHint(hintId);
         await onRefresh();
-        Swal.fire({
-          title: "ลบสำเร็จ",
-          text: "ลบคำใบ้เรียบร้อยแล้ว",
-          icon: "success",
-          confirmButtonColor: "#708840",
-          background: "#0a0e08",
-          color: "#d8e8b8",
-        });
+        alertUtil.showSuccess(ALERT_MESSAGES.SUCCESS.TITLE, ALERT_MESSAGES.SUCCESS.DELETE_HINT);
       } catch (err) {
         console.error("Failed to delete hint:", err);
-        Swal.fire({
-          title: "เกิดข้อผิดพลาด",
-          text: "ไม่สามารถลบคำใบ้ได้ กรุณาลองใหม่อีกครั้ง",
-          icon: "error",
-          confirmButtonColor: "#708840",
-          background: "#0a0e08",
-          color: "#d8e8b8",
-        });
+        alertUtil.showError(ALERT_MESSAGES.ERROR.TITLE, ALERT_MESSAGES.ERROR.DELETE_HINT);
       }
     }
   };
@@ -245,15 +208,7 @@ function MentorRow({
   const addHint = async () => {
     if (!newHint.trim()) return;
     try {
-      Swal.fire({
-        title: "กำลังบันทึกคำใบ้...",
-        allowOutsideClick: false,
-        background: "#0a0e08",
-        color: "#d8e8b8",
-        didOpen: () => {
-          Swal.showLoading();
-        },
-      });
+      alertUtil.showLoading(ALERT_MESSAGES.LOADING.SAVE_HINT);
       await hintService.addHints({
         mentorId: mentor.id,
         hints: [{ content: newHint.trim(), level: newLevel }],
@@ -262,24 +217,10 @@ function MentorRow({
       setNewLevel(1);
       setAdding(false);
       await onRefresh();
-      Swal.fire({
-        title: "บันทึกสำเร็จ",
-        text: "บันทึกคำใบ้เรียบร้อยแล้ว",
-        icon: "success",
-        confirmButtonColor: "#708840",
-        background: "#0a0e08",
-        color: "#d8e8b8",
-      });
+      alertUtil.showSuccess(ALERT_MESSAGES.SUCCESS.TITLE, ALERT_MESSAGES.SUCCESS.SAVE_HINT);
     } catch (err) {
       console.error("Failed to add hint:", err);
-      Swal.fire({
-        title: "เกิดข้อผิดพลาด",
-        text: "ไม่สามารถเพิ่มคำใบ้ได้ กรุณาลองใหม่อีกครั้ง",
-        icon: "error",
-        confirmButtonColor: "#708840",
-        background: "#0a0e08",
-        color: "#d8e8b8",
-      });
+      alertUtil.showError(ALERT_MESSAGES.ERROR.TITLE, ALERT_MESSAGES.ERROR.SAVE_HINT);
     }
   };
 
@@ -334,6 +275,28 @@ function MentorRow({
         )}
 
         <div onClick={(e) => e.stopPropagation()}>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              addPointsToUser(mentor.id, "mentor", mentor.studentId);
+            }}
+            title="เพิ่มแต้ม"
+            style={{
+              fontSize: "10px",
+              fontFamily: "monospace",
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              padding: "2px 8px",
+              borderRadius: "2px",
+              cursor: "pointer",
+              border: "1px solid rgba(220, 180, 50, 0.5)",
+              backgroundColor: "rgba(220, 180, 50, 0.15)",
+              color: "#e8c850",
+              marginRight: "6px",
+            }}
+          >
+            + PTS
+          </button>
           <button
             onClick={toggleAdmin}
             disabled={togglingAdmin}
@@ -408,9 +371,31 @@ function MentorRow({
                 >
                   <MenteeBadge id={mentor.mentee.studentId} nickname={mentor.mentee.nickname} />
                 </div>
-                <span
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addPointsToUser(mentor.mentee!.id, "mentee", mentor.mentee!.studentId);
+                  }}
+                  title="เพิ่มแต้ม"
                   style={{
                     marginLeft: "auto",
+                    fontSize: "10px",
+                    fontFamily: "monospace",
+                    fontWeight: 700,
+                    letterSpacing: "0.08em",
+                    padding: "2px 8px",
+                    borderRadius: "2px",
+                    cursor: "pointer",
+                    border: "1px solid rgba(74, 158, 255, 0.5)",
+                    backgroundColor: "rgba(74, 158, 255, 0.15)",
+                    color: "#7ab8e8",
+                    marginRight: "10px",
+                  }}
+                >
+                  + PTS
+                </button>
+                <span
+                  style={{
                     fontSize: "10px",
                     color: "#2a5070",
                     letterSpacing: "0.08em",

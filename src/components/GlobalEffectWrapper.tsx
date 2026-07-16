@@ -17,10 +17,8 @@ export default function GlobalEffectWrapper({
   const [effectKey, setEffectKey] = useState<EffectKey | null>(null);
 
   useEffect(() => {
-    if (!user) {
-      getUser();
-    }
-  }, [user, getUser]);
+    getUser();
+  }, [getUser]);
 
   useEffect(() => {
     let isMounted = true;
