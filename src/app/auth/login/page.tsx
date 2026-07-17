@@ -338,27 +338,6 @@ export default function Page() {
             <FaArrowRight size={14} />
           </button>
         </form>
-
-        <p
-          style={{
-            marginTop: "32px",
-            fontSize: "12px",
-            marginBottom: 0,
-            color: "#6b7280",
-          }}
-        >
-          Forgot your ID?{" "}
-          <span
-            style={{
-              cursor: "pointer",
-              textDecoration: "underline",
-              textUnderlineOffset: "2px",
-              color: "#fff",
-            }}
-          >
-            click here
-          </span>
-        </p>
       </div>
 
       <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
