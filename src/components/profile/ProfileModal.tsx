@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { useUserStore } from "@/src/store/auth";
-import { profileService } from "@/src/clients/container";
+import { authService } from "@/src/clients/container";
 import { alertUtil } from "@/src/utils/alert.util";
 import { ALERT_MESSAGES } from "@/src/core/constants/messages";
 
@@ -45,7 +45,7 @@ const ProfileModal = ({ onClose }: ProfileModalProps) => {
     setSuccess(false);
 
     try {
-      await profileService.updateProfile({ nickname: inputValue });
+      await authService.updateProfile({ nickname: inputValue });
 
       setSuccess(true);
       await getUser();

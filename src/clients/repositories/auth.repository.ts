@@ -5,6 +5,7 @@ import {
   SetupProfileResponse,
 } from "@/src/core/domain/auth";
 import { CurrentUser } from "@/src/core/domain/user";
+import { UpdateProfileRequest, UpdateProfileResponse } from "@/src/core/domain/profile";
 import httpClient from "@/src/lib/http";
 
 import { IAuthClientRepository } from "@/src/core/ports/client/auth.repository.port";
@@ -30,5 +31,11 @@ export class AuthClientRepository implements IAuthClientRepository {
 
   async logout(): Promise<ApiResponse<null>> {
     return httpClient.post<null>("/api/auth/logout");
+  }
+
+  async updateProfile(
+    data: UpdateProfileRequest
+  ): Promise<ApiResponse<UpdateProfileResponse>> {
+    return httpClient.put<UpdateProfileResponse>("/api/auth/profile", data);
   }
 }

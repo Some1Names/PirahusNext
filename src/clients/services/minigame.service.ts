@@ -18,4 +18,9 @@ export class MinigameClientService {
     const res = await this.repository.getLeaderboard(gameName, limit);
     return res.data;
   }
+
+  async getTopScores(limit: number = 10) {
+    const res = await this.repository.getTopScores(limit);
+    return res.data;
+  }
 }

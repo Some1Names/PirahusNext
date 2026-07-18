@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { PointsEntry } from "@/src/lib/leaderboard/types";
-import { leaderboardService } from "@/src/clients/container";
+import { minigameService } from "@/src/clients/container";
 import { ILeaderboardEntry } from "@/src/core/domain/leaderboard";
 
 export function usePointsLeaderboard(endpoint: string, limit: number) {
@@ -15,7 +15,7 @@ export function usePointsLeaderboard(endpoint: string, limit: number) {
 
     const fetchData = async () => {
       try {
-        const data = await leaderboardService.getTopScores(limit);
+        const data = await minigameService.getTopScores(limit);
         if (cancelled) return;
 
         const combined = [

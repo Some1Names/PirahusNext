@@ -69,4 +69,8 @@ export class MinigameRecordService {
   async getLeaderboard(gameName: string, limit: number = 10) {
     return this.recordRepo.getLeaderboard(gameName, limit);
   }
+
+  async getTopScores(limit: number = 10) {
+    return this.recordRepo.getTopScores(limit);
+  }
 }

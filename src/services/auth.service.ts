@@ -126,4 +126,24 @@ export class AuthService {
 
     return { message: "Password setup successfully" };
   }
+  async updateNickname(
+    studentId: string,
+    role: Role,
+    nickname: string
+  ): Promise<{ message: string }> {
+    if (role === "admin" || role === "mentor") {
+      const mentor = await this.mentorRepo.findByStudentId(studentId);
+      if (mentor) {
+        await this.mentorRepo.update(mentor.id, { nickname });
+      }
+    } else {
+      const lastThree = studentId.slice(-3);
+      const formattedNickname = `${lastThree} ${nickname}`;
+      const mentee = await this.menteeRepo.findByStudentId(studentId);
+      if (mentee) {
+        await this.menteeRepo.update(mentee.id, { nickname: formattedNickname });
+      }
+    }
+    return { message: "Profile updated successfully" };
+  }
 }

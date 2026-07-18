@@ -1,6 +1,7 @@
 import { prisma } from "@/src/lib/prisma";
 import { IMinigameRecordRepository } from "@/src/core/ports/server/minigame-record.repository.port";
 import { IMinigameRecordResponse } from "@/src/core/domain/minigame";
+import { ILeaderboardResponse } from "@/src/core/domain/leaderboard";
 
 export class MinigameRecordRepository implements IMinigameRecordRepository {
 
@@ -60,5 +61,25 @@ export class MinigameRecordRepository implements IMinigameRecordRepository {
         username: `[${role}] ${user!.nickname || user!.studentId}`,
       };
     });
+  }
+
+  async getTopScores(limit: number = 10): Promise<ILeaderboardResponse> {
+    const [topMentors, topMentees] = await Promise.all([
+      prisma.mentor.findMany({
+        orderBy: { point: "desc" },
+        take: limit,
+        select: { id: true, studentId: true, nickname: true, point: true },
+      }),
+      prisma.mentee.findMany({
+        orderBy: { point: "desc" },
+        take: limit,
+        select: { id: true, studentId: true, nickname: true, point: true },
+      }),
+    ]);
+
+    return {
+      mentors: topMentors.map((m) => ({ ...m, role: "mentor" })),
+      mentees: topMentees.map((m) => ({ ...m, role: "mentee" })),
+    };
   }
 }
