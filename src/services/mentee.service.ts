@@ -46,23 +46,6 @@ export class MenteeService {
     return mentee.point;
   }
 
-  async addPoint(
-    id: string,
-    point: number,
-    sessionStudentId?: string,
-    sessionRole?: Role,
-  ): Promise<number> {
-    if (sessionRole === "mentee" && sessionStudentId) {
-      const mentee = await this.menteeRepo.findByStudentId(sessionStudentId);
-      if (!mentee || (mentee.id !== id && mentee.studentId !== id)) {
-        throw new ForbiddenError("You can only modify your own points");
-      }
-    }
-    const updated = await this.menteeRepo.addPoint(id, point);
-    if (!updated) throw new NotFoundError("Mentee not found");
-    return updated.point;
-  }
-
   async setPoint(id: string, point: number): Promise<number> {
     const updated = await this.menteeRepo.setPoint(id, point);
     if (!updated) throw new NotFoundError("Mentee not found");

@@ -48,23 +48,6 @@ export class MentorService {
     return mentor.point;
   }
 
-  async addPoint(
-    id: string,
-    point: number,
-    sessionStudentId?: string,
-    sessionRole?: Role,
-  ): Promise<number> {
-    if (sessionRole === "mentor" && sessionStudentId) {
-      const mentor = await this.mentorRepo.findByStudentId(sessionStudentId);
-      if (!mentor || (mentor.id !== id && mentor.studentId !== id)) {
-        throw new ForbiddenError("You can only modify your own points");
-      }
-    }
-    const updated = await this.mentorRepo.addPoint(id, point);
-    if (!updated) throw new NotFoundError("Mentor not found");
-    return updated.point;
-  }
-
   async setPoint(id: string, point: number): Promise<number> {
     const updated = await this.mentorRepo.setPoint(id, point);
     if (!updated) throw new NotFoundError("Mentor not found");

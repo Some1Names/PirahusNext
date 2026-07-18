@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { successResponse } from "@/src/lib/api-response";
 import { handleError } from "@/src/lib/handle-error";
 import { requireAuth } from "@/src/lib/get-current-user";
-import { addMentorPointSchema, setPointSchema } from "@/src/core/schema/point";
+import { setPointSchema } from "@/src/core/schema/point";
 import { MentorService } from "@/src/services/mentor.service";
 
 const mentorService = new MentorService();
@@ -21,21 +21,6 @@ export async function GET(
   }
 }
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const session = await requireAuth(["admin", "mentor"]);
-    const { id } = await params;
-    const body = await req.json();
-    const { point } = addMentorPointSchema.parse(body);
-    const newPoint = await mentorService.addPoint(id, point, session.studentId, session.role);
-    return successResponse(newPoint);
-  } catch (error) {
-    return handleError(error);
-  }
-}
 
 export async function PUT(
   req: NextRequest,

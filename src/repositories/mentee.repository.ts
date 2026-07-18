@@ -84,15 +84,6 @@ export class MenteeRepository implements IMenteeRepository {
     return mentee ? mapToDomainMentee(mentee) : null;
   }
 
-  async addPoint(id: string, point: number): Promise<IMentee> {
-    const mentee = await prisma.mentee.update({
-      where: { id },
-      data: { point: { increment: point } },
-      include: { mentor: { include: { hints: true } } },
-    });
-    return mapToDomainMentee(mentee);
-  }
-
   async setPoint(id: string, point: number): Promise<IMentee> {
     const mentee = await prisma.mentee.update({
       where: { id },
@@ -102,7 +93,11 @@ export class MenteeRepository implements IMenteeRepository {
     return mapToDomainMentee(mentee);
   }
 
-  async unlockHint(menteeId: string, level: number, cost: number): Promise<IMentee> {
+  async unlockHint(
+    menteeId: string,
+    level: number,
+    cost: number,
+  ): Promise<IMentee> {
     const mentee = await prisma.mentee.update({
       where: { id: menteeId },
       data: { point: { decrement: cost }, unlockedHintLevels: { push: level } },
@@ -110,5 +105,4 @@ export class MenteeRepository implements IMenteeRepository {
     });
     return mapToDomainMentee(mentee);
   }
-
 }
