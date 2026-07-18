@@ -295,53 +295,7 @@ function MentorRow({
   const [newLevel, setNewLevel] = useState(1);
   const [togglingAdmin, setTogglingAdmin] = useState(false);
 
-  const addPointsToUser = async (
-    id: string,
-    role: "mentor" | "mentee",
-    studentId: string,
-  ) => {
-    const { value: amount } = await alertUtil.showPrompt(
-      ALERT_MESSAGES.PROMPT.ADD_POINTS(studentId),
-      ALERT_MESSAGES.PROMPT.ADD_POINTS_LABEL,
-    );
 
-    if (amount) {
-      const points = parseInt(amount, 10);
-      if (isNaN(points) || points === 0) return;
-
-      const confirmResult = await alertUtil.showConfirm(
-        ALERT_MESSAGES.CONFIRM.ADD_POINTS,
-        ALERT_MESSAGES.CONFIRM.ADD_POINTS_DESC(
-          points > 0 ? "เพิ่ม" : "ลด",
-          Math.abs(points),
-          studentId,
-        ),
-      );
-      if (!confirmResult.isConfirmed) return;
-
-      try {
-        alertUtil.showLoading(ALERT_MESSAGES.LOADING.ADD_POINTS);
-
-        if (role === "mentor") {
-          await mentorService.addMentorPoint(id, points);
-        } else {
-          await menteeService.addMenteePoint(id, points);
-        }
-
-        await onRefresh();
-        alertUtil.showSuccess(
-          ALERT_MESSAGES.SUCCESS.TITLE,
-          ALERT_MESSAGES.SUCCESS.ADD_POINTS,
-        );
-      } catch (err) {
-        console.error("Failed to add points:", err);
-        alertUtil.showError(
-          ALERT_MESSAGES.ERROR.TITLE,
-          ALERT_MESSAGES.ERROR.ADD_POINTS,
-        );
-      }
-    }
-  };
 
   const setPointsToUser = async (
     id: string,
@@ -598,28 +552,7 @@ function MentorRow({
 
         {mode !== "passwords" && (
           <div onClick={(e) => e.stopPropagation()}>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                addPointsToUser(mentor.id, "mentor", mentor.studentId);
-              }}
-              title="เพิ่ม/ลดแต้ม"
-              style={{
-                fontSize: "10px",
-                fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: "0.08em",
-                padding: "2px 8px",
-                borderRadius: "2px",
-                cursor: "pointer",
-                border: "1px solid rgba(220, 180, 50, 0.5)",
-                backgroundColor: "rgba(220, 180, 50, 0.15)",
-                color: "#e8c850",
-                marginRight: "6px",
-              }}
-            >
-              + PTS
-            </button>
+
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -765,33 +698,7 @@ function MentorRow({
                 )}
                 {mode !== "passwords" && (
                   <>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        addPointsToUser(
-                          mentor.mentee!.id,
-                          "mentee",
-                          mentor.mentee!.studentId,
-                        );
-                      }}
-                      title="เพิ่ม/ลดแต้ม"
-                      style={{
-                        marginLeft: "auto",
-                        fontSize: "10px",
-                        fontFamily: "monospace",
-                        fontWeight: 700,
-                        letterSpacing: "0.08em",
-                        padding: "2px 8px",
-                        borderRadius: "2px",
-                        cursor: "pointer",
-                        border: "1px solid rgba(74, 158, 255, 0.5)",
-                        backgroundColor: "rgba(74, 158, 255, 0.15)",
-                        color: "#7ab8e8",
-                        marginRight: "6px",
-                      }}
-                    >
-                      + PTS
-                    </button>
+
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -803,6 +710,7 @@ function MentorRow({
                       }}
                       title="แก้ไขแต้ม (แทนที่ค่าเดิม)"
                       style={{
+                        marginLeft: "auto",
                         fontSize: "10px",
                         fontFamily: "monospace",
                         fontWeight: 700,

@@ -10,6 +10,5 @@ export interface IMentorRepository {
   setAdminRole(id: string, isAdmin: boolean): Promise<IMentor>;
   delete(id: string): Promise<IMentor>;
   getPoint(id: string): Promise<IMentor | null>;
-  addPoint(id: string, point: number): Promise<IMentor>;
   setPoint(id: string, point: number): Promise<IMentor>;
 }
