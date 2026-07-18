@@ -146,4 +146,8 @@ export class AuthService {
     }
     return { message: "Profile updated successfully" };
   }
+
+  async deletePassword(id: string, role: Role): Promise<void> {
+    await this.authRepo.deletePassword(id, role);
+  }
 }

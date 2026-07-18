@@ -6,7 +6,7 @@ import {
   LoginResponse,
   SetupProfileResponse,
 } from "@/src/core/domain/auth";
-import { CurrentUser } from "@/src/core/domain/user";
+import { CurrentUser, Role } from "@/src/core/domain/user";
 import { updateProfileSchema } from "@/src/core/schema/profile";
 import {
   UpdateProfileRequest,
@@ -49,5 +49,9 @@ export class AuthService {
     const parsedData = parseSchema(updateProfileSchema, data);
     const response = await this.authRepository.updateProfile(parsedData);
     return response.data;
+  }
+
+  async deletePassword(id: string, role: Role): Promise<void> {
+    await this.authRepository.deletePassword(id, role);
   }
 }

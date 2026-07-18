@@ -93,6 +93,20 @@ export class AuthRepository implements IAuthRepository {
     return mapToDomainMentee(mentee);
   }
 
+  async deletePassword(id: string, role: Role): Promise<void> {
+    if (role === "admin" || role === "mentor") {
+      await prisma.mentor.update({
+        where: { id },
+        data: { password: null },
+      });
+    } else {
+      await prisma.mentee.update({
+        where: { id },
+        data: { password: null },
+      });
+    }
+  }
+
   async setTokenCookie(
     studentId: string,
     role: Role,

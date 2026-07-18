@@ -4,8 +4,11 @@ import {
   LoginResponse,
   SetupProfileResponse,
 } from "@/src/core/domain/auth";
-import { CurrentUser } from "@/src/core/domain/user";
-import { UpdateProfileRequest, UpdateProfileResponse } from "@/src/core/domain/profile";
+import { CurrentUser, Role } from "@/src/core/domain/user";
+import {
+  UpdateProfileRequest,
+  UpdateProfileResponse,
+} from "@/src/core/domain/profile";
 import httpClient from "@/src/lib/http";
 
 import { IAuthClientRepository } from "@/src/core/ports/client/auth.repository.port";
@@ -21,7 +24,7 @@ export class AuthClientRepository implements IAuthClientRepository {
 
   async setupProfile(
     password: string,
-    nickname: string
+    nickname: string,
   ): Promise<ApiResponse<SetupProfileResponse>> {
     return httpClient.post<SetupProfileResponse>("/api/auth/setupprofile", {
       password,
@@ -34,8 +37,12 @@ export class AuthClientRepository implements IAuthClientRepository {
   }
 
   async updateProfile(
-    data: UpdateProfileRequest
+    data: UpdateProfileRequest,
   ): Promise<ApiResponse<UpdateProfileResponse>> {
     return httpClient.put<UpdateProfileResponse>("/api/auth/profile", data);
+  }
+
+  async deletePassword(id: string, role: Role): Promise<ApiResponse<void>> {
+    return httpClient.delete<void>("/api/auth/password", { data: { id, role } });
   }
 }

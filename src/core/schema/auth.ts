@@ -9,3 +9,8 @@ export const setupProfileSchema = z.object({
   password: z.string().min(4, "รหัสผ่านต้องมีความยาวอย่างน้อย 4 ตัวอักษร"),
   nickname: z.string().min(1, "กรุณากรอกชื่อเล่น"),
 });
+
+export const deletePasswordSchema = z.object({
+  id: z.string().min(1),
+  role: z.enum(["admin", "mentor", "mentee"]),
+});

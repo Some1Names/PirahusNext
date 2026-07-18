@@ -2,14 +2,12 @@ import { MentorRepository } from "@/src/repositories/mentor.repository";
 import { ICreateMentor, IMentor } from "@/src/core/domain/mentor";
 import { NotFoundError, ForbiddenError } from "@/src/core/error/error";
 import { IMentorRepository } from "@/src/core/ports/server/mentor.repository.port";
-import { stripMentorPassword } from "@/src/lib/user-utils";
+import { stripMentorPassword, SafeMentor } from "@/src/lib/user-utils";
 import { Role } from "@/src/core/domain/user";
-
-type SafeMentor = Omit<IMentor, "password">;
 
 export class MentorService {
   constructor(
-    private readonly mentorRepo: IMentorRepository = new MentorRepository()
+    private readonly mentorRepo: IMentorRepository = new MentorRepository(),
   ) {}
 
   async createMentor(data: ICreateMentor): Promise<SafeMentor> {
@@ -50,7 +48,12 @@ export class MentorService {
     return mentor.point;
   }
 
-  async addPoint(id: string, point: number, sessionStudentId?: string, sessionRole?: Role): Promise<number> {
+  async addPoint(
+    id: string,
+    point: number,
+    sessionStudentId?: string,
+    sessionRole?: Role,
+  ): Promise<number> {
     if (sessionRole === "mentor" && sessionStudentId) {
       const mentor = await this.mentorRepo.findByStudentId(sessionStudentId);
       if (!mentor || (mentor.id !== id && mentor.studentId !== id)) {

@@ -1,20 +1,18 @@
 import { IMentor } from "@/src/core/domain/mentor";
 import { IMentee } from "@/src/core/domain/mentee";
 
-/**
- * Removes the password hash from the mentor object before it is returned to the client.
- */
-export function stripMentorPassword(mentor: IMentor): Omit<IMentor, "password"> {
+export type SafeMentor = Omit<IMentor, "password"> & { hasPassword: boolean };
+
+export function stripMentorPassword(mentor: IMentor): SafeMentor {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { password: _password, ...safeMentor } = mentor;
-  return safeMentor as Omit<IMentor, "password">;
+  return { ...safeMentor, hasPassword: !!_password } as SafeMentor;
 }
 
-/**
- * Removes the password hash from the mentee object before it is returned to the client.
- */
-export function stripMenteePassword(mentee: IMentee): Omit<IMentee, "password"> {
+export type SafeMentee = Omit<IMentee, "password"> & { hasPassword: boolean };
+
+export function stripMenteePassword(mentee: IMentee): SafeMentee {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { password: _password, ...safeMentee } = mentee;
-  return safeMentee as Omit<IMentee, "password">;
+  return { ...safeMentee, hasPassword: !!_password } as SafeMentee;
 }
