@@ -17,6 +17,8 @@ import {
 import { Pixelify_Sans } from "next/font/google";
 import { authService } from "@/src/clients/container";
 import { useUserStore } from "@/src/store/auth";
+import { alertUtil } from "@/src/utils/alert.util";
+import { ALERT_MESSAGES } from "@/src/core/constants/messages";
 
 const pixelifySans = Pixelify_Sans({ subsets: ["latin"] });
 
@@ -50,6 +52,12 @@ export default function ProfileSetupPage() {
   const passwordVal = watch("password");
 
   const onSubmit = async (data: { password?: string; nickname?: string }) => {
+    const confirmResult = await alertUtil.showConfirm(
+      ALERT_MESSAGES.CONFIRM.SETUP_PROFILE,
+      ALERT_MESSAGES.CONFIRM.SETUP_PROFILE_DESC
+    );
+    if (!confirmResult.isConfirmed) return;
+
     setErrorMsg("");
     setLoading(true);
     try {

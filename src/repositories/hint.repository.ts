@@ -35,18 +35,4 @@ export class HintRepository implements IHintRepository {
   async delete(id: string): Promise<IHint> {
     return prisma.hint.delete({ where: { id } });
   }
-
-  async findMenteeWithHints(studentId: string) {
-    return prisma.mentee.findUnique({
-      where: { studentId },
-      include: { mentor: { include: { hints: true } } },
-    });
-  }
-
-  async unlockHintTransaction(menteeId: string, level: number, cost: number) {
-    return prisma.mentee.update({
-      where: { id: menteeId },
-      data: { point: { decrement: cost }, unlockedHintLevels: { push: level } },
-    });
-  }
 }

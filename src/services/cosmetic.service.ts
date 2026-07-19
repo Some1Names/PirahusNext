@@ -53,7 +53,7 @@ export class CosmeticService {
       throw new AppError("Not enough points", 400, "INSUFFICIENT_POINTS");
     }
 
-    return this.cosmeticRepo.unlockCosmeticTransaction(
+    return this.cosmeticRepo.unlockCosmetic(
       userId,
       role,
       itemId,
@@ -91,6 +91,6 @@ export class CosmeticService {
       throw new AppError("You do not own this cosmetic", 400, "NOT_OWNED");
     }
 
-    return this.cosmeticRepo.equipCosmeticTransaction(userId, role, itemId);
+    return this.cosmeticRepo.equipCosmetic(userId, role, itemId);
   }
 }

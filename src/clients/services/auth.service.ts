@@ -6,7 +6,12 @@ import {
   LoginResponse,
   SetupProfileResponse,
 } from "@/src/core/domain/auth";
-import { CurrentUser } from "@/src/core/domain/user";
+import { CurrentUser, Role } from "@/src/core/domain/user";
+import { updateProfileSchema } from "@/src/core/schema/profile";
+import {
+  UpdateProfileRequest,
+  UpdateProfileResponse,
+} from "@/src/core/domain/profile";
 
 export class AuthService {
   constructor(private readonly authRepository: IAuthClientRepository) {}
@@ -36,5 +41,17 @@ export class AuthService {
 
   async logout(): Promise<void> {
     await this.authRepository.logout();
+  }
+
+  async updateProfile(
+    data: UpdateProfileRequest,
+  ): Promise<UpdateProfileResponse> {
+    const parsedData = parseSchema(updateProfileSchema, data);
+    const response = await this.authRepository.updateProfile(parsedData);
+    return response.data;
+  }
+
+  async deletePassword(id: string, role: Role): Promise<void> {
+    await this.authRepository.deletePassword(id, role);
   }
 }

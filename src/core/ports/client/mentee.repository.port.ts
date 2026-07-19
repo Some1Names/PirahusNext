@@ -8,5 +8,5 @@ export interface IMenteeClientRepository {
   getMenteeById(id: string): Promise<ApiResponse<IMentee>>;
   getAllMentees(): Promise<ApiResponse<IMentee[]>>;
   getMenteePoint(menteeId: string): Promise<ApiResponse<number>>;
-  addMenteePoint(menteeId: string, point: number): Promise<ApiResponse<number>>;
+  setMenteePoint(menteeId: string, point: number): Promise<ApiResponse<number>>;
 }

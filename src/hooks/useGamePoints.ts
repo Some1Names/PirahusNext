@@ -47,9 +47,13 @@ export function useGamePoints(game: GameName) {
         let totalPoints = 0;
 
         if (user.role === "admin" || user.role === "mentor") {
-          totalPoints = await mentorService.addMentorPoint(user.id, points);
+          const currentPoint = await mentorService.getMentorPoint(user.id);
+          totalPoints = currentPoint + points;
+          await mentorService.setMentorPoint(user.id, totalPoints);
         } else if (user.role === "mentee") {
-          totalPoints = await menteeService.addMenteePoint(user.id, points);
+          const currentPoint = await menteeService.getMenteePoint(user.id);
+          totalPoints = currentPoint + points;
+          await menteeService.setMenteePoint(user.id, totalPoints);
         }
 
         if (meta && (typeof meta.timeTaken === "number" || typeof meta.score === "number")) {

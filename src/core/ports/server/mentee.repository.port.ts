@@ -9,5 +9,6 @@ export interface IMenteeRepository {
   update(id: string, data: Partial<IMentee>): Promise<IMentee>;
   delete(id: string): Promise<IMentee>;
   getPoint(id: string): Promise<IMentee | null>;
-  addPoint(id: string, point: number): Promise<IMentee>;
+  setPoint(id: string, point: number): Promise<IMentee>;
+  unlockHint(menteeId: string, level: number, cost: number): Promise<IMentee>;
 }

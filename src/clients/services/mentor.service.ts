@@ -39,8 +39,9 @@ export class MentorService {
     const res = await this.mentorRepository.getMentorPoint(mentorId);
     return res.data;
   }
-  async addMentorPoint(mentorId: string, point: number): Promise<number> {
-    const res = await this.mentorRepository.addMentorPoint(mentorId, point);
+
+  async setMentorPoint(mentorId: string, point: number): Promise<number> {
+    const res = await this.mentorRepository.setMentorPoint(mentorId, point);
     return res.data;
   }
 }

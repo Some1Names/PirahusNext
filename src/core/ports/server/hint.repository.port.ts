@@ -1,5 +1,4 @@
 import { IUpdateHints, IHint } from "@/src/core/domain/hint";
-import { IMentee } from "@/src/core/domain/mentee";
 
 export interface IHintRepository {
   addHints(
@@ -10,10 +9,4 @@ export interface IHintRepository {
   findByMentorId(mentorId: string): Promise<IHint[]>;
   update(id: string, data: IUpdateHints): Promise<IHint>;
   delete(id: string): Promise<IHint>;
-  findMenteeWithHints(studentId: string): Promise<IMentee | null>;
-  unlockHintTransaction(
-    menteeId: string,
-    level: number,
-    cost: number,
-  ): Promise<IMentee>;
 }

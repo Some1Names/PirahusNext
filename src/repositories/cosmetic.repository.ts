@@ -12,7 +12,7 @@ export class CosmeticRepository implements ICosmeticRepository {
     return item ? mapToShopItemEntity(item) : null;
   }
 
-  async unlockCosmeticTransaction(
+  async unlockCosmetic(
     userId: string,
     role: Role,
     itemId: string,
@@ -33,7 +33,7 @@ export class CosmeticRepository implements ICosmeticRepository {
     }
   }
 
-  async equipCosmeticTransaction(
+  async equipCosmetic(
     userId: string,
     role: Role,
     itemId: string | null

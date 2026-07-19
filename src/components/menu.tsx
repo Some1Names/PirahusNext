@@ -1,10 +1,10 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import React, { useState } from "react";
 import SlidingTextReveal from "./SlidingTextRevealProps";
 import SplitText from "./SplitText";
 import { useUserStore } from "../store/auth";
+import { SquareUser } from "lucide-react";
 
 interface MenuProps {
   onNavigate?: () => void; // call this to close the menu before route change
@@ -81,12 +81,12 @@ function Menu({ onNavigate }: MenuProps) {
         ))}
       </ul>
 
-      {/* CONTACT SECTION */}
+      {/* CREDIT SECTION */}
       <span className="flex flex-col gap-4 items-center mt-10">
         {/* Title with sliding reveal */}
         <SlidingTextReveal
           as="span"
-          text={["Contact Via"]}
+          text={["Credit"]}
           direction="lr"
           once
           delay={0.2}
@@ -96,24 +96,20 @@ function Menu({ onNavigate }: MenuProps) {
           className="font-bold text-2xl uppercase"
         />
 
-        <div className="flex flex-col gap-0 font-2xl">
-          {/* Gmail */}
+        <div className="flex flex-row gap-8 font-2xl">
+          {/* IG: yafuuyufaa */}
           <a
-            href="https://mail.google.com/mail/?view=cm&fs=1&to=himarukoishiwa@gmail.com"
+            href="https://instagram.com/yafuuyufaa"
             target="_blank"
-            title="mail me"
-            className="inline-flex gap-5 items-center"
+            title="ig: yafuuyufaa"
+            className="inline-flex gap-3 items-center"
           >
             <SlidingTextReveal
               as="span"
               text={[
-                <span key="gmail" className="inline-flex gap-5 items-center">
-                  <img
-                    src="/images/gmail.svg"
-                    alt="gmail"
-                    className="size-7 opacity-100 invert brightness-0"
-                  />
-                  <span>himarukoishiwa@gmail.com</span>
+                <span key="ig1" className="inline-flex gap-3 items-center">
+                  <SquareUser className="size-7" />
+                  <span>yafuuyufaa</span>
                 </span>,
               ]}
               direction="lr"
@@ -121,27 +117,23 @@ function Menu({ onNavigate }: MenuProps) {
               delay={0.35}
               duration={1.3}
               coverClass="bg-[#6812D2]"
-              className="inline-flex items-center gap-5"
+              className="inline-flex items-center gap-3"
             />
           </a>
 
-          {/* Discord */}
+          {/* IG: vixvify_v */}
           <a
-            href="https://discord.com/users/mand3la"
+            href="https://instagram.com/vixvify_v"
             target="_blank"
-            title="discord"
-            className=" inline-flex gap-5 items-center"
+            title="ig: vixvify_v"
+            className="inline-flex gap-3 items-center"
           >
             <SlidingTextReveal
               as="span"
               text={[
-                <span key="discord" className="inline-flex gap-5 items-center">
-                  <img
-                    src="/images/discord.svg"
-                    alt="discord"
-                    className="size-7 opacity-100 invert brightness-0"
-                  />
-                  <span>N0tH1ma</span>
+                <span key="ig2" className="inline-flex gap-3 items-center">
+                  <SquareUser className="size-7" />
+                  <span>vixvify_v</span>
                 </span>,
               ]}
               direction="lr"
@@ -149,7 +141,7 @@ function Menu({ onNavigate }: MenuProps) {
               delay={0.45}
               duration={1.3}
               coverClass="bg-[#6812D2]"
-              className="inline-flex items-center gap-5"
+              className="inline-flex items-center gap-3"
             />
           </a>
         </div>

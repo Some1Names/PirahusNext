@@ -32,8 +32,9 @@ export class MenteeService {
     const res = await this.menteeRepository.getMenteePoint(menteeId);
     return res.data;
   }
-  async addMenteePoint(menteeId: string, point: number): Promise<number> {
-    const res = await this.menteeRepository.addMenteePoint(menteeId, point);
+
+  async setMenteePoint(menteeId: string, point: number): Promise<number> {
+    const res = await this.menteeRepository.setMenteePoint(menteeId, point);
     return res.data;
   }
 }

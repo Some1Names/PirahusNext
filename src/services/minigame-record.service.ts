@@ -1,9 +1,15 @@
 import { IMinigameRecordRepository } from "@/src/core/ports/server/minigame-record.repository.port";
 import { MinigameRecordRepository } from "@/src/repositories/minigame-record.repository";
+import { MentorRepository } from "@/src/repositories/mentor.repository";
+import { MenteeRepository } from "@/src/repositories/mentee.repository";
+import { IMentorRepository } from "@/src/core/ports/server/mentor.repository.port";
+import { IMenteeRepository } from "@/src/core/ports/server/mentee.repository.port";
 
 export class MinigameRecordService {
   constructor(
     private readonly recordRepo: IMinigameRecordRepository = new MinigameRecordRepository(),
+    private readonly mentorRepo: IMentorRepository = new MentorRepository(),
+    private readonly menteeRepo: IMenteeRepository = new MenteeRepository()
   ) {}
 
   async submitRecord(
@@ -19,11 +25,13 @@ export class MinigameRecordService {
     let mentorId = null;
 
     if (role === "mentee") {
-      menteeId = await this.recordRepo.findMenteeIdByStudentId(studentId);
-      if (!menteeId) throw new Error("User not found");
+      const mentee = await this.menteeRepo.findByStudentId(studentId);
+      if (!mentee) throw new Error("User not found");
+      menteeId = mentee.id;
     } else {
-      mentorId = await this.recordRepo.findMentorIdByStudentId(studentId);
-      if (!mentorId) throw new Error("User not found");
+      const mentor = await this.mentorRepo.findByStudentId(studentId);
+      if (!mentor) throw new Error("User not found");
+      mentorId = mentor.id;
     }
 
     const existing = await this.recordRepo.findExistingRecord(menteeId, mentorId, gameName);
@@ -60,5 +68,9 @@ export class MinigameRecordService {
 
   async getLeaderboard(gameName: string, limit: number = 10) {
     return this.recordRepo.getLeaderboard(gameName, limit);
+  }
+
+  async getTopScores(limit: number = 10) {
+    return this.recordRepo.getTopScores(limit);
   }
 }

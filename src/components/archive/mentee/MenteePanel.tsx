@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { useUserStore } from "@/src/store/auth";
 import { MenteeUser } from "@/src/core/domain/user";
 import ProfileModal from "@/src/components/profile/ProfileModal";
+import { alertUtil } from "@/src/utils/alert.util";
+import { ALERT_MESSAGES } from "@/src/core/constants/messages";
 
 function MentorCard({
   mentor,
@@ -234,6 +236,12 @@ export default function MenteePanel({ mentee }: MenteePanelProps) {
   const [profileOpen, setProfileOpen] = useState(false);
 
   const handleLogout = async () => {
+    const confirmResult = await alertUtil.showConfirm(
+      ALERT_MESSAGES.CONFIRM.LOGOUT,
+      ALERT_MESSAGES.CONFIRM.LOGOUT_DESC
+    );
+    if (!confirmResult.isConfirmed) return;
+
     await logout();
     router.push("/auth/login");
   };

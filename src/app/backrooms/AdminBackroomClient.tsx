@@ -13,17 +13,37 @@ import {
   FaArrowLeft,
 } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { mentorService, hintService, menteeService } from "@/src/clients/container";
+import {
+  mentorService,
+  hintService,
+  menteeService,
+} from "@/src/clients/container";
 import { useUserStore } from "@/src/store/auth";
 import { alertUtil } from "@/src/utils/alert.util";
 import { ALERT_MESSAGES } from "@/src/core/constants/messages";
 import { IMentor } from "@/src/core/domain/mentor";
+import { IMentee } from "@/src/core/domain/mentee";
 
-function MentorBadge({ id, nickname }: { id: string; nickname?: string | null }) {
+function MentorBadge({
+  id,
+  nickname,
+  point,
+}: {
+  id: string;
+  nickname?: string | null;
+  point: number;
+}) {
   const firstTwo = id.length >= 2 ? id.slice(0, 2) : "";
   const rest = id.length >= 2 ? id.slice(2) : id;
   return (
-    <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", margin: "4px 0" }}>
+    <div
+      style={{
+        display: "flex",
+        gap: "10px",
+        flexWrap: "wrap",
+        margin: "4px 0",
+      }}
+    >
       <div
         style={{
           display: "flex",
@@ -35,8 +55,25 @@ function MentorBadge({ id, nickname }: { id: string; nickname?: string | null })
           borderRadius: "4px",
         }}
       >
-        <span style={{ fontSize: "10px", color: "#d45c2a", fontWeight: 700, letterSpacing: "1px", lineHeight: 1 }}>ID</span>
-        <span style={{ fontFamily: "monospace", fontSize: "14px", fontWeight: 700, lineHeight: 1 }}>
+        <span
+          style={{
+            fontSize: "10px",
+            color: "#d45c2a",
+            fontWeight: 700,
+            letterSpacing: "1px",
+            lineHeight: 1,
+          }}
+        >
+          ID
+        </span>
+        <span
+          style={{
+            fontFamily: "monospace",
+            fontSize: "14px",
+            fontWeight: 700,
+            lineHeight: 1,
+          }}
+        >
           {firstTwo && <span style={{ color: "#d45c2a" }}>{firstTwo}</span>}
           <span style={{ color: "#c8d4a8" }}>{rest}</span>
         </span>
@@ -53,17 +90,77 @@ function MentorBadge({ id, nickname }: { id: string; nickname?: string | null })
             borderRadius: "4px",
           }}
         >
-          <span style={{ fontSize: "10px", color: "#a8c060", fontWeight: 700, letterSpacing: "1px", lineHeight: 1 }}>NAME</span>
-          <span style={{ fontSize: "14px", fontFamily: "'Share Tech Mono', monospace", color: "#d8e8b8", fontWeight: 600, lineHeight: 1 }}>
+          <span
+            style={{
+              fontSize: "10px",
+              color: "#a8c060",
+              fontWeight: 700,
+              letterSpacing: "1px",
+              lineHeight: 1,
+            }}
+          >
+            NAME
+          </span>
+          <span
+            style={{
+              fontSize: "14px",
+              fontFamily: "'Share Tech Mono', monospace",
+              color: "#d8e8b8",
+              fontWeight: 600,
+              lineHeight: 1,
+            }}
+          >
             {nickname}
           </span>
         </div>
       )}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "baseline",
+          gap: "6px",
+          padding: "6px 12px",
+          border: "1px solid rgba(220, 180, 50, 0.3)",
+          backgroundColor: "rgba(220, 180, 50, 0.08)",
+          borderRadius: "4px",
+        }}
+      >
+        <span
+          style={{
+            fontSize: "10px",
+            color: "#e8c850",
+            fontWeight: 700,
+            letterSpacing: "1px",
+            lineHeight: 1,
+          }}
+        >
+          PTS
+        </span>
+        <span
+          style={{
+            fontSize: "14px",
+            fontFamily: "'Share Tech Mono', monospace",
+            color: "#f8e8a8",
+            fontWeight: 600,
+            lineHeight: 1,
+          }}
+        >
+          {point}
+        </span>
+      </div>
     </div>
   );
 }
 
-function MenteeBadge({ id, nickname }: { id: string; nickname?: string | null }) {
+function MenteeBadge({
+  id,
+  nickname,
+  point,
+}: {
+  id: string;
+  nickname?: string | null;
+  point: number;
+}) {
   const firstTwo = id.length >= 2 ? id.slice(0, 2) : "";
   const rest = id.length >= 2 ? id.slice(2) : id;
   return (
@@ -79,8 +176,25 @@ function MenteeBadge({ id, nickname }: { id: string; nickname?: string | null })
           borderRadius: "4px",
         }}
       >
-        <span style={{ fontSize: "10px", color: "#4a9eff", fontWeight: 700, letterSpacing: "1px", lineHeight: 1 }}>ID</span>
-        <span style={{ fontFamily: "monospace", fontSize: "14px", fontWeight: 700, lineHeight: 1 }}>
+        <span
+          style={{
+            fontSize: "10px",
+            color: "#4a9eff",
+            fontWeight: 700,
+            letterSpacing: "1px",
+            lineHeight: 1,
+          }}
+        >
+          ID
+        </span>
+        <span
+          style={{
+            fontFamily: "monospace",
+            fontSize: "14px",
+            fontWeight: 700,
+            lineHeight: 1,
+          }}
+        >
           {firstTwo && <span style={{ color: "#4a9eff" }}>{firstTwo}</span>}
           <span style={{ color: "#8aaccc" }}>{rest}</span>
         </span>
@@ -97,21 +211,80 @@ function MenteeBadge({ id, nickname }: { id: string; nickname?: string | null })
             borderRadius: "4px",
           }}
         >
-          <span style={{ fontSize: "10px", color: "#7ab8e8", fontWeight: 700, letterSpacing: "1px", lineHeight: 1 }}>NAME</span>
-          <span style={{ fontSize: "14px", fontWeight: 600, color: "#aadcff", fontFamily: "'Share Tech Mono', monospace", lineHeight: 1 }}>
+          <span
+            style={{
+              fontSize: "10px",
+              color: "#7ab8e8",
+              fontWeight: 700,
+              letterSpacing: "1px",
+              lineHeight: 1,
+            }}
+          >
+            NAME
+          </span>
+          <span
+            style={{
+              fontSize: "14px",
+              fontWeight: 600,
+              color: "#aadcff",
+              fontFamily: "'Share Tech Mono', monospace",
+              lineHeight: 1,
+            }}
+          >
             {nickname}
           </span>
         </div>
       )}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "baseline",
+          gap: "6px",
+          padding: "6px 12px",
+          border: "1px solid rgba(220, 180, 50, 0.3)",
+          backgroundColor: "rgba(220, 180, 50, 0.08)",
+          borderRadius: "4px",
+        }}
+      >
+        <span
+          style={{
+            fontSize: "10px",
+            color: "#e8c850",
+            fontWeight: 700,
+            letterSpacing: "1px",
+            lineHeight: 1,
+          }}
+        >
+          PTS
+        </span>
+        <span
+          style={{
+            fontSize: "14px",
+            fontFamily: "'Share Tech Mono', monospace",
+            color: "#f8e8a8",
+            fontWeight: 600,
+            lineHeight: 1,
+          }}
+        >
+          {point}
+        </span>
+      </div>
     </div>
   );
 }
 
+type AdminMentorData = IMentor & {
+  hasPassword?: boolean;
+  mentee?: (IMentee & { hasPassword?: boolean }) | null;
+};
+
 function MentorRow({
   mentor,
+  mode,
   onRefresh,
 }: {
-  mentor: IMentor;
+  mentor: AdminMentorData;
+  mode: "mentors" | "passwords";
   onRefresh: () => Promise<void>;
 }) {
   const [open, setOpen] = useState(false);
@@ -122,30 +295,48 @@ function MentorRow({
   const [newLevel, setNewLevel] = useState(1);
   const [togglingAdmin, setTogglingAdmin] = useState(false);
 
-  const addPointsToUser = async (id: string, role: "mentor" | "mentee", studentId: string) => {
+
+
+  const setPointsToUser = async (
+    id: string,
+    role: "mentor" | "mentee",
+    studentId: string,
+  ) => {
     const { value: amount } = await alertUtil.showPrompt(
-      ALERT_MESSAGES.PROMPT.ADD_POINTS(studentId),
-      ALERT_MESSAGES.PROMPT.ADD_POINTS_LABEL
+      ALERT_MESSAGES.PROMPT.SET_POINTS(studentId),
+      ALERT_MESSAGES.PROMPT.SET_POINTS_LABEL,
     );
 
     if (amount) {
       const points = parseInt(amount, 10);
-      if (isNaN(points) || points === 0) return;
+      if (isNaN(points) || points < 0) return;
+
+      const confirmResult = await alertUtil.showConfirm(
+        ALERT_MESSAGES.CONFIRM.SET_POINTS,
+        ALERT_MESSAGES.CONFIRM.SET_POINTS_DESC(studentId, points),
+      );
+      if (!confirmResult.isConfirmed) return;
 
       try {
-        alertUtil.showLoading(ALERT_MESSAGES.LOADING.ADD_POINTS);
-        
+        alertUtil.showLoading(ALERT_MESSAGES.LOADING.SET_POINTS);
+
         if (role === "mentor") {
-          await mentorService.addMentorPoint(id, points);
+          await mentorService.setMentorPoint(id, points);
         } else {
-          await menteeService.addMenteePoint(id, points);
+          await menteeService.setMenteePoint(id, points);
         }
-        
+
         await onRefresh();
-        alertUtil.showSuccess(ALERT_MESSAGES.SUCCESS.TITLE, ALERT_MESSAGES.SUCCESS.ADD_POINTS);
+        alertUtil.showSuccess(
+          ALERT_MESSAGES.SUCCESS.TITLE,
+          ALERT_MESSAGES.SUCCESS.SET_POINTS,
+        );
       } catch (err) {
-        console.error("Failed to add points:", err);
-        alertUtil.showError(ALERT_MESSAGES.ERROR.TITLE, ALERT_MESSAGES.ERROR.ADD_POINTS);
+        console.error("Failed to set points:", err);
+        alertUtil.showError(
+          ALERT_MESSAGES.ERROR.TITLE,
+          ALERT_MESSAGES.ERROR.SET_POINTS,
+        );
       }
     }
   };
@@ -156,7 +347,10 @@ function MentorRow({
     const label = next ? "แอดมิน" : "Mentor";
     const result = await alertUtil.showConfirm(
       ALERT_MESSAGES.CONFIRM.TOGGLE_ROLE(label),
-      ALERT_MESSAGES.CONFIRM.TOGGLE_ROLE_DESC(mentor.nickname || mentor.studentId, label)
+      ALERT_MESSAGES.CONFIRM.TOGGLE_ROLE_DESC(
+        mentor.nickname || mentor.studentId,
+        label,
+      ),
     );
     if (!result.isConfirmed) return;
     try {
@@ -165,7 +359,10 @@ function MentorRow({
       await onRefresh();
     } catch (err) {
       console.error("Failed to toggle admin:", err);
-      alertUtil.showError(ALERT_MESSAGES.ERROR.TITLE, ALERT_MESSAGES.ERROR.TOGGLE_ROLE);
+      alertUtil.showError(
+        ALERT_MESSAGES.ERROR.TITLE,
+        ALERT_MESSAGES.ERROR.TOGGLE_ROLE,
+      );
     } finally {
       setTogglingAdmin(false);
     }
@@ -173,15 +370,28 @@ function MentorRow({
 
   const saveEdit = async (hintId: string) => {
     if (!editVal.trim()) return;
+
+    const result = await alertUtil.showConfirm(
+      ALERT_MESSAGES.CONFIRM.EDIT_HINT,
+      ALERT_MESSAGES.CONFIRM.EDIT_HINT_DESC,
+    );
+    if (!result.isConfirmed) return;
+
     try {
       alertUtil.showLoading(ALERT_MESSAGES.LOADING.EDIT_HINT);
       await hintService.updateHints(hintId, { content: editVal.trim() });
       setEditingIdx(null);
       await onRefresh();
-      alertUtil.showSuccess(ALERT_MESSAGES.SUCCESS.TITLE, ALERT_MESSAGES.SUCCESS.EDIT_HINT);
+      alertUtil.showSuccess(
+        ALERT_MESSAGES.SUCCESS.TITLE,
+        ALERT_MESSAGES.SUCCESS.EDIT_HINT,
+      );
     } catch (err) {
       console.error("Failed to edit hint:", err);
-      alertUtil.showError(ALERT_MESSAGES.ERROR.TITLE, ALERT_MESSAGES.ERROR.EDIT_HINT);
+      alertUtil.showError(
+        ALERT_MESSAGES.ERROR.TITLE,
+        ALERT_MESSAGES.ERROR.EDIT_HINT,
+      );
     }
   };
 
@@ -189,7 +399,7 @@ function MentorRow({
     const result = await alertUtil.showConfirm(
       ALERT_MESSAGES.CONFIRM.DELETE_HINT,
       ALERT_MESSAGES.CONFIRM.DELETE_HINT_DESC,
-      { isDanger: true, confirmButtonText: "ลบ" }
+      { isDanger: true, confirmButtonText: "ลบ" },
     );
 
     if (result.isConfirmed) {
@@ -197,16 +407,29 @@ function MentorRow({
         alertUtil.showLoading(ALERT_MESSAGES.LOADING.DELETE_HINT);
         await hintService.deleteHint(hintId);
         await onRefresh();
-        alertUtil.showSuccess(ALERT_MESSAGES.SUCCESS.TITLE, ALERT_MESSAGES.SUCCESS.DELETE_HINT);
+        alertUtil.showSuccess(
+          ALERT_MESSAGES.SUCCESS.TITLE,
+          ALERT_MESSAGES.SUCCESS.DELETE_HINT,
+        );
       } catch (err) {
         console.error("Failed to delete hint:", err);
-        alertUtil.showError(ALERT_MESSAGES.ERROR.TITLE, ALERT_MESSAGES.ERROR.DELETE_HINT);
+        alertUtil.showError(
+          ALERT_MESSAGES.ERROR.TITLE,
+          ALERT_MESSAGES.ERROR.DELETE_HINT,
+        );
       }
     }
   };
 
   const addHint = async () => {
     if (!newHint.trim()) return;
+
+    const result = await alertUtil.showConfirm(
+      ALERT_MESSAGES.CONFIRM.ADD_HINT,
+      ALERT_MESSAGES.CONFIRM.ADD_HINT_DESC,
+    );
+    if (!result.isConfirmed) return;
+
     try {
       alertUtil.showLoading(ALERT_MESSAGES.LOADING.SAVE_HINT);
       await hintService.addHints({
@@ -217,10 +440,16 @@ function MentorRow({
       setNewLevel(1);
       setAdding(false);
       await onRefresh();
-      alertUtil.showSuccess(ALERT_MESSAGES.SUCCESS.TITLE, ALERT_MESSAGES.SUCCESS.SAVE_HINT);
+      alertUtil.showSuccess(
+        ALERT_MESSAGES.SUCCESS.TITLE,
+        ALERT_MESSAGES.SUCCESS.SAVE_HINT,
+      );
     } catch (err) {
       console.error("Failed to add hint:", err);
-      alertUtil.showError(ALERT_MESSAGES.ERROR.TITLE, ALERT_MESSAGES.ERROR.SAVE_HINT);
+      alertUtil.showError(
+        ALERT_MESSAGES.ERROR.TITLE,
+        ALERT_MESSAGES.ERROR.SAVE_HINT,
+      );
     }
   };
 
@@ -255,10 +484,57 @@ function MentorRow({
             gap: "10px",
           }}
         >
-          <MentorBadge id={mentor.studentId} nickname={mentor.nickname} />
+          <MentorBadge
+            id={mentor.studentId}
+            nickname={mentor.nickname}
+            point={mentor.point}
+          />
         </div>
 
-        {mentor.hints.length > 0 && (
+        {mode === "passwords" && (
+          <div style={{ marginRight: "10px", display: "flex", alignItems: "center", gap: "8px" }}>
+            {mentor.hasPassword ? (
+              <span style={{ fontSize: "12px", color: "#4ade80", fontFamily: "monospace", fontWeight: "bold" }}>✅ มีรหัส</span>
+            ) : (
+              <span style={{ fontSize: "12px", color: "#f87171", fontFamily: "monospace", fontWeight: "bold" }}>❌ ไม่มีรหัส</span>
+            )}
+            {mentor.hasPassword && (
+              <button
+                onClick={async (e) => {
+                  e.stopPropagation();
+                  const res = await alertUtil.showConfirm("ลบรหัสผ่าน?", `คุณแน่ใจหรือไม่ที่จะลบรหัสผ่านของ ${mentor.studentId}?`, { isDanger: true, confirmButtonText: "ลบ" });
+                  if (res.isConfirmed) {
+                    try {
+                      alertUtil.showLoading("กำลังลบ...");
+                      const { authService } = await import("@/src/clients/container");
+                      await authService.deletePassword(mentor.id, "mentor");
+                      await onRefresh();
+                      alertUtil.showSuccess("สำเร็จ", "ลบรหัสผ่านเรียบร้อย");
+                    } catch (err) {
+                      console.error(err);
+                      alertUtil.showError("ผิดพลาด", "ไม่สามารถลบรหัสผ่านได้");
+                    }
+                  }
+                }}
+                style={{
+                  fontSize: "10px",
+                  fontFamily: "monospace",
+                  fontWeight: 700,
+                  padding: "2px 8px",
+                  borderRadius: "2px",
+                  cursor: "pointer",
+                  border: "1px solid rgba(220, 50, 50, 0.5)",
+                  backgroundColor: "rgba(220, 50, 50, 0.15)",
+                  color: "#e85050",
+                }}
+              >
+                ลบรหัสผ่าน
+              </button>
+            )}
+          </div>
+        )}
+
+        {mode === "mentors" && mentor.hints.length > 0 && (
           <span
             style={{
               fontSize: "11px",
@@ -274,30 +550,32 @@ function MentorRow({
           </span>
         )}
 
-        <div onClick={(e) => e.stopPropagation()}>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              addPointsToUser(mentor.id, "mentor", mentor.studentId);
-            }}
-            title="เพิ่มแต้ม"
-            style={{
-              fontSize: "10px",
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: "0.08em",
-              padding: "2px 8px",
-              borderRadius: "2px",
-              cursor: "pointer",
-              border: "1px solid rgba(220, 180, 50, 0.5)",
-              backgroundColor: "rgba(220, 180, 50, 0.15)",
-              color: "#e8c850",
-              marginRight: "6px",
-            }}
-          >
-            + PTS
-          </button>
-          <button
+        {mode !== "passwords" && (
+          <div onClick={(e) => e.stopPropagation()}>
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setPointsToUser(mentor.id, "mentor", mentor.studentId);
+              }}
+              title="แก้ไขแต้ม (แทนที่ค่าเดิม)"
+              style={{
+                fontSize: "10px",
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: "0.08em",
+                padding: "2px 8px",
+                borderRadius: "2px",
+                cursor: "pointer",
+                border: "1px solid rgba(220, 100, 50, 0.5)",
+                backgroundColor: "rgba(220, 100, 50, 0.15)",
+                color: "#e88050",
+                marginRight: "6px",
+              }}
+            >
+              EDIT PTS
+            </button>
+            <button
             onClick={toggleAdmin}
             disabled={togglingAdmin}
             title={
@@ -326,6 +604,7 @@ function MentorRow({
             {mentor.isAdmin ? "ADMIN" : "MENTOR"}
           </button>
         </div>
+        )}
 
         <div onClick={(e) => e.stopPropagation()}>
           {open ? (
@@ -369,31 +648,86 @@ function MentorRow({
                 <div
                   style={{ display: "flex", alignItems: "center", gap: "10px" }}
                 >
-                  <MenteeBadge id={mentor.mentee.studentId} nickname={mentor.mentee.nickname} />
+                  <MenteeBadge
+                    id={mentor.mentee.studentId}
+                    nickname={mentor.mentee.nickname}
+                    point={mentor.mentee.point}
+                  />
                 </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    addPointsToUser(mentor.mentee!.id, "mentee", mentor.mentee!.studentId);
-                  }}
-                  title="เพิ่มแต้ม"
-                  style={{
-                    marginLeft: "auto",
-                    fontSize: "10px",
-                    fontFamily: "monospace",
-                    fontWeight: 700,
-                    letterSpacing: "0.08em",
-                    padding: "2px 8px",
-                    borderRadius: "2px",
-                    cursor: "pointer",
-                    border: "1px solid rgba(74, 158, 255, 0.5)",
-                    backgroundColor: "rgba(74, 158, 255, 0.15)",
-                    color: "#7ab8e8",
-                    marginRight: "10px",
-                  }}
-                >
-                  + PTS
-                </button>
+                {mode === "passwords" && (
+                  <div style={{ marginLeft: "auto", marginRight: "10px", display: "flex", alignItems: "center", gap: "8px" }}>
+                    {mentor.mentee.hasPassword ? (
+                      <span style={{ fontSize: "12px", color: "#4ade80", fontFamily: "monospace", fontWeight: "bold" }}>✅ มีรหัส</span>
+                    ) : (
+                      <span style={{ fontSize: "12px", color: "#f87171", fontFamily: "monospace", fontWeight: "bold" }}>❌ ไม่มีรหัส</span>
+                    )}
+                    {mentor.mentee.hasPassword && (
+                      <button
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          const res = await alertUtil.showConfirm("ลบรหัสผ่าน?", `คุณแน่ใจหรือไม่ที่จะลบรหัสผ่านของ ${mentor.mentee!.studentId}?`, { isDanger: true, confirmButtonText: "ลบ" });
+                          if (res.isConfirmed) {
+                            try {
+                              alertUtil.showLoading("กำลังลบ...");
+                              const { authService } = await import("@/src/clients/container");
+                              await authService.deletePassword(mentor.mentee!.id, "mentee");
+                              await onRefresh();
+                              alertUtil.showSuccess("สำเร็จ", "ลบรหัสผ่านเรียบร้อย");
+                            } catch (err) {
+                              console.error(err);
+                              alertUtil.showError("ผิดพลาด", "ไม่สามารถลบรหัสผ่านได้");
+                            }
+                          }
+                        }}
+                        style={{
+                          fontSize: "10px",
+                          fontFamily: "monospace",
+                          fontWeight: 700,
+                          padding: "2px 8px",
+                          borderRadius: "2px",
+                          cursor: "pointer",
+                          border: "1px solid rgba(220, 50, 50, 0.5)",
+                          backgroundColor: "rgba(220, 50, 50, 0.15)",
+                          color: "#e85050",
+                        }}
+                      >
+                        ลบรหัสผ่าน
+                      </button>
+                    )}
+                  </div>
+                )}
+                {mode !== "passwords" && (
+                  <>
+
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setPointsToUser(
+                          mentor.mentee!.id,
+                          "mentee",
+                          mentor.mentee!.studentId,
+                        );
+                      }}
+                      title="แก้ไขแต้ม (แทนที่ค่าเดิม)"
+                      style={{
+                        marginLeft: "auto",
+                        fontSize: "10px",
+                        fontFamily: "monospace",
+                        fontWeight: 700,
+                        letterSpacing: "0.08em",
+                        padding: "2px 8px",
+                        borderRadius: "2px",
+                        cursor: "pointer",
+                        border: "1px solid rgba(158, 100, 255, 0.5)",
+                        backgroundColor: "rgba(158, 100, 255, 0.15)",
+                        color: "#b880e8",
+                        marginRight: "10px",
+                      }}
+                    >
+                      EDIT PTS
+                    </button>
+                  </>
+                )}
                 <span
                   style={{
                     fontSize: "10px",
@@ -420,6 +754,8 @@ function MentorRow({
             )}
           </div>
 
+          {mode === "mentors" && (
+            <>
           <div
             style={{
               display: "flex",
@@ -443,8 +779,10 @@ function MentorRow({
             {mentor.hints.length < 5 && (
               <button
                 onClick={() => {
-                  const usedLevels = mentor.hints.map(h => h.level);
-                  const availableLevels = [1, 2, 3, 4, 5].filter(l => !usedLevels.includes(l));
+                  const usedLevels = mentor.hints.map((h) => h.level);
+                  const availableLevels = [1, 2, 3, 4, 5].filter(
+                    (l) => !usedLevels.includes(l),
+                  );
                   if (availableLevels.length > 0) {
                     setNewLevel(availableLevels[0]);
                   }
@@ -618,9 +956,17 @@ function MentorRow({
                 }}
               >
                 {[1, 2, 3, 4, 5].map((l) => {
-                  const isUsed = mentor.hints.some(h => h.level === l);
+                  const isUsed = mentor.hints.some((h) => h.level === l);
                   return (
-                    <option key={l} value={l} disabled={isUsed} style={{ background: "#0a0e08", color: isUsed ? "#4a5a3a" : "#d8e8b8" }}>
+                    <option
+                      key={l}
+                      value={l}
+                      disabled={isUsed}
+                      style={{
+                        background: "#0a0e08",
+                        color: isUsed ? "#4a5a3a" : "#d8e8b8",
+                      }}
+                    >
                       L{l} {isUsed ? "(เลือกแล้ว)" : ""}
                     </option>
                   );
@@ -685,6 +1031,8 @@ function MentorRow({
               </button>
             </div>
           )}
+          </>
+        )}
         </div>
       )}
     </div>
@@ -699,8 +1047,8 @@ export default function AdminBackroomClient() {
 
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [students, setStudents] = useState<IMentor[]>([]);
-  const [activeTab, setActiveTab] = useState<"mentors" | "shop">("mentors");
+  const [students, setStudents] = useState<AdminMentorData[]>([]);
+  const [activeTab, setActiveTab] = useState<"mentors" | "shop" | "passwords">("mentors");
 
   const refreshData = async () => {
     try {
@@ -802,7 +1150,14 @@ export default function AdminBackroomClient() {
           }}
         />
 
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+            marginBottom: "24px",
+          }}
+        >
           <div style={{ display: "flex", gap: "16px" }}>
             <button
               onClick={() => setActiveTab("mentors")}
@@ -815,11 +1170,34 @@ export default function AdminBackroomClient() {
                 fontFamily: "'Share Tech Mono', monospace",
                 cursor: "pointer",
                 padding: "0 0 4px",
-                borderBottom: activeTab === "mentors" ? "2px solid #a8c060" : "2px solid transparent",
-                transition: "all 0.2s"
+                borderBottom:
+                  activeTab === "mentors"
+                    ? "2px solid #a8c060"
+                    : "2px solid transparent",
+                transition: "all 0.2s",
               }}
             >
               จัดการสายรหัส
+            </button>
+            <button
+              onClick={() => setActiveTab("passwords")}
+              style={{
+                background: "none",
+                border: "none",
+                color: activeTab === "passwords" ? "#a8c060" : "#5a7a38",
+                fontSize: "20px",
+                fontWeight: 700,
+                fontFamily: "'Share Tech Mono', monospace",
+                cursor: "pointer",
+                padding: "0 0 4px",
+                borderBottom:
+                  activeTab === "passwords"
+                    ? "2px solid #a8c060"
+                    : "2px solid transparent",
+                transition: "all 0.2s",
+              }}
+            >
+              จัดการรหัสผ่าน
             </button>
             <button
               onClick={() => setActiveTab("shop")}
@@ -832,8 +1210,11 @@ export default function AdminBackroomClient() {
                 fontFamily: "'Share Tech Mono', monospace",
                 cursor: "pointer",
                 padding: "0 0 4px",
-                borderBottom: activeTab === "shop" ? "2px solid #a8c060" : "2px solid transparent",
-                transition: "all 0.2s"
+                borderBottom:
+                  activeTab === "shop"
+                    ? "2px solid #a8c060"
+                    : "2px solid transparent",
+                transition: "all 0.2s",
               }}
             >
               จัดการร้านค้า
@@ -867,79 +1248,78 @@ export default function AdminBackroomClient() {
           }}
         />
 
-        {activeTab === "mentors" ? (
+        {activeTab === "mentors" || activeTab === "passwords" ? (
           <>
+            <input
+              type="text"
+              placeholder="> search by id..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              style={{
+                width: "100%",
+                boxSizing: "border-box",
+                padding: "9px 14px",
+                borderRadius: "2px",
+                border: "1px solid rgba(140,170,80,0.25)",
+                backgroundColor: "rgba(10, 14, 8, 0.82)",
+                color: "#a8c060",
+                fontSize: "13px",
+                outline: "none",
+                marginBottom: "16px",
+                fontFamily: "monospace",
+                caretColor: "#a8c060",
+              }}
+            />
 
-        <input
-          type="text"
-          placeholder="> search by id..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          style={{
-            width: "100%",
-            boxSizing: "border-box",
-            padding: "9px 14px",
-            borderRadius: "2px",
-            border: "1px solid rgba(140,170,80,0.25)",
-            backgroundColor: "rgba(10, 14, 8, 0.82)",
-            color: "#a8c060",
-            fontSize: "13px",
-            outline: "none",
-            marginBottom: "16px",
-            fontFamily: "monospace",
-            caretColor: "#a8c060",
-          }}
-        />
+            <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
+              {[
+                { color: "#d45c2a", label: "mentor (พี่รหัส)" },
+                { color: "#4a9eff", label: "mentee (น้องรหัส)" },
+              ].map(({ color, label }) => (
+                <div
+                  key={label}
+                  style={{ display: "flex", alignItems: "center", gap: "6px" }}
+                >
+                  <span
+                    style={{
+                      fontFamily: "monospace",
+                      fontWeight: 700,
+                      color,
+                      fontSize: "13px",
+                    }}
+                  >
+                    ■
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "11px",
+                      color: "#8faa55",
+                      fontFamily: "monospace",
+                    }}
+                  >
+                    {label}
+                  </span>
+                </div>
+              ))}
+            </div>
 
-        <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
-          {[
-            { color: "#d45c2a", label: "mentor (พี่รหัส)" },
-            { color: "#4a9eff", label: "mentee (น้องรหัส)" },
-          ].map(({ color, label }) => (
-            <div
-              key={label}
-              style={{ display: "flex", alignItems: "center", gap: "6px" }}
-            >
-              <span
+            {filtered.map((s) => (
+              <MentorRow key={s.id} mentor={s} mode={activeTab as "mentors" | "passwords"} onRefresh={refreshData} />
+            ))}
+
+            {filtered.length === 0 && (
+              <p
                 style={{
+                  color: "#5a7a38",
+                  textAlign: "center",
+                  marginTop: "48px",
                   fontFamily: "monospace",
-                  fontWeight: 700,
-                  color,
                   fontSize: "13px",
                 }}
               >
-                ■
-              </span>
-              <span
-                style={{
-                  fontSize: "11px",
-                  color: "#8faa55",
-                  fontFamily: "monospace",
-                }}
-              >
-                {label}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        {filtered.map((s) => (
-          <MentorRow key={s.id} mentor={s} onRefresh={refreshData} />
-        ))}
-
-        {filtered.length === 0 && (
-          <p
-            style={{
-              color: "#5a7a38",
-              textAlign: "center",
-              marginTop: "48px",
-              fontFamily: "monospace",
-              fontSize: "13px",
-            }}
-          >
-            — no results —
-          </p>
-        )}
+                — no results —
+              </p>
+            )}
           </>
         ) : (
           <ShopAdminTab />

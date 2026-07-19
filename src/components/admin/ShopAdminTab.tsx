@@ -5,17 +5,19 @@ import { FaPlus, FaTrash, FaPencilAlt, FaTimes } from "react-icons/fa";
 import { alertUtil } from "@/src/utils/alert.util";
 import { ALERT_MESSAGES } from "@/src/core/constants/messages";
 import { shopItemService } from "@/src/clients/container";
-import type { ShopItemEntity, CreateShopItemInput } from "@/src/core/domain/shop-item";
+import type {
+  ShopItemEntity,
+  CreateShopItemInput,
+} from "@/src/core/domain/shop-item";
 import type { ShopCategory, EffectKey } from "@/src/lib/shop/Types";
 
 export default function ShopAdminTab() {
   const [items, setItems] = useState<ShopItemEntity[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<ShopItemEntity | null>(null);
 
-  // Form State
   const [category, setCategory] = useState<ShopCategory>("cosmetic");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -32,7 +34,10 @@ export default function ShopAdminTab() {
       setItems(data);
     } catch (err) {
       console.error(err);
-      alertUtil.showError(ALERT_MESSAGES.ERROR.TITLE, ALERT_MESSAGES.ERROR.FETCH_ITEM);
+      alertUtil.showError(
+        ALERT_MESSAGES.ERROR.TITLE,
+        ALERT_MESSAGES.ERROR.FETCH_ITEM,
+      );
     } finally {
       setLoading(false);
     }
@@ -92,43 +97,79 @@ export default function ShopAdminTab() {
 
     try {
       if (editingItem) {
+        const confirmResult = await alertUtil.showConfirm(
+          "ยืนยันการแก้ไข",
+          "คุณต้องการบันทึกการแก้ไขสินค้านี้ใช่หรือไม่?",
+        );
+        if (!confirmResult.isConfirmed) return;
+
         await shopItemService.updateShopItem(editingItem.id, payload);
-        alertUtil.showSuccess(ALERT_MESSAGES.SUCCESS.TITLE, ALERT_MESSAGES.SUCCESS.UPDATE_ITEM);
+        alertUtil.showSuccess(
+          ALERT_MESSAGES.SUCCESS.TITLE,
+          ALERT_MESSAGES.SUCCESS.UPDATE_ITEM,
+        );
       } else {
+        const confirmResult = await alertUtil.showConfirm(
+          "ยืนยันการเพิ่มสินค้า",
+          "คุณต้องการเพิ่มสินค้าใหม่นี้ใช่หรือไม่?",
+        );
+        if (!confirmResult.isConfirmed) return;
+
         await shopItemService.createShopItem(payload);
-        alertUtil.showSuccess(ALERT_MESSAGES.SUCCESS.TITLE, ALERT_MESSAGES.SUCCESS.CREATE_ITEM);
+        alertUtil.showSuccess(
+          ALERT_MESSAGES.SUCCESS.TITLE,
+          ALERT_MESSAGES.SUCCESS.CREATE_ITEM,
+        );
       }
       closeModal();
       fetchItems();
     } catch (err) {
       console.error(err);
-      alertUtil.showError(ALERT_MESSAGES.ERROR.TITLE, ALERT_MESSAGES.ERROR.SAVE_ITEM);
+      alertUtil.showError(
+        ALERT_MESSAGES.ERROR.TITLE,
+        ALERT_MESSAGES.ERROR.SAVE_ITEM,
+      );
     }
   };
 
-  const handleDelete = async (id: string, name: string) => {
+  const handleDelete = async (id: string) => {
     const result = await alertUtil.showConfirm(
       ALERT_MESSAGES.CONFIRM.DELETE_ITEM,
       ALERT_MESSAGES.CONFIRM.DELETE_ITEM_DESC,
-      { isDanger: true, confirmButtonText: "ลบ" }
+      { isDanger: true, confirmButtonText: "ลบ" },
     );
 
     if (result.isConfirmed) {
       try {
         await shopItemService.deleteShopItem(id);
-        alertUtil.showSuccess(ALERT_MESSAGES.SUCCESS.TITLE, ALERT_MESSAGES.SUCCESS.DELETE_ITEM);
+        alertUtil.showSuccess(
+          ALERT_MESSAGES.SUCCESS.TITLE,
+          ALERT_MESSAGES.SUCCESS.DELETE_ITEM,
+        );
         fetchItems();
       } catch (err) {
         console.error(err);
-        alertUtil.showError(ALERT_MESSAGES.ERROR.TITLE, ALERT_MESSAGES.ERROR.DELETE_ITEM);
+        alertUtil.showError(
+          ALERT_MESSAGES.ERROR.TITLE,
+          ALERT_MESSAGES.ERROR.DELETE_ITEM,
+        );
       }
     }
   };
 
   return (
     <div style={{ marginTop: "24px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-        <h2 style={{ fontSize: "20px", color: "#d8e8b8", fontWeight: "bold" }}>จัดการร้านค้า (Shop Items)</h2>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "16px",
+        }}
+      >
+        <h2 style={{ fontSize: "20px", color: "#d8e8b8", fontWeight: "bold" }}>
+          จัดการร้านค้า (Shop Items)
+        </h2>
         <button
           onClick={() => openModal()}
           style={{
@@ -151,43 +192,85 @@ export default function ShopAdminTab() {
         <p style={{ color: "#8aaccc" }}>Loading...</p>
       ) : (
         <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", color: "#c8d4a8", fontSize: "14px" }}>
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              color: "#c8d4a8",
+              fontSize: "14px",
+            }}
+          >
             <thead>
-              <tr style={{ background: "#101810", borderBottom: "1px solid #2a3a18", textAlign: "left" }}>
+              <tr
+                style={{
+                  background: "#101810",
+                  borderBottom: "1px solid #2a3a18",
+                  textAlign: "left",
+                }}
+              >
                 <th style={{ padding: "12px" }}>Icon</th>
                 <th style={{ padding: "12px" }}>Category</th>
                 <th style={{ padding: "12px" }}>Name</th>
                 <th style={{ padding: "12px" }}>Price</th>
                 <th style={{ padding: "12px" }}>Status</th>
-                <th style={{ padding: "12px", textAlign: "center" }}>Actions</th>
+                <th style={{ padding: "12px", textAlign: "center" }}>
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
               {items.map((item) => (
                 <tr key={item.id} style={{ borderBottom: "1px solid #1a2a12" }}>
-                  <td style={{ padding: "12px", fontSize: "24px" }}>{item.icon}</td>
-                  <td style={{ padding: "12px", textTransform: "capitalize" }}>{item.category}</td>
+                  <td style={{ padding: "12px", fontSize: "24px" }}>
+                    {item.icon}
+                  </td>
+                  <td style={{ padding: "12px", textTransform: "capitalize" }}>
+                    {item.category}
+                  </td>
                   <td style={{ padding: "12px" }}>
                     <strong>{item.name}</strong>
-                    <div style={{ fontSize: "12px", color: "#8aaccc" }}>{item.description}</div>
+                    <div style={{ fontSize: "12px", color: "#8aaccc" }}>
+                      {item.description}
+                    </div>
                   </td>
-                  <td style={{ padding: "12px", color: "#ffd66b" }}>{item.price} pts</td>
+                  <td style={{ padding: "12px", color: "#ffd66b" }}>
+                    {item.price} pts
+                  </td>
                   <td style={{ padding: "12px" }}>
-                    <span style={{ 
-                      color: item.disabled ? "#ff6b6b" : "#6dff9e",
-                      padding: "4px 8px",
-                      background: item.disabled ? "#2a0808" : "#082a12",
-                      borderRadius: "12px",
-                      fontSize: "12px"
-                    }}>
+                    <span
+                      style={{
+                        color: item.disabled ? "#ff6b6b" : "#6dff9e",
+                        padding: "4px 8px",
+                        background: item.disabled ? "#2a0808" : "#082a12",
+                        borderRadius: "12px",
+                        fontSize: "12px",
+                      }}
+                    >
                       {item.disabled ? "Disabled" : "Active"}
                     </span>
                   </td>
                   <td style={{ padding: "12px", textAlign: "center" }}>
-                    <button onClick={() => openModal(item)} style={{ background: "transparent", border: "none", color: "#4a9eff", cursor: "pointer", marginRight: "12px" }}>
+                    <button
+                      onClick={() => openModal(item)}
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        color: "#4a9eff",
+                        cursor: "pointer",
+                        marginRight: "12px",
+                      }}
+                    >
                       <FaPencilAlt />
                     </button>
-                    <button onClick={() => handleDelete(item.id, item.name)} style={{ background: "transparent", border: "none", color: "#ff6b6b", cursor: "pointer" }}>
+                    <button
+                      onClick={() => handleDelete(item.id)}
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        color: "#ff6b6b",
+                        cursor: "pointer",
+                      }}
+                    >
                       <FaTrash />
                     </button>
                   </td>
@@ -195,7 +278,16 @@ export default function ShopAdminTab() {
               ))}
               {items.length === 0 && (
                 <tr>
-                  <td colSpan={6} style={{ textAlign: "center", padding: "24px", color: "#5a7a38" }}>ไม่มีสินค้า</td>
+                  <td
+                    colSpan={6}
+                    style={{
+                      textAlign: "center",
+                      padding: "24px",
+                      color: "#5a7a38",
+                    }}
+                  >
+                    ไม่มีสินค้า
+                  </td>
                 </tr>
               )}
             </tbody>
@@ -204,33 +296,84 @@ export default function ShopAdminTab() {
       )}
 
       {isModalOpen && (
-        <div style={{
-          position: "fixed",
-          top: 0, left: 0, width: "100%", height: "100%",
-          background: "rgba(0,0,0,0.7)", zIndex: 1000,
-          display: "flex", justifyContent: "center", alignItems: "center"
-        }}>
-          <div style={{
-            background: "#0d130f",
-            border: "1px solid #2a3a18",
-            borderRadius: "8px",
-            width: "90%", maxWidth: "500px",
-            maxHeight: "90vh", overflowY: "auto",
-            padding: "24px"
-          }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "rgba(0,0,0,0.7)",
+            zIndex: 1000,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <div
+            style={{
+              background: "#0d130f",
+              border: "1px solid #2a3a18",
+              borderRadius: "8px",
+              width: "90%",
+              maxWidth: "500px",
+              maxHeight: "90vh",
+              overflowY: "auto",
+              padding: "24px",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "20px",
+              }}
+            >
               <h3 style={{ margin: 0, color: "#d8e8b8", fontSize: "18px" }}>
                 {editingItem ? "แก้ไขสินค้า" : "เพิ่มสินค้าใหม่"}
               </h3>
-              <button onClick={closeModal} style={{ background: "none", border: "none", color: "#ff6b6b", cursor: "pointer", fontSize: "18px" }}>
+              <button
+                onClick={closeModal}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "#ff6b6b",
+                  cursor: "pointer",
+                  fontSize: "18px",
+                }}
+              >
                 <FaTimes />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            <form
+              onSubmit={handleSubmit}
+              style={{ display: "flex", flexDirection: "column", gap: "16px" }}
+            >
               <div>
-                <label style={{ display: "block", color: "#8aaccc", marginBottom: "8px", fontSize: "14px" }}>Category</label>
-                <select value={category} onChange={(e) => setCategory(e.target.value as ShopCategory)} style={{ width: "100%", padding: "10px", background: "#060a08", border: "1px solid #2a3a18", color: "#d8e8b8" }} required>
+                <label
+                  style={{
+                    display: "block",
+                    color: "#8aaccc",
+                    marginBottom: "8px",
+                    fontSize: "14px",
+                  }}
+                >
+                  Category
+                </label>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value as ShopCategory)}
+                  style={{
+                    width: "100%",
+                    padding: "10px",
+                    background: "#060a08",
+                    border: "1px solid #2a3a18",
+                    color: "#d8e8b8",
+                  }}
+                  required
+                >
                   <option value="cosmetic">Cosmetic</option>
                   <option value="hint">Hint</option>
                   <option value="spin">Spin</option>
@@ -238,46 +381,199 @@ export default function ShopAdminTab() {
               </div>
 
               <div>
-                <label style={{ display: "block", color: "#8aaccc", marginBottom: "8px", fontSize: "14px" }}>Name</label>
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} required style={{ width: "100%", padding: "10px", background: "#060a08", border: "1px solid #2a3a18", color: "#d8e8b8" }} />
+                <label
+                  style={{
+                    display: "block",
+                    color: "#8aaccc",
+                    marginBottom: "8px",
+                    fontSize: "14px",
+                  }}
+                >
+                  Name
+                </label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  style={{
+                    width: "100%",
+                    padding: "10px",
+                    background: "#060a08",
+                    border: "1px solid #2a3a18",
+                    color: "#d8e8b8",
+                  }}
+                />
               </div>
 
               <div>
-                <label style={{ display: "block", color: "#8aaccc", marginBottom: "8px", fontSize: "14px" }}>Description</label>
-                <textarea value={description} onChange={(e) => setDescription(e.target.value)} style={{ width: "100%", padding: "10px", background: "#060a08", border: "1px solid #2a3a18", color: "#d8e8b8", minHeight: "80px" }} />
+                <label
+                  style={{
+                    display: "block",
+                    color: "#8aaccc",
+                    marginBottom: "8px",
+                    fontSize: "14px",
+                  }}
+                >
+                  Description
+                </label>
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  style={{
+                    width: "100%",
+                    padding: "10px",
+                    background: "#060a08",
+                    border: "1px solid #2a3a18",
+                    color: "#d8e8b8",
+                    minHeight: "80px",
+                  }}
+                />
               </div>
 
               <div style={{ display: "flex", gap: "16px" }}>
                 <div style={{ flex: 1 }}>
-                  <label style={{ display: "block", color: "#8aaccc", marginBottom: "8px", fontSize: "14px" }}>Price (pts)</label>
-                  <input type="number" min="0" value={price} onChange={(e) => setPrice(Number(e.target.value))} required style={{ width: "100%", padding: "10px", background: "#060a08", border: "1px solid #2a3a18", color: "#d8e8b8" }} />
+                  <label
+                    style={{
+                      display: "block",
+                      color: "#8aaccc",
+                      marginBottom: "8px",
+                      fontSize: "14px",
+                    }}
+                  >
+                    Price (pts)
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={price}
+                    onChange={(e) => setPrice(Number(e.target.value))}
+                    required
+                    style={{
+                      width: "100%",
+                      padding: "10px",
+                      background: "#060a08",
+                      border: "1px solid #2a3a18",
+                      color: "#d8e8b8",
+                    }}
+                  />
                 </div>
                 <div style={{ flex: 1 }}>
-                  <label style={{ display: "block", color: "#8aaccc", marginBottom: "8px", fontSize: "14px" }}>Icon (Emoji/URL)</label>
-                  <input type="text" value={icon} onChange={(e) => setIcon(e.target.value)} required style={{ width: "100%", padding: "10px", background: "#060a08", border: "1px solid #2a3a18", color: "#d8e8b8" }} />
+                  <label
+                    style={{
+                      display: "block",
+                      color: "#8aaccc",
+                      marginBottom: "8px",
+                      fontSize: "14px",
+                    }}
+                  >
+                    Icon (Emoji/URL)
+                  </label>
+                  <input
+                    type="text"
+                    value={icon}
+                    onChange={(e) => setIcon(e.target.value)}
+                    required
+                    style={{
+                      width: "100%",
+                      padding: "10px",
+                      background: "#060a08",
+                      border: "1px solid #2a3a18",
+                      color: "#d8e8b8",
+                    }}
+                  />
                 </div>
               </div>
 
               {category === "cosmetic" && (
                 <div>
-                  <label style={{ display: "block", color: "#8aaccc", marginBottom: "8px", fontSize: "14px" }}>Effect Key</label>
-                  <input type="text" value={effectKey} onChange={(e) => setEffectKey(e.target.value)} placeholder="e.g. ribbons, click-spark" style={{ width: "100%", padding: "10px", background: "#060a08", border: "1px solid #2a3a18", color: "#d8e8b8" }} />
+                  <label
+                    style={{
+                      display: "block",
+                      color: "#8aaccc",
+                      marginBottom: "8px",
+                      fontSize: "14px",
+                    }}
+                  >
+                    Effect Key
+                  </label>
+                  <input
+                    type="text"
+                    value={effectKey}
+                    onChange={(e) => setEffectKey(e.target.value)}
+                    placeholder="e.g. ribbons, click-spark"
+                    style={{
+                      width: "100%",
+                      padding: "10px",
+                      background: "#060a08",
+                      border: "1px solid #2a3a18",
+                      color: "#d8e8b8",
+                    }}
+                  />
                 </div>
               )}
 
               {category === "hint" && (
                 <div>
-                  <label style={{ display: "block", color: "#8aaccc", marginBottom: "8px", fontSize: "14px" }}>Hint Level (1-5)</label>
-                  <input type="number" min="1" max="5" value={hintLevel} onChange={(e) => setHintLevel(Number(e.target.value))} style={{ width: "100%", padding: "10px", background: "#060a08", border: "1px solid #2a3a18", color: "#d8e8b8" }} />
+                  <label
+                    style={{
+                      display: "block",
+                      color: "#8aaccc",
+                      marginBottom: "8px",
+                      fontSize: "14px",
+                    }}
+                  >
+                    Hint Level (1-5)
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="5"
+                    value={hintLevel}
+                    onChange={(e) => setHintLevel(Number(e.target.value))}
+                    style={{
+                      width: "100%",
+                      padding: "10px",
+                      background: "#060a08",
+                      border: "1px solid #2a3a18",
+                      color: "#d8e8b8",
+                    }}
+                  />
                 </div>
               )}
 
-              <label style={{ display: "flex", alignItems: "center", gap: "8px", color: "#d8e8b8", cursor: "pointer", marginTop: "8px" }}>
-                <input type="checkbox" checked={disabled} onChange={(e) => setDisabled(e.target.checked)} />
+              <label
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  color: "#d8e8b8",
+                  cursor: "pointer",
+                  marginTop: "8px",
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={disabled}
+                  onChange={(e) => setDisabled(e.target.checked)}
+                />
                 <span>ปิดใช้งาน (Disabled)</span>
               </label>
 
-              <button type="submit" style={{ marginTop: "16px", background: "#d45c2a", color: "#fff", border: "none", padding: "12px", borderRadius: "4px", fontSize: "16px", fontWeight: "bold", cursor: "pointer" }}>
+              <button
+                type="submit"
+                style={{
+                  marginTop: "16px",
+                  background: "#d45c2a",
+                  color: "#fff",
+                  border: "none",
+                  padding: "12px",
+                  borderRadius: "4px",
+                  fontSize: "16px",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                }}
+              >
                 บันทึกข้อมูล
               </button>
             </form>

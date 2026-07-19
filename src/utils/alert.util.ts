@@ -1,4 +1,4 @@
-import Swal, { SweetAlertIcon, SweetAlertResult } from "sweetalert2";
+import Swal, { SweetAlertResult } from "sweetalert2";
 
 const THEME = {
   background: "#0a0e08",

@@ -3,6 +3,7 @@ import { ICreateMentee, IMentee } from "@/src/core/domain/mentee";
 import { NotFoundError, ForbiddenError } from "@/src/core/error/error";
 import { IMenteeRepository } from "@/src/core/ports/server/mentee.repository.port";
 import { stripMenteePassword } from "@/src/lib/user-utils";
+import { Role } from "@/src/core/domain/user";
 
 type SafeMentee = Omit<IMentee, "password">;
 
@@ -45,19 +46,8 @@ export class MenteeService {
     return mentee.point;
   }
 
-  async addPoint(
-    id: string,
-    point: number,
-    sessionStudentId?: string,
-    sessionRole?: string,
-  ): Promise<number> {
-    if (sessionRole === "mentee" && sessionStudentId) {
-      const mentee = await this.menteeRepo.findByStudentId(sessionStudentId);
-      if (!mentee || (mentee.id !== id && mentee.studentId !== id)) {
-        throw new ForbiddenError("You can only modify your own points");
-      }
-    }
-    const updated = await this.menteeRepo.addPoint(id, point);
+  async setPoint(id: string, point: number): Promise<number> {
+    const updated = await this.menteeRepo.setPoint(id, point);
     if (!updated) throw new NotFoundError("Mentee not found");
     return updated.point;
   }

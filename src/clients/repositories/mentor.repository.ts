@@ -26,7 +26,8 @@ export class MentorClientRepository implements IMentorClientRepository {
   async getMentorPoint(mentorId: string): Promise<ApiResponse<number>> {
     return httpClient.get<number>(`/api/point/mentor/${mentorId}`);
   }
-  async addMentorPoint(mentorId: string, point: number): Promise<ApiResponse<number>> {
-    return httpClient.post<number>(`/api/point/mentor/${mentorId}`, { point });
+
+  async setMentorPoint(mentorId: string, point: number): Promise<ApiResponse<number>> {
+    return httpClient.put<number>(`/api/point/mentor/${mentorId}`, { point });
   }
 }

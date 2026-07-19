@@ -124,7 +124,7 @@ export default function Info() {
           <div className="flex flex-col gap-4 justify-end h-full w-xs shrink-0 font-normal text-m text-justify tracking-wide">
             <p>
               *ช่องทางการติดต่อพี่อยู่ในหน้าเมนู ขอให้ไว้แค่สองอันก่อน
-              คือเมลสำรองพี่กับดิสคอร์ด มีอะไรก็ทักถามได้เลย
+              คือไอจีพี่ (@yafuuyufaa) กับพี่อีกคนนึง (@vixvify_v) มีอะไรก็ทักถามได้เลย
             </p>
             <p>
               **เอาจริงๆแล้วระบบสายรหัสมันหาพี่รหัสง่ายมากๆเลย

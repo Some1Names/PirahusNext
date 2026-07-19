@@ -26,6 +26,13 @@ export function useShopActions(
 
     if (item.category === "hint") {
       if (!hintLevel) return;
+
+      const confirmResult = await alertUtil.showConfirm(
+        ALERT_MESSAGES.CONFIRM.BUY_ITEM,
+        ALERT_MESSAGES.CONFIRM.BUY_ITEM_DESC(item.name, item.price)
+      );
+      if (!confirmResult.isConfirmed) return;
+
       try {
         alertUtil.showLoading(ALERT_MESSAGES.LOADING.GENERIC);
 
@@ -47,6 +54,12 @@ export function useShopActions(
     }
 
     if (item.category === "cosmetic") {
+      const confirmResult = await alertUtil.showConfirm(
+        ALERT_MESSAGES.CONFIRM.BUY_ITEM,
+        ALERT_MESSAGES.CONFIRM.BUY_ITEM_DESC(item.name, item.price)
+      );
+      if (!confirmResult.isConfirmed) return;
+
       try {
         alertUtil.showLoading(ALERT_MESSAGES.LOADING.GENERIC);
 
@@ -70,10 +83,18 @@ export function useShopActions(
   };
 
   const handleEquip = async (item: ShopItem) => {
+    const isEquipping = user?.equippedEffect !== item.id;
+    const actionLabel = isEquipping ? "ใส่" : "ถอด";
+
+    const confirmResult = await alertUtil.showConfirm(
+      ALERT_MESSAGES.CONFIRM.EQUIP_ITEM(actionLabel),
+      ALERT_MESSAGES.CONFIRM.EQUIP_ITEM_DESC(actionLabel, item.name)
+    );
+    if (!confirmResult.isConfirmed) return;
+
     try {
       alertUtil.showLoading(ALERT_MESSAGES.LOADING.GENERIC);
 
-      const isEquipping = user?.equippedEffect !== item.id;
       const equipId = isEquipping ? item.id : null;
 
       const result = await cosmeticService.equipCosmetic(equipId);
@@ -97,6 +118,12 @@ export function useShopActions(
   };
 
   const handleSendGift = async (transfer: GiftTransfer): Promise<boolean> => {
+    const confirmResult = await alertUtil.showConfirm(
+      ALERT_MESSAGES.CONFIRM.SEND_GIFT,
+      ALERT_MESSAGES.CONFIRM.SEND_GIFT_DESC(transfer.amount)
+    );
+    if (!confirmResult.isConfirmed) return false;
+
     try {
       alertUtil.showLoading(ALERT_MESSAGES.LOADING.TRANSFER);
 

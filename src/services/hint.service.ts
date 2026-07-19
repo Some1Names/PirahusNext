@@ -90,7 +90,7 @@ export class HintService {
   }
 
   async getMenteeHints(sessionStudentId: string): Promise<IMenteeHint[]> {
-    const mentee = await this.hintRepo.findMenteeWithHints(sessionStudentId);
+    const mentee = await this.menteeRepo.findByStudentId(sessionStudentId);
     if (!mentee) throw new NotFoundError("Mentee not found");
 
     const hintShopItems = await this.shopItemRepo.findByCategory("hint");
@@ -142,7 +142,7 @@ export class HintService {
       throw new AppError("Not enough points", 400, "INSUFFICIENT_POINTS");
     }
 
-    const updatedMentee = await this.hintRepo.unlockHintTransaction(
+    const updatedMentee = await this.menteeRepo.unlockHint(
       mentee.id,
       level,
       cost,

@@ -5,7 +5,6 @@ import bcrypt from "bcryptjs";
 
 import { IMentor } from "@/src/core/domain/mentor";
 import { IMentee } from "@/src/core/domain/mentee";
-import { IAdmissionYear } from "@/src/core/domain/admission-year";
 import { MentorUser, MenteeUser, Role } from "@/src/core/domain/user";
 import { mapToDomainMentor } from "@/src/factories/mentor.factory";
 import { mapToDomainMentee } from "@/src/factories/mentee.factory";
@@ -13,26 +12,6 @@ import { mapToDomainMentee } from "@/src/factories/mentee.factory";
 import { IAuthRepository } from "@/src/core/ports/server/auth.repository.port";
 
 export class AuthRepository implements IAuthRepository {
-  async findAdmissionYear(): Promise<IAdmissionYear | null> {
-    return prisma.admissionYear.findFirst();
-  }
-
-  async findMentorByStudentId(studentId: string): Promise<IMentor | null> {
-    const mentor = await prisma.mentor.findUnique({
-      where: { studentId },
-      include: { hints: true, mentee: true },
-    });
-    return mentor ? mapToDomainMentor(mentor) : null;
-  }
-
-  async findMenteeByStudentId(studentId: string): Promise<IMentee | null> {
-    const mentee = await prisma.mentee.findUnique({
-      where: { studentId },
-      include: { mentor: { include: { hints: true } } },
-    });
-    return mentee ? mapToDomainMentee(mentee) : null;
-  }
-
   async findMentorForMe(studentId: string): Promise<MentorUser | null> {
     const mentor = await prisma.mentor.findUnique({
       where: { studentId },
@@ -112,6 +91,20 @@ export class AuthRepository implements IAuthRepository {
       include: { mentor: { include: { hints: true } } },
     });
     return mapToDomainMentee(mentee);
+  }
+
+  async deletePassword(id: string, role: Role): Promise<void> {
+    if (role === "admin" || role === "mentor") {
+      await prisma.mentor.update({
+        where: { id },
+        data: { password: null },
+      });
+    } else {
+      await prisma.mentee.update({
+        where: { id },
+        data: { password: null },
+      });
+    }
   }
 
   async setTokenCookie(

@@ -92,10 +92,10 @@ export class MentorRepository implements IMentorRepository {
     return mentor ? mapToDomainMentor(mentor) : null;
   }
 
-  async addPoint(id: string, point: number): Promise<IMentor> {
+  async setPoint(id: string, point: number): Promise<IMentor> {
     const mentor = await prisma.mentor.update({
       where: { id },
-      data: { point: { increment: point } },
+      data: { point },
       include: { hints: true, mentee: true },
     });
     return mapToDomainMentor(mentor);

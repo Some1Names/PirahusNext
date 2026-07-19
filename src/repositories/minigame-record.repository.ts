@@ -1,17 +1,9 @@
 import { prisma } from "@/src/lib/prisma";
 import { IMinigameRecordRepository } from "@/src/core/ports/server/minigame-record.repository.port";
 import { IMinigameRecordResponse } from "@/src/core/domain/minigame";
+import { ILeaderboardResponse } from "@/src/core/domain/leaderboard";
 
 export class MinigameRecordRepository implements IMinigameRecordRepository {
-  async findMenteeIdByStudentId(studentId: string): Promise<string | null> {
-    const mentee = await prisma.mentee.findUnique({ where: { studentId } });
-    return mentee?.id || null;
-  }
-
-  async findMentorIdByStudentId(studentId: string): Promise<string | null> {
-    const mentor = await prisma.mentor.findUnique({ where: { studentId } });
-    return mentor?.id || null;
-  }
 
   async findExistingRecord(menteeId: string | null, mentorId: string | null, gameName: string): Promise<{ id: string, timeTaken: number, score: number | null } | null> {
     const existing = await prisma.minigameRecord.findFirst({
@@ -69,5 +61,25 @@ export class MinigameRecordRepository implements IMinigameRecordRepository {
         username: `[${role}] ${user!.nickname || user!.studentId}`,
       };
     });
+  }
+
+  async getTopScores(limit: number = 10): Promise<ILeaderboardResponse> {
+    const [topMentors, topMentees] = await Promise.all([
+      prisma.mentor.findMany({
+        orderBy: { point: "desc" },
+        take: limit,
+        select: { id: true, studentId: true, nickname: true, point: true },
+      }),
+      prisma.mentee.findMany({
+        orderBy: { point: "desc" },
+        take: limit,
+        select: { id: true, studentId: true, nickname: true, point: true },
+      }),
+    ]);
+
+    return {
+      mentors: topMentors.map((m) => ({ ...m, role: "mentor" })),
+      mentees: topMentees.map((m) => ({ ...m, role: "mentee" })),
+    };
   }
 }

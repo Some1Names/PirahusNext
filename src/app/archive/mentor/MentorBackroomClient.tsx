@@ -47,6 +47,13 @@ export default function MentorBackroomClient() {
 
   const addHint = async () => {
     if (!newHint.trim() || !mentor) return;
+    
+    const confirmResult = await alertUtil.showConfirm(
+      ALERT_MESSAGES.CONFIRM.ADD_HINT,
+      ALERT_MESSAGES.CONFIRM.ADD_HINT_DESC
+    );
+    if (!confirmResult.isConfirmed) return;
+
     try {
       alertUtil.showLoading(ALERT_MESSAGES.LOADING.SAVE_HINT);
 
@@ -91,6 +98,13 @@ export default function MentorBackroomClient() {
 
   const editHint = async (id: string, content: string) => {
     if (!mentor) return;
+
+    const confirmResult = await alertUtil.showConfirm(
+      ALERT_MESSAGES.CONFIRM.EDIT_HINT,
+      ALERT_MESSAGES.CONFIRM.EDIT_HINT_DESC
+    );
+    if (!confirmResult.isConfirmed) return;
+
     try {
       alertUtil.showLoading(ALERT_MESSAGES.LOADING.EDIT_HINT);
 
