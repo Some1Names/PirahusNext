@@ -18,7 +18,12 @@ export default async function proxy(request: NextRequest) {
       const forwardedFor = request.headers.get("x-forwarded-for");
       const ip = forwardedFor ? forwardedFor.split(",")[0].trim() : "127.0.0.1";
 
-      if (request.nextUrl.pathname.startsWith("/api/auth")) {
+      const pathname = request.nextUrl.pathname;
+      if (
+        pathname === "/api/auth/login" ||
+        pathname === "/api/auth/password" ||
+        pathname === "/api/auth/setupprofile"
+      ) {
         await authLimiter.check(5, ip);
       } else {
         await globalLimiter.check(100, ip);
