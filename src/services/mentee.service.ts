@@ -1,9 +1,8 @@
 import { MenteeRepository } from "@/src/repositories/mentee.repository";
 import { ICreateMentee, IMentee } from "@/src/core/domain/mentee";
-import { NotFoundError, ForbiddenError } from "@/src/core/error/error";
+import { NotFoundError } from "@/src/core/error/error";
 import { IMenteeRepository } from "@/src/core/ports/server/mentee.repository.port";
 import { stripMenteePassword } from "@/src/lib/user-utils";
-import { Role } from "@/src/core/domain/user";
 
 type SafeMentee = Omit<IMentee, "password">;
 

@@ -1,7 +1,6 @@
 import { prisma } from "@/src/lib/prisma";
 import { signToken } from "@/src/lib/jwt";
 import { cookies } from "next/headers";
-import bcrypt from "bcryptjs";
 
 import { IMentor } from "@/src/core/domain/mentor";
 import { IMentee } from "@/src/core/domain/mentee";
@@ -124,11 +123,4 @@ export class AuthRepository implements IAuthRepository {
     return token;
   }
 
-  comparePassword(plain: string, hashed: string): boolean {
-    return bcrypt.compareSync(plain, hashed);
-  }
-
-  hashPassword(plain: string): string {
-    return bcrypt.hashSync(plain, 10);
-  }
 }

@@ -11,6 +11,7 @@ import { IAuthRepository } from "@/src/core/ports/server/auth.repository.port";
 import { IAdmissionYearRepository } from "@/src/core/ports/server/admission-year.repository.port";
 import { IMentorRepository } from "@/src/core/ports/server/mentor.repository.port";
 import { IMenteeRepository } from "@/src/core/ports/server/mentee.repository.port";
+import { comparePassword, hashPassword } from "@/src/security/bcrypt";
 
 export class AuthService {
   constructor(
@@ -56,7 +57,7 @@ export class AuthService {
       return { studentId, firstLogin: false, hasPassword: true };
     }
 
-    const isValid = this.authRepo.comparePassword(password, user.password!);
+    const isValid = comparePassword(password, user.password!);
     if (!isValid) throw new UnauthorizedError("Incorrect password");
 
     const role: Role =
@@ -110,7 +111,7 @@ export class AuthService {
     password: string,
     nickname: string,
   ): Promise<SetupProfileResponse> {
-    const hashed = this.authRepo.hashPassword(password);
+    const hashed = hashPassword(password);
 
     if (role === "admin" || role === "mentor") {
       await this.authRepo.updateMentorPassword(studentId, hashed, nickname);

@@ -17,6 +17,4 @@ export interface IAuthRepository {
   ): Promise<IMentee>;
   deletePassword(id: string, role: Role): Promise<void>;
   setTokenCookie(studentId: string, role: Role, point: number): Promise<string>;
-  comparePassword(plain: string, hashed: string): boolean;
-  hashPassword(plain: string): string;
 }
